@@ -1,15 +1,16 @@
 # Shiny handwriter
 
+library(dplyr)
+library(DT)
+library(ggplot2)
+library(handwriter)
 library(magick)
 library(shiny)
-library(shinyjs)
-library(shinybusy)
 library(shinyBS)
+library(shinybusy)
 library(shinyFiles)
-library(DT)
+library(shinyjs)
 library(stringr)
-library(dplyr)
-library(ggplot2)
 
 print(paste0('working in: ', getwd()))
 
