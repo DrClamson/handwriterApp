@@ -38,12 +38,14 @@ tabPanel("Analyze documents",
                ),
                tabPanel("Writer Profiles",
                         h4("Writer Profiles in Questioned Documents"),
-                        helpText("This plot shows the median of the model parameters that estimate the true cluster fill rate the writer
-                                 of each questioned document and each cluster. The error bars show the 95% credible intervals."),
+                        helpText("The writer profile of the questioned document writer is estimated by the cluster fill rates of the 
+                                 questioned document. This plot shows the cluster fill counts of the questioned document."),
                         plotOutput("q_profiles"),
                         h4("Persons of Interest Writer Profiles"),
-                        helpText("This plot shows the median of the model parameters that estimate the true cluster fill rate for 
-                                 each person of interest and each cluster. The error bars show the 95% credible intervals."),
+                        helpText("Writer profiles are estimated from the cluster fill rates of the known writing samples. More specifically,
+                                 the writer profiles are the median of the model parameters that estimate the true cluster fill rates for 
+                                 each person of interest and each cluster. The plots show the writer profiles. 
+                                 The error bars show the 95% credible intervals."),
                         plotOutput("q_poi_profiles")
                ),
                tabPanel("Results",

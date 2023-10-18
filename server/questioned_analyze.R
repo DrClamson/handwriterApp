@@ -35,8 +35,32 @@ displayImageServer("q_image", q_docs_path)
 
 # questioned doc writer profiles
 output$q_profiles <- renderPlot({
+  # copied body of handwriter::plot_cluster_fill_rates() so I could change plot color to black
   if ( !is.null(q_values$analysis) ){
-    plot_cluster_fill_counts(q_values$analysis, facet = TRUE)
+    formatted_data <- q_values$analysis
+    counts <- formatted_data$cluster_fill_counts
+    rates <- counts
+    rates[, -c(1, 2, 3)] <- rates[, -c(1, 2, 3)]/rowSums(rates[, 
+                                                               -c(1, 2, 3)])
+    single_doc <- ifelse(length(unique(rates$writer)) == length(rates$writer), 
+                         TRUE, FALSE)
+    rates <- rates %>% tidyr::pivot_longer(cols = -c(1, 2, 3), 
+                                           names_to = "cluster", values_to = "rate")
+    rates <- rates %>% dplyr::mutate(writer = factor(writer))
+    if (single_doc) {
+      p <- rates %>% dplyr::mutate(cluster = as.integer(cluster)) %>% 
+        ggplot2::ggplot(aes(x = cluster, y = rate)) + 
+        geom_line() + geom_point() + scale_x_continuous(breaks = as.integer(unique(rates$cluster))) + 
+        theme_bw()
+    }
+    else {
+      p <- rates %>% dplyr::mutate(cluster = as.integer(cluster)) %>% 
+        ggplot2::ggplot(aes(x = cluster, y = rate, group = interaction(writer, doc))) + geom_line() + geom_point() + 
+        scale_x_continuous(breaks = as.integer(unique(rates$cluster))) + 
+        theme_bw() +
+        facet_wrap(~writer)
+    }
+    p
   }
 })
 

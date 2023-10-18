@@ -1,5 +1,5 @@
 tabPanel("Create new template",
-         h2("STEP 2: Create a New Tempalte"),
+         h2("STEP 2: Create a New Template"),
          sidebarLayout(
            sidebarPanel(
              # main dir

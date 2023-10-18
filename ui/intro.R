@@ -7,7 +7,7 @@ tabPanel("Intro",
          br(),
          h3("What's available:"),
          tags$div(tags$ul(
-           tags$li("Explore how handwriter works | See how handwriter decomposes handwriting into component shapes called graphs"),
+           # tags$li("Explore how handwriter works | See how handwriter decomposes handwriting into component shapes called graphs"),
            tags$li("Pre-process documents | Rotate, crop, and mask to clean up your data for use with handwriter"),
            tags$li("Analyze handwriting | Perform writership analysis on questioned documnets")
          ), style = "font-size: 15px"), 
