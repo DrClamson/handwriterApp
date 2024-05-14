@@ -18,15 +18,15 @@ directoryContentsUI <- function(id) {
 displayImageUI <- function(id, label) {
   tagList(
     selectInput(NS(id, "select_image"), label, choices = NA),
-    imageOutput(NS(id, "image"))
+    imageOutput(NS(id, "image"),height = "400px")
   )
 }
 
 # MODULE: start and stop substring indices
-substringIndicesUI <- function(id, start_label, stop_label){
+substringIndicesUI <- function(id, start_label, stop_label,start_val=2,stop_val=5){
   tagList(
-    fluidRow(column(width=3, numericInput(NS(id, "start"), start_label, value=1, min=1, step=1),),
-             column(width=3, numericInput(NS(id, "stop"), stop_label, value=5, min=1, step=1)))
+    fluidRow(column(width=3, numericInput(NS(id, "start"), start_label, value=start_val, min=1, step=1),),
+             column(width=3, numericInput(NS(id, "stop"), stop_label, value=stop_val, min=1, step=1)))
   )
 }
 
@@ -48,7 +48,7 @@ loadUI <- function(id, label) {
 
 # Tab Contents ------------------------------------------------------------
 tabPanel("Questioned Documents",
-         navbarPage("",
+         navset_pill(
                     navbarMenu("Analyze",
                                "STEP 1: Set-Up",
                                source(file.path("ui", "questioned_setup.R"), local = TRUE)$value,

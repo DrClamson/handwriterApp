@@ -19,7 +19,7 @@ tabPanel("Analyze documents",
              
              # settings
              substringIndicesUI("q_writer_indices", "writer start character", "writer stop character"),
-             substringIndicesUI("q_doccode_indices", "doc start character", "doc stop character"),
+             substringIndicesUI("q_doccode_indices", "doc start character", "doc stop character",11,14),
              numericInput("q_cores", "# cores", value=1, min=1, max=100),
              hr(),
              

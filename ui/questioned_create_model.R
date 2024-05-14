@@ -16,7 +16,7 @@ tabPanel("STEP 3: Persons of Interest",
              
              h4("Statistical Model Settings"),
              substringIndicesUI("poi_writer_indices", "writer start character", "writer stop character"),
-             substringIndicesUI("poi_doccode_indices", "doc start character", "doc stop character"),
+             substringIndicesUI("poi_doccode_indices", "doc start character", "doc stop character",11,14),
              fluidRow(column(width=3, numericInput("poi_num_iters", "# MCMC iters", value=4000, min=100, step=1)),
                       column(width=3, numericInput("poi_chains", "# MCMC chains", value=1, min=1, max=10, step=1))),
              fluidRow(column(width=3, numericInput("poi_cores", "# cores", value=2, min=1, max=100, step=1))),
