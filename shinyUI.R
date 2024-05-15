@@ -1,5 +1,5 @@
 ui <- shinyUI({
-  fluidPage(title = "ShoePrintMatcheR",
+  fluidPage(title = "handwriter",
   tags$head(
         tags$link(
             href = "https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900|Ubuntu:400,500,700",
@@ -25,7 +25,7 @@ ui <- shinyUI({
                               tags$style(HTML('#save_document_extract{background-color:#33ADFF} #save_document_extract:hover{background-color:#3398FF} #save_document_extract{color:white}')),
                               tags$style(HTML('#save_batch{background-color:#33ADFF} #save_batch:hover{background-color:#3398FF} #save_batch{color:white}')),
                               tags$style(HTML('#save_mask{background-color:#33ADFF} #save_mask:hover{background-color:#3398FF} #save_mask{color:white}'))),
-                    source(file.path("ui", "home.R"), local = TRUE)$value
+                    source(file.path("ui", "ui_inner.R"), local = TRUE)$value
                   ),
             tabPanel( 
                       "About",
