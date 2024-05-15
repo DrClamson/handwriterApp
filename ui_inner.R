@@ -7,16 +7,15 @@ sidebarLayout(tags$div(id="my-sidebar",
           div(id = "autonomous",
                 tags$h1(class = "responsive-text","GET STARTED"),
                 br(),
-                helpText("Press the following button to start using the app by uploading the bullet data."),
+                helpText("Press the following button to start using the app by uploading handwriting samples."),
                 br(),
                 actionButton("confirm_autonomous", "Begin")#, icon = icon("check"))
             ),
       ),
 
-      ## Bullet Select and manipulate Input 
+      ## Handwriting Sample Select and Manipulate Input 
       conditionalPanel(condition="input.prevreport == 'Upload Bullet'",
-          fluidRow(column(12,uiOutput("bul_x3pui"))),
-          # fluidRow(column(12,actionButton("rot90", label = "Rotate Lands by 90 Degree"),align="center")),
+          fluidRow(column(12, uiOutput("bul_x3pui"))),
           hr()
       ),
       conditionalPanel(condition="input.prevreport == 'Preview Bullet'",
@@ -53,18 +52,18 @@ sidebarLayout(tags$div(id="my-sidebar",
 
       ## Welcome
       tabPanel("Welcome",
-                h3("WELCOME TO BULLETANALYZR!"),
-                p("Our innovation combines 3D imagery and sophisticated algorithms to revolutionize bullet analysis. This prototype demonstrates how our methods can calculate the likelihood of the observed similarity if two bullets originated from the same firearm versus different firearms. It's a work in progress, evolving through feedback from diverse communities."),
+                h3("WELCOME TO HANDWRITER!"),
+                p("The handwriter R package compares a questioned document with writing samples from persons of interest. This prototype demonstrates how our methods calculates the probability that each person of interest wrote the questioned document. It's a work in progress, evolving through feedback from diverse communities."),
       ),
 
       ## Upload Bullet RGL Windows
-      tabPanel("Upload Bullet",uiOutput("lpupload")),
+      tabPanel("Upload Bullet", uiOutput("lpupload")),
 
       ## Upload Bullet RGL Windows
-      tabPanel("Preview Bullet",uiOutput("lpreview")),
+      tabPanel("Preview Bullet", uiOutput("lpreview")),
 
       ## Comparison Report
-      tabPanel("Comparison Report",withSpinner(uiOutput("reportUI")))  
+      tabPanel("Comparison Report", withSpinner(uiOutput("reportUI")))  
     )
   )
 )

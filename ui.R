@@ -9,15 +9,14 @@ library(shinycssloaders)
 library(shinyscreenshot)
 
 ## Load Bullet Libraries
-options(rgl.useNULL = TRUE)
-library(rgl)
+# options(rgl.useNULL = TRUE)
+# library(rgl)
 
 options(shiny.maxRequestSize = 30*1024^2)
 addResourcePath("images", "images")
 
 ui <- shinyUI({
-  fluidPage(title = "App Title",
-  # theme =  bs_theme(),
+  fluidPage(title = "handwriter",
   useShinyjs(),
   tags$head(
         tags$link(
@@ -53,12 +52,7 @@ ui <- shinyUI({
                       hr()
             ),
             tabPanel("Instructions",),
-            tabPanel("Contact",),
-            # tags$li(
-            #   class = "dropdown",
-            #   tags$img(src = "csafe_tools_blue_h.png", style = "height: 50px; padding-top: 10px; padding-right: 10px;"),
-            #   style = "position: absolute; right: 0px; top: 100px;"
-            # )
+            tabPanel("Contact",)
   ))),
   # Footer
   tags$div(id="global-footer",

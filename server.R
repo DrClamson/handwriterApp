@@ -57,7 +57,7 @@ server <- function(input, output, session) {
 	#################################################################################
 	## Bullet Data Upload and Storage 
 	#################################################################################
-	observeEvent(input$confirm_autonomous,{updateTabsetPanel(session, "prevreport", selected = "Upload Bullet")})
+	observeEvent(input$confirm_autonomous, {updateTabsetPanel(session, "prevreport", selected = "Upload Bullet")})
 	#################################################################################
 	#################################################################################
 
