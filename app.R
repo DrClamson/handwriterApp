@@ -1,17 +1,13 @@
 # Shiny handwriter
 
-library(dplyr)
-library(DT)
+library(bslib)
+library(bsicons)
 library(ggplot2)
-library(handwriter)
-library(magick)
 library(shiny)
 library(shinyBS)
-library(shinybusy)
-library(shinyFiles)
+library(shinycssloaders)
 library(shinyjs)
-library(stringr)
-library(bslib)
+library(shinyscreenshot)
 
 print(paste0('working in: ', getwd()))
 addResourcePath("images", "images")
