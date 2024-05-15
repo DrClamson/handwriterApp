@@ -31,9 +31,9 @@ ui <- shinyUI({
   includeCSS("css/styles.css"),
   tags$div(id="app-container",
     fluidRow(
-            column(width = 4,tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/BulletAnalzr-Mark-2.png", width="500px"))),
+            column(width = 4,tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/CSAFE-Tools_Horizontal.png", width="500px"))),
             column(width = 4,br()),
-            column(width = 4,tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/BulletAnalyzr-Design-2.png", width="500px")),align="right"),
+            # column(width = 4,tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/BulletAnalyzr-Design-2.png", width="500px")),align="right"),
         ),
     tags$div(id="main-content",
       # navbarPage(title = div(div(id = "img-id",img(src = "csafe_tools_blue_h.png", alt="Logo", height = "40px"))),
