@@ -85,7 +85,7 @@ html, body {
 #global-footer {
   background-color: #003A70;
   overflow: hidden;
-  height: 80px;  
+  height: 60px;  
 }
 
 #global-navbar a, #global-navbar img, #global-footer a #global-footer p {
@@ -106,7 +106,7 @@ html, body {
 
 #global-footer img {
   height: 60px;
-  margin-top: 10px;
+  margin-top: 00px;
   margin-bottom: 10px;
   margin-left: 20px;
   vertical-align: middle;
@@ -114,7 +114,7 @@ html, body {
 
 #global-footer a, #global-footer p {
   color: white;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 #global-navbar a {

@@ -1,5 +1,24 @@
+## Load Libraries
+library(shiny)
+library(shinyjs)
+library(shinyBS)
+library(ggplot2)
+library(bslib)
+library(bsicons)
+library(shinycssloaders)
+library(shinyscreenshot)
+
+## Load Bullet Libraries
+options(rgl.useNULL = TRUE)
+library(rgl)
+
+options(shiny.maxRequestSize = 30*1024^2)
+addResourcePath("images", "images")
+
 ui <- shinyUI({
-  fluidPage(title = "handwriter",
+  fluidPage(title = "App Title",
+  # theme =  bs_theme(),
+  useShinyjs(),
   tags$head(
         tags$link(
             href = "https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900|Ubuntu:400,500,700",
@@ -11,22 +30,17 @@ ui <- shinyUI({
   ),
   includeCSS("css/styles.css"),
   tags$div(id="app-container",
-    tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/CSAFE-Tools_Horizontal.png", width="300px")),
-    tags$div(id="main-content",navbarPage(NULL,
+    fluidRow(
+            column(width = 4,tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/BulletAnalzr-Mark-2.png", width="500px"))),
+            column(width = 4,br()),
+            column(width = 4,tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/BulletAnalyzr-Design-2.png", width="500px")),align="right"),
+        ),
+    tags$div(id="main-content",
+      # navbarPage(title = div(div(id = "img-id",img(src = "csafe_tools_blue_h.png", alt="Logo", height = "40px"))),
+        navbarPage(NULL,
             tabPanel("Home",
-                    shinyjs::useShinyjs(),
-                    shinyBS:::shinyBSDep,
-                    add_busy_spinner(spin = "fading-circle"),
-                    #span(textOutput("error"), style="color:red"),
-                    tags$head(tags$script(src = "message-handler.js"), 
-                              tags$style(HTML("input[type=\"number\"] {width: 80px;}")),
-                              tags$style(HTML("hr {border-top: 1px solid #000000;}")),
-                              tags$style(HTML('#save_document{background-color:#33ADFF} #save_document:hover{background-color:#3398FF} #save_document{color:white}')),
-                              tags$style(HTML('#save_document_extract{background-color:#33ADFF} #save_document_extract:hover{background-color:#3398FF} #save_document_extract{color:white}')),
-                              tags$style(HTML('#save_batch{background-color:#33ADFF} #save_batch:hover{background-color:#3398FF} #save_batch{color:white}')),
-                              tags$style(HTML('#save_mask{background-color:#33ADFF} #save_mask:hover{background-color:#3398FF} #save_mask{color:white}'))),
-                    source(file.path("ui", "ui_inner.R"), local = TRUE)$value
-                  ),
+              # source("ui_inner.R", local = TRUE)$value,
+            ),
             tabPanel( 
                       "About",
                       h4(HTML("CSAFE Tools is a software suite of state-of-the-art statistical libraries designed to assist practitioners in analyzing forensic data. This work was developed in collaboration with the Center for Statistics and Applications in Forensic Evidence (CSAFE) at Iowa State University and Omni Analytics Group. These procedures are fully open-source and transparent. For more details on the underlying code, please see the <a href='https://github.com/OAITI/bulletmatcher' target='_blank'>GitHub repository</a> for the companion R package.")),
@@ -40,11 +54,16 @@ ui <- shinyUI({
             ),
             tabPanel("Instructions",),
             tabPanel("Contact",),
+            # tags$li(
+            #   class = "dropdown",
+            #   tags$img(src = "csafe_tools_blue_h.png", style = "height: 50px; padding-top: 10px; padding-right: 10px;"),
+            #   style = "position: absolute; right: 0px; top: 100px;"
+            # )
   ))),
   # Footer
   tags$div(id="global-footer",
     fluidRow(
-      column(width = 4,tags$img(src="csafe_tools_blue.png", alt="Logo", height = "60px")),
+      column(width = 4,tags$img(src="csafe_tools_blue_h.png", alt="Logo", height = "40px")),
       column(width = 4,tags$p("195 Durham Center, 613 Morrill Road, Ames, Iowa, 50011")),
       column(width = 4,tags$p("(C) 2023 | All Rights Reserved", class="right-float"))
     )

@@ -7,7 +7,7 @@ sidebarLayout(tags$div(id="my-sidebar",
           div(id = "autonomous",
                 tags$h1(class = "responsive-text","GET STARTED"),
                 br(),
-                helpText("Press the following button to start using the app by uploading handwriting samples."),
+                helpText("Press the following button to start using the app by uploading the bullet data."),
                 br(),
                 actionButton("confirm_autonomous", "Begin")#, icon = icon("check"))
             ),
