@@ -10,11 +10,8 @@ library(randomForest)
 library(dplyr)
 library(DT)
 
-## Load Bullet Libraries
-options(rgl.useNULL = TRUE)
-library(rgl)
-library(x3ptools)
-# library(bulletxtrctr)
+## Load handwriter
+library(handwriter)
 
 ## Config
 options(shiny.maxRequestSize = 30*1024^2)
@@ -97,7 +94,7 @@ server <- function(input, output, session) {
 	#################################################################################
 
 
-  	#################################################################################
+  #################################################################################
 	## Preview Bullets while Uploading Bullet lands
 	#################################################################################
 	output$lpupload <- renderUI({
