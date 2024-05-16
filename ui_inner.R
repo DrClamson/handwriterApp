@@ -14,7 +14,7 @@ sidebarLayout(tags$div(id="my-sidebar",
       ),
 
       ## Handwriting Sample Select and Manipulate Input 
-      conditionalPanel(condition="input.prevreport == 'Upload Questioned Document'",
+      conditionalPanel(condition="input.prevreport == 'Questioned Document'",
           fluidRow(column(12, uiOutput("qd_ui")))
       ),
       conditionalPanel(condition="input.prevreport == 'Preview Bullet'",
@@ -25,7 +25,7 @@ sidebarLayout(tags$div(id="my-sidebar",
       ),
 
       ## Bullet Add to Comparison UI
-      # conditionalPanel(condition="input.prevreport == 'Upload Questioned Document'",
+      # conditionalPanel(condition="input.prevreport == 'Questioned Document'",
       #     fluidRow(
       #       column(12,textInput("bul_x3p_name", label="Bullet Name",value="",placeholder="Bullet Name Here ...")),
       #       column(12,actionButton("up_bull", label = "Add Bullet to Comparison List"),align="center")
@@ -34,7 +34,7 @@ sidebarLayout(tags$div(id="my-sidebar",
       # ),
 
       ## Bullet Comparison UI
-      # conditionalPanel(condition="input.prevreport == 'Upload Questioned Document'",
+      # conditionalPanel(condition="input.prevreport == 'Questioned Document'",
       #     fluidRow(
       #       column(12,uiOutput("bull_sel")),
       #       column(12,actionButton("doprocess", label = "Compare Bullets"),align="center")
@@ -57,12 +57,12 @@ sidebarLayout(tags$div(id="my-sidebar",
                   It's a work in progress, evolving through feedback from diverse communities."),
       ),
 
-      ## Upload Questioned Document RGL Windows
-      tabPanel("Upload Questioned Document", 
-               textOutput("test"),
+      ## Questioned Document RGL Windows
+      tabPanel("Questioned Document", 
+               # textOutput("test"),
                uiOutput("qd_display")),
 
-      ## Upload Questioned Document RGL Windows
+      ## Questioned Document RGL Windows
       tabPanel("Preview Bullet", uiOutput("lpreview")),
 
       ## Comparison Report

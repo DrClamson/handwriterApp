@@ -34,7 +34,7 @@ parse_plot <- function(x, title){
     card_header(class = "bg-dark", title),
     max_height = 300,
     full_screen = TRUE,
-    plotOutput(x, height=300, width=400),
+    plotOutput(x),
   )
 }
 
@@ -120,7 +120,7 @@ server <- function(input, output, session) {
   #################################################################################
   ## QD Upload and Storage 
   #################################################################################
-  observeEvent(input$confirm_autonomous, {updateTabsetPanel(session, "prevreport", selected = "Upload Questioned Document")})
+  observeEvent(input$confirm_autonomous, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
   #################################################################################
   #################################################################################
   
@@ -226,10 +226,49 @@ server <- function(input, output, session) {
                                    doc_indices = c(7, 13))
     values$qd_clusters <- readRDS(file.path(temp_dir, "data", "questioned_clusters", stringr::str_replace(values$qd_name, ".png", ".rds")))
     
-    layout_column_wrap(1, 
-                       parse_image(x="qd_image", title="Questioned Document"),
-                       parse_plot(x="qd_nodes", title="Graphs"),
-                       parse_plot(x="qd_clusters", title="Cluster Fill Counts"))
+    # display qd image, graphs plot, and clusters plot
+    navset_card_tab(
+      height = 450,
+      nav_panel(
+        "Preview",
+        full_screen = TRUE,
+        p(class = "text-muted", "Here is a preview of the selected questioned document."),
+        imageOutput("qd_image")
+      ),
+      nav_panel(
+        "Graphs",
+        full_screen = TRUE,
+        p(class = "text-muted", "The handwriting is split into component shapes called graphs."),
+        plotOutput("qd_nodes")
+      ),
+      nav_panel(
+        "Writer Profile",
+        full_screen = TRUE,
+        p(class = "text-muted", "A writer profile for the questioned document is estimated by grouping the graphs into clusters of 
+          similar shapes and counting the number of graphs in each cluster. The idea is that different writers generally produce different
+          shapes at differing frequencies."),
+        plotOutput("qd_clusters")
+      )
+    )
+    
+    # layout_column_wrap(1/3,
+    #                    card(
+    #                      full_screen = TRUE,
+    #                      card_header(class = "bg-dark", "Questioned Document"),
+    #                      max_height = 300,
+    #                      card_body(imageOutput("qd_image")),
+    #                    ),
+    #                    card(
+    #                      full_screen = TRUE,
+    #                      card_header(class = "bg-dark", "Graphs"),
+    #                      max_height = 300,
+    #                      card_body(plotOutput("qd_nodes")),
+    #                    ),
+    #                    card(
+    #                      full_screen = TRUE,
+    #                      card_header(class = "bg-dark", "Cluster Fill Counts"),
+    #                      card_body(plotOutput("qd_clusters")),
+    #                    ))
     
     # ## Read Bullet
     # progress$set(message = "Reading Bullets", value = .25)
