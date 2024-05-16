@@ -124,15 +124,11 @@ server <- function(input, output, session) {
   #################################################################################
   #################################################################################
   
-  
   #################################################################################
   ## QD Upload and Storage 
   #################################################################################
   ## Reactive object to hold the qd
   values <- reactiveValues()
-  
-  ## UI to upload questioned document
-  output$qd_ui <- renderUI({fileInput("qd_upload", "Select the questioned document", accept = ".png", multiple=FALSE)})
   
   # create temp directory structure copy template there
   temp_dir <- tempfile()
@@ -159,12 +155,14 @@ server <- function(input, output, session) {
   #################################################################################
   #################################################################################
   
-  
   #################################################################################
-  ## Preview QD
+  ## QUESTIONED DOCUMENT
   #################################################################################
   
-  # load qd image for display
+  # UI to upload questioned document
+  output$qd_ui <- renderUI({fileInput("qd_upload", "Select the questioned document", accept = ".png", multiple=FALSE)})
+  
+  # load QD image for display
   observeEvent(input$qd_upload, {
     values$qd_path <- input$qd_upload$datapath
     values$qd_name <- input$qd_upload$name
@@ -196,9 +194,7 @@ server <- function(input, output, session) {
     plot_clusters(values$qd_clusters, K=40)
   })
   
-  ## TESTING ONLY
-  output$test <- renderText({values$test_qd_docs})
-  
+  # UI to dispaly questioned document and plots
   output$qd_display <- renderUI({
     if(is.null(input$qd_upload)) {return(NULL)}
     
@@ -250,59 +246,55 @@ server <- function(input, output, session) {
         plotOutput("qd_clusters")
       )
     )
-    
-    # layout_column_wrap(1/3,
-    #                    card(
-    #                      full_screen = TRUE,
-    #                      card_header(class = "bg-dark", "Questioned Document"),
-    #                      max_height = 300,
-    #                      card_body(imageOutput("qd_image")),
-    #                    ),
-    #                    card(
-    #                      full_screen = TRUE,
-    #                      card_header(class = "bg-dark", "Graphs"),
-    #                      max_height = 300,
-    #                      card_body(plotOutput("qd_nodes")),
-    #                    ),
-    #                    card(
-    #                      full_screen = TRUE,
-    #                      card_header(class = "bg-dark", "Cluster Fill Counts"),
-    #                      card_body(plotOutput("qd_clusters")),
-    #                    ))
-    
-    # ## Read Bullet
-    # progress$set(message = "Reading Bullets", value = .25)
-    # bull <- read_bullet(temp_dir)
-    # bull$x3p <- lapply(bull$x3p,x3p_m_to_mum)
-    # bull$x3pv <- bull$x3p
-    # bull$x3p <- lapply(bull$x3p,function(x) y_flip_x3p(rotate_x3p(x,angle = -90)))
-    # bull$md5sum <- tools::md5sum(bull$source)
-    # bull$filename <- basename(bull$source)
-    # bulldata$cbull <- bull
-    
-    # ## Render Bullet
-    # progress$set(message = "Rendering Previews", value = .75)
-    # for(idx in 1:nrow(bull))
-    # {
-    # 	local({
-    # 			cidx <- idx
-    # 			output[[paste0("x3prgl",idx)]] <- renderRglwidget({
-    # 																image_x3p(x3p_sample(bull$x3pv[[cidx]],m=5),zoom=1)
-    # 																rglwidget()
-    # 												})
-    # 		})
-    # }
-    
-    # ## UI
-    # layout_column_wrap(
-    # 	width = 1/3,
-    # 	!!!lapply(1:nrow(bull),parse_rglui)
-    # )
   })
   
   #################################################################################
   #################################################################################
   
+  #################################################################################
+  ## KNOWN WRITING
+  #################################################################################
+  ## UI to upload known writing samples
+  output$known_ui <- renderUI({fileInput("known_upload", "Select the known writing samples", accept = ".png", multiple=TRUE)})
+  
+  # load known images
+  observeEvent(input$known_upload, {
+    values$known_paths <- input$known_upload$datapath
+    values$known_names <- input$known_upload$name
+    
+    # values$known_image <- NULL
+    # values$known_image <- magick::image_read(values$known_path)
+    # info <- image_info(values$known_image)
+    
+    # copy known docs to temp directory
+    lapply(1:length(values$known_paths), function(i) file.copy(values$known_paths[i], file.path(temp_dir, "data", "model_docs", values$known_names[i])))
+    
+    # list known docs
+    values$known_docs <- data.frame('files' = list.files(file.path(temp_dir, "data", "model_docs")))
+  })
+  
+  output$known_docs <- renderTable({values$known_docs})
+  
+  # UI to dispaly known handwriting samples and plots
+  output$known_display <- renderUI({
+    if(is.null(input$known_upload)) {return(NULL)}
+    
+    progress <- shiny::Progress$new(); on.exit(progress$close())
+    
+    ## Refresh on Tab Change
+    temp_refresh <- input$prevreport
+    
+    # display
+    navset_card_tab(
+      height = 450,
+      nav_panel(
+        "Samples",
+        full_screen = TRUE,
+        p(class = "text-muted", "These are the selected known writing samples."),
+        tableOutput("known_docs")
+      )
+    )
+  })
   
   #################################################################################
   ## Preview Bullet Selection

@@ -13,12 +13,14 @@ sidebarLayout(tags$div(id="my-sidebar",
             ),
       ),
 
-      ## Handwriting Sample Select and Manipulate Input 
+      ## Select Questioned Document
       conditionalPanel(condition="input.prevreport == 'Questioned Document'",
           fluidRow(column(12, uiOutput("qd_ui")))
       ),
-      conditionalPanel(condition="input.prevreport == 'Preview Bullet'",
-          uiOutput("prevSelUI"),
+      
+      ## Select Known Writing Samples
+      conditionalPanel(condition="input.prevreport == 'Known Writing'",
+          uiOutput("known_ui"),
       ),
       conditionalPanel(condition="input.prevreport == 'Comparison Report'",
           uiOutput("reportSelUI"),
@@ -57,13 +59,16 @@ sidebarLayout(tags$div(id="my-sidebar",
                   It's a work in progress, evolving through feedback from diverse communities."),
       ),
 
-      ## Questioned Document RGL Windows
+      ## Questioned Document 
       tabPanel("Questioned Document", 
                # textOutput("test"),
                uiOutput("qd_display")),
 
-      ## Questioned Document RGL Windows
-      tabPanel("Preview Bullet", uiOutput("lpreview")),
+      ## Known Writing
+      tabPanel("Known Writing", 
+               tableOutput("known_display")
+               # uiOutput("lpreview")
+               ),
 
       ## Comparison Report
       tabPanel("Comparison Report", withSpinner(uiOutput("reportUI")))  
