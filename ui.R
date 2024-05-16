@@ -1,17 +1,19 @@
 ## Load Libraries
-library(shiny)
-library(shinyjs)
-library(shinyBS)
-library(ggplot2)
-library(bslib)
 library(bsicons)
+library(bslib)
+library(ggplot2)
+library(magick)
+library(shiny)
+library(shinyBS)
 library(shinycssloaders)
+library(shinyjs)
 library(shinyscreenshot)
 
 ## Load Bullet Libraries
 # options(rgl.useNULL = TRUE)
 # library(rgl)
 
+# increase maximum allowed file size
 options(shiny.maxRequestSize = 30*1024^2)
 addResourcePath("images", "images")
 
@@ -32,10 +34,8 @@ ui <- shinyUI({
     fluidRow(
             column(width = 4,tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/CSAFE-Tools_Horizontal.png", width="500px"))),
             column(width = 4,br()),
-            # column(width = 4,tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/BulletAnalyzr-Design-2.png", width="500px")),align="right"),
         ),
     tags$div(id="main-content",
-      # navbarPage(title = div(div(id = "img-id",img(src = "csafe_tools_blue_h.png", alt="Logo", height = "40px"))),
         navbarPage(NULL,
             tabPanel("Home",
               source("ui_inner.R", local = TRUE)$value,
