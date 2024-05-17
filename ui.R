@@ -6,6 +6,7 @@ library(magick)
 library(shiny)
 library(shinyBS)
 library(shinycssloaders)
+library(shinyFiles)
 library(shinyjs)
 library(shinyscreenshot)
 

@@ -17,9 +17,14 @@ library(handwriter)
 options(shiny.maxRequestSize = 30*1024^2)
 addResourcePath("images", "images")
 
-#################################################################################
-## Helper Functions
-#################################################################################
+
+# HELPER FUNCTIONS --------------------------------------------------------
+create_dir <- function(folder){
+  if (!dir.exists(folder)){
+    dir.create(folder)
+  }
+}
+
 parse_image <- function(x, title){
   card(
     card_header(class = "bg-dark", title),
@@ -111,34 +116,56 @@ plot_clusters <- function (clusters, K=40, facet = TRUE) {
 # 	snapshot3d(imgsrc,webshot=TRUE)
 # 	return(imgsrc)
 # }
-#################################################################################
-#################################################################################
 
+
+# SERVER ------------------------------------------------------------------
 
 server <- function(input, output, session) {
+
+  observeEvent(input$confirm_autonomous, {updateTabsetPanel(session, "prevreport", selected = "Folders")})
+
+# STORAGE ----
+  global <- reactiveValues(main_dir = getwd())
   
-  #################################################################################
-  ## QD Upload and Storage 
-  #################################################################################
-  observeEvent(input$confirm_autonomous, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
-  #################################################################################
-  #################################################################################
+
+# FOLDERS -----------------------------------------------------------------
+  shinyDirChoose(
+    input,
+    'main_dir',
+    roots = c(home = '~'),
+    filetypes = c('', 'txt', 'bigWig', "tsv", "csv", "bw")
+  )
   
-  #################################################################################
-  ## QD Upload and Storage 
-  #################################################################################
-  ## Reactive object to hold the qd
-  values <- reactiveValues()
+  dir <- reactive(input$main_dir)
   
-  # create temp directory structure copy template there
-  temp_dir <- tempfile()
-  dir.create(temp_dir)
-  dir.create(file.path(temp_dir, "data"))
-  dir.create(file.path(temp_dir, "data", "questioned_docs"))
-  dir.create(file.path(temp_dir, "data", "questioned_graphs"))
-  dir.create(file.path(temp_dir, "data", "model_docs"))
-  # copy template to temp dir
-  file.copy(file.path("data", "template.RDS"), file.path(temp_dir, "data", "template.RDS"))
+  output$dir <- renderText({
+    global$main_dir
+  })
+  
+  # update main directory to the selected directory
+  observeEvent(ignoreNULL = TRUE,
+               eventExpr = {
+                 input$main_dir
+               },
+               handlerExpr = {
+                 if (!"path" %in% names(dir())) {
+                   return()
+                 }
+                 home <- normalizePath("~")
+                 # update main directory
+                 global$main_dir <- file.path(home, paste(unlist(dir()$path[-1]), collapse = .Platform$file.sep))
+  })
+  
+  observeEvent(input$main_dir, {
+    # create directory structure copy template there
+    create_dir(file.path(global$main_dir, "data"))
+    create_dir(file.path(global$main_dir, "data", "questioned_docs"))
+    create_dir(file.path(global$main_dir, "data", "questioned_graphs"))
+    create_dir(file.path(global$main_dir, "data", "model_docs"))
+    
+    # copy template to directory
+    file.copy(file.path("data", "template.RDS"), file.path(global$main_dir, "data", "template.RDS"))
+  })
   
   ## Push current bullet data to all bullet data object
   # observeEvent(input$up_bull,{
@@ -152,77 +179,73 @@ server <- function(input, output, session) {
   # 							disable("up_bull")
   # 			})
   
-  #################################################################################
-  #################################################################################
-  
-  #################################################################################
-  ## QUESTIONED DOCUMENT
-  #################################################################################
-  
+
+# QUESTIONED DOCUMENT ----
+
   # UI to upload questioned document
   output$qd_ui <- renderUI({fileInput("qd_upload", "Select the questioned document", accept = ".png", multiple=FALSE)})
   
-  # load QD image for display
+  # load QD image for display and copy to temp dir > data > questioned_docs
   observeEvent(input$qd_upload, {
-    values$qd_path <- input$qd_upload$datapath
-    values$qd_name <- input$qd_upload$name
+    global$qd_path <- input$qd_upload$datapath
+    global$qd_name <- input$qd_upload$name
     
-    values$qd_image <- NULL
-    values$qd_image <- magick::image_read(values$qd_path)
-    # info <- image_info(values$qd_image)
+    global$qd_image <- NULL
+    global$qd_image <- magick::image_read(global$qd_path)
+    # info <- image_info(global$qd_image)
     
     # copy qd to temp directory
-    file.copy(values$qd_path, file.path(temp_dir, "data", "questioned_docs", values$qd_name))
+    file.copy(global$qd_path, file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
     
     # testing only
-    values$test_qd_docs <- list.files(file.path(temp_dir, "data", "questioned_docs"))
+    global$test_qd_docs <- list.files(file.path(global$main_dir, "data", "questioned_docs"))
   })
   
   output$qd_image <- renderImage({
-    tmp <- values$qd_image %>%
+    tmp <- global$qd_image %>%
       image_write(tempfile(fileext='png'), format = 'png')
     
-    # Return a list
+    # return a list
     list(src = tmp, contentType = "image/png")
   }, deleteFile = FALSE)
   
   output$qd_nodes <- renderPlot({
-    handwriter::plotNodes(values$doc, nodeSize = 2)
+    handwriter::plotNodes(global$doc, nodeSize = 2)
   })
   
-  output$qd_clusters <- renderPlot({
-    plot_clusters(values$qd_clusters, K=40)
+  output$qd_profiles <- renderPlot({
+    plot_clusters(global$qd_profiles, K=40)
   })
   
-  # UI to dispaly questioned document and plots
+  # UI to display QD and plots
   output$qd_display <- renderUI({
     if(is.null(input$qd_upload)) {return(NULL)}
     
     progress <- shiny::Progress$new(); on.exit(progress$close())
     
-    ## Refresh on Tab Change
+    # refresh on Tab Change
     temp_refresh <- input$prevreport
     
-    # Process and save document
+    # process and save document to global$main_dir > data > questioned_graphs
     progress$set(message = "Processing document", value = .25)
-    values$doc <- handwriter::processDocument(file.path(temp_dir, "data", "questioned_docs", values$qd_name))
-    saveRDS(values$doc, file.path(temp_dir, "data", "questioned_graphs", stringr::str_replace(values$qd_name, ".png", "_proclist.rds")))
+    global$doc <- handwriter::processDocument(file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
+    saveRDS(global$doc, file.path(global$main_dir, "data", "questioned_graphs", stringr::str_replace(global$qd_name, ".png", "_proclist.rds")))
     
-    # Load template
+    # load template
     progress$set(message = "Loading cluster template", value = .5)
-    values$template <- readRDS(file.path(temp_dir, "data", "template.RDS"))
+    global$template <- readRDS(file.path(global$main_dir, "data", "template.RDS"))
     
-    # Get cluster fill counts
+    # get cluster fill counts
     progress$set(message = "Getting cluster fill counts", value = .5)
     # TO-DO: allow user to set writer and doc indices
-    handwriter::get_clusters_batch(template = values$template,
-                                   input_dir = file.path(temp_dir, "data", "questioned_graphs"),
-                                   output_dir = file.path(temp_dir, "data", "questioned_clusters"),
+    handwriter::get_clusters_batch(template = global$template,
+                                   input_dir = file.path(global$main_dir, "data", "questioned_graphs"),
+                                   output_dir = file.path(global$main_dir, "data", "questioned_clusters"),
                                    writer_indices = c(2, 5),
                                    doc_indices = c(7, 13))
-    values$qd_clusters <- readRDS(file.path(temp_dir, "data", "questioned_clusters", stringr::str_replace(values$qd_name, ".png", ".rds")))
+    global$qd_profiles <- readRDS(file.path(global$main_dir, "data", "questioned_clusters", stringr::str_replace(global$qd_name, ".png", ".rds")))
     
-    # display qd image, graphs plot, and clusters plot
+    # display QD image, graphs plot, and clusters plot
     navset_card_tab(
       height = 450,
       nav_panel(
@@ -243,46 +266,52 @@ server <- function(input, output, session) {
         p(class = "text-muted", "A writer profile for the questioned document is estimated by grouping the graphs into clusters of 
           similar shapes and counting the number of graphs in each cluster. The idea is that different writers generally produce different
           shapes at differing frequencies."),
-        plotOutput("qd_clusters")
+        plotOutput("qd_profiles")
       )
     )
   })
   
-  #################################################################################
-  #################################################################################
   
-  #################################################################################
-  ## KNOWN WRITING
-  #################################################################################
+# KNOWN WRITING ----
   ## UI to upload known writing samples
   output$known_ui <- renderUI({fileInput("known_upload", "Select the known writing samples", accept = ".png", multiple=TRUE)})
   
-  # load known images
+  # load known images and save to temp directory > data > model_docs
   observeEvent(input$known_upload, {
-    values$known_paths <- input$known_upload$datapath
-    values$known_names <- input$known_upload$name
-    
-    # values$known_image <- NULL
-    # values$known_image <- magick::image_read(values$known_path)
-    # info <- image_info(values$known_image)
-    
-    # copy known docs to temp directory
-    lapply(1:length(values$known_paths), function(i) file.copy(values$known_paths[i], file.path(temp_dir, "data", "model_docs", values$known_names[i])))
+    global$known_paths <- input$known_upload$datapath
+    global$known_names <- input$known_upload$name
+
+    # copy known docs to temp directory > data > model_docs
+    lapply(1:length(global$known_paths), function(i) file.copy(global$known_paths[i], file.path(global$main_dir, "data", "model_docs", global$known_names[i])))
     
     # list known docs
-    values$known_docs <- data.frame('files' = list.files(file.path(temp_dir, "data", "model_docs")))
+    global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs")))
   })
   
-  output$known_docs <- renderTable({values$known_docs})
+  output$known_docs <- renderTable({global$known_docs})
   
-  # UI to dispaly known handwriting samples and plots
+  output$known_profiles <- renderPlot({handwriter::plot_cluster_fill_counts(formatted_data = model,
+                                                                            facet = TRUE)})
+  
+  # UI to display known handwriting samples and plots
   output$known_display <- renderUI({
     if(is.null(input$known_upload)) {return(NULL)}
     
     progress <- shiny::Progress$new(); on.exit(progress$close())
     
-    ## Refresh on Tab Change
-    temp_refresh <- input$prevreport
+    # # refresh on Tab Change
+    # temp_refresh <- input$prevreport
+    
+    # TO-DO: Allow users to change writer indices and doc indices 
+    progress$set(message = "Fitting statistical model", value = .5)
+    global$model <- handwriter::fit_model(template_dir = global$main_dir,
+                                          model_images_dir = file.path(global$main_dir, "data", "model_docs"),
+                                          num_iters = 10,
+                                          num_chains = 1,
+                                          num_cores = 1,
+                                          writer_indices = c(2, 5),
+                                          doc_indices = c(7, 18),
+    )
     
     # display
     navset_card_tab(
@@ -292,6 +321,11 @@ server <- function(input, output, session) {
         full_screen = TRUE,
         p(class = "text-muted", "These are the selected known writing samples."),
         tableOutput("known_docs")
+      ),
+      nav_panel(
+        "Profiles",
+        full_screen = TRUE,
+        plotOutput("known_profiles")
       )
     )
   })
@@ -695,7 +729,7 @@ server <- function(input, output, session) {
   # 									  geom_tile() +
   # 									  labs(fill="Bullet Score") +
   # 									  scale_fill_gradient2(low = "grey80", high = "darkorange", midpoint = .5) +
-  # 									  scale_colour_manual(values = c("black", "black")) +
+  # 									  scale_colour_manual(global = c("black", "black")) +
   # 									  geom_tile(size = 1, data = bullet_scores %>% filter(selsource)) +
   # 									  geom_text(aes(label = round(bullet_score, 2)),size=6) +
   # 									  xlab("Bullet Name") +
@@ -723,7 +757,7 @@ server <- function(input, output, session) {
   # 									  geom_tile() +
   # 									  labs(fill="Land Score") +
   # 									  scale_fill_gradient2(low = "grey80", high = "darkorange", midpoint = .5) +
-  # 									  scale_colour_manual(values = c("black", "black")) +
+  # 									  scale_colour_manual(global = c("black", "black")) +
   # 									  geom_tile(size = 1, data = features %>% filter(samesource)) +
   # 									  geom_text(aes(label = round(rfscore, 2)),size=6) +
   # 									  xlab(paste0("Land Name","(Bullet ",features$bulletA[1],")")) +

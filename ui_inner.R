@@ -12,6 +12,17 @@ sidebarLayout(tags$div(id="my-sidebar",
                 actionButton("confirm_autonomous", "Begin")
             ),
       ),
+      
+      conditionalPanel(condition="input.prevreport == 'Folders'",
+                       div(id = "folders",
+                           tags$h1(class = "responsive-text", "WORKING FOLDER"),
+                           br(),
+                           helpText("Choose a folder in which to save the results."),
+                           br(),
+                           shinyDirButton("main_dir", "Working folder", "Upload"),
+                           verbatimTextOutput("dir", placeholder = TRUE)
+                       ),
+      ),
 
       ## Select Questioned Document
       conditionalPanel(condition="input.prevreport == 'Questioned Document'",
@@ -57,6 +68,11 @@ sidebarLayout(tags$div(id="my-sidebar",
                 p("The handwriter R package compares a questioned document with writing samples from persons of interest. 
                   This prototype demonstrates how our methods calculates the probability that each person of interest wrote the questioned document. 
                   It's a work in progress, evolving through feedback from diverse communities."),
+      ),
+      
+      ## Folders
+      tabPanel("Folders",
+
       ),
 
       ## Questioned Document 
