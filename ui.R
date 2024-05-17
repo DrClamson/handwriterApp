@@ -33,11 +33,13 @@ ui <- shinyUI({
   includeCSS("css/styles.css"),
   tags$div(id="app-container",
     fluidRow(
-            column(width = 4,tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/CSAFE-Tools_Horizontal.png", width="500px"))),
-            column(width = 4,br()),
+            column(width = 4, tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/CSAFE_Tools_handwriter_cropped.png", height="100px"))),
+            column(width = 4, br()),
+            column(width = 4, tags$a(target = "_blank", href="https://forensicstats.org", tags$img(src = "images/handwriter graphic.png", height="100px"), class="right-float")),
         ),
     tags$div(id="main-content",
-        navbarPage(NULL,
+        navbarPage(
+          tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><a href=\"https://forensicstats.org\"><img src=\"images/CSAFE-Tools_Stacked_white_cropped.png\" alt=\"alt\" style=\"float:right;width:117px;height:50px;padding-right:5px;\"> </a></div>'); console.log(header)")),
             tabPanel("Home",
               source("ui_inner.R", local = TRUE)$value,
             ),
