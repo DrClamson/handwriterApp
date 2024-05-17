@@ -176,9 +176,9 @@ html, body {
 
 .modal-dialog {
     position: fixed; /* Or 'absolute' depending on your layout */
-    top: 30%;
-    left: 45%;
-    transform: translate(-45%, -30%);
+    top: 10%;
+    left: 10%;
+    transform: translate(-10%, -10%);
 }
 
 .responsive-text {
