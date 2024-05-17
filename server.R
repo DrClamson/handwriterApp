@@ -290,7 +290,7 @@ server <- function(input, output, session) {
   
   output$known_docs <- renderTable({global$known_docs})
   
-  output$known_profiles <- renderPlot({handwriter::plot_cluster_fill_counts(formatted_data = model,
+  output$known_profiles <- renderPlot({handwriter::plot_cluster_fill_counts(formatted_data = global$model,
                                                                             facet = TRUE)})
   
   # UI to display known handwriting samples and plots
@@ -304,6 +304,7 @@ server <- function(input, output, session) {
     
     # TO-DO: Allow users to change writer indices and doc indices 
     progress$set(message = "Fitting statistical model", value = .5)
+    # TO-DO: I had to manually delete the problems.txt file from data > model_graphs for fit_model to run
     global$model <- handwriter::fit_model(template_dir = global$main_dir,
                                           model_images_dir = file.path(global$main_dir, "data", "model_docs"),
                                           num_iters = 10,
