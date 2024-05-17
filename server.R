@@ -121,14 +121,16 @@ plot_clusters <- function (clusters, K=40, facet = TRUE) {
 # SERVER ------------------------------------------------------------------
 
 server <- function(input, output, session) {
+  
+# NEXT BUTTONS ----
+  shinyjs::disable("next_main_dir")
 
-  observeEvent(input$confirm_autonomous, {updateTabsetPanel(session, "prevreport", selected = "Folders")})
-
+  
 # STORAGE ----
   global <- reactiveValues(main_dir = getwd())
   
 
-# FOLDERS -----------------------------------------------------------------
+# FOLDERS ----
   shinyDirChoose(
     input,
     'main_dir',
@@ -138,6 +140,7 @@ server <- function(input, output, session) {
   
   dir <- reactive(input$main_dir)
   
+  # dispaly folder path below button
   output$dir <- renderText({
     global$main_dir
   })
@@ -165,7 +168,12 @@ server <- function(input, output, session) {
     
     # copy template to directory
     file.copy(file.path("data", "template.RDS"), file.path(global$main_dir, "data", "template.RDS"))
+    
+    # enable next button
+    shinyjs::enable("next_main_dir")
   })
+  
+  observeEvent(input$next_main_dir, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
   
   ## Push current bullet data to all bullet data object
   # observeEvent(input$up_bull,{

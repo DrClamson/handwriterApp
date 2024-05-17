@@ -4,26 +4,18 @@ sidebarLayout(tags$div(id="my-sidebar",
 
       ## Welcome Page
       conditionalPanel(condition="input.prevreport == 'Welcome'",
-          div(id = "autonomous",
-                tags$h1(class = "responsive-text","GET STARTED"),
-                br(),
-                helpText("Press the following button to start using the app by uploading handwriting samples."),
-                br(),
-                actionButton("confirm_autonomous", "Begin")
-            ),
-      ),
-      
-      conditionalPanel(condition="input.prevreport == 'Folders'",
-                       div(id = "folders",
-                           tags$h1(class = "responsive-text", "WORKING FOLDER"),
+                       div(id = "autonomous",
+                           tags$h1(class = "responsive-text","GET STARTED"),
                            br(),
-                           helpText("Choose a folder in which to save the results."),
+                           helpText("Choose a working folder to get started."),
                            br(),
                            shinyDirButton("main_dir", "Working folder", "Upload"),
-                           verbatimTextOutput("dir", placeholder = TRUE)
+                           verbatimTextOutput("dir", placeholder = TRUE),
+                           br(),
+                           actionButton("next_main_dir", "Next")
                        ),
       ),
-
+      
       ## Select Questioned Document
       conditionalPanel(condition="input.prevreport == 'Questioned Document'",
           fluidRow(column(12, uiOutput("qd_ui")))
@@ -64,26 +56,25 @@ sidebarLayout(tags$div(id="my-sidebar",
 
       ## Welcome
       tabPanel("Welcome",
-                h3("WELCOME TO HANDWRITER!"),
-                p("The handwriter R package compares a questioned document with writing samples from persons of interest. 
+               h3("WELCOME TO HANDWRITER!"),
+               p("The handwriter R package compares a questioned document with writing samples from persons of interest. 
                   This prototype demonstrates how our methods calculates the probability that each person of interest wrote the questioned document. 
                   It's a work in progress, evolving through feedback from diverse communities."),
-      ),
-      
-      ## Folders
-      tabPanel("Folders",
-
+               br(),
+               h4("Getting Started"),
+               p("Get started by choosing a working folder with the button to the left. The handwriter app will save files to this folder
+                 as you analyze a questioned document. The working folder can be empty if you starting a analysis. If you would like to 
+                 continue an analysis, select the appropriate folder as the working folder."),
+               br()
       ),
 
       ## Questioned Document 
       tabPanel("Questioned Document", 
-               # textOutput("test"),
                uiOutput("qd_display")),
 
       ## Known Writing
       tabPanel("Known Writing", 
-               tableOutput("known_display")
-               # uiOutput("lpreview")
+               uiOutput("known_display")
                ),
 
       ## Comparison Report
