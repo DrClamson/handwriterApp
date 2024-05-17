@@ -123,11 +123,15 @@ plot_clusters <- function (clusters, K=40, facet = TRUE) {
 server <- function(input, output, session) {
   
 # NEXT BUTTONS ----
-  shinyjs::disable("next_main_dir")
+  shinyjs::disable("main_next_button")
+  shinyjs::disable("qd_next_button")
+  
+  observeEvent(input$begin_button, {updateTabsetPanel(session, "prevreport", selected = "Main Folder")})
+  observeEvent(input$main_next_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
 
   
 # STORAGE ----
-  global <- reactiveValues(main_dir = getwd())
+  global <- reactiveValues(main_dir = NULL)
   
 
 # FOLDERS ----
@@ -140,59 +144,45 @@ server <- function(input, output, session) {
   
   dir <- reactive(input$main_dir)
   
-  # dispaly folder path below button
+  # display folder path below button
   output$dir <- renderText({
     global$main_dir
   })
   
   # update main directory to the selected directory
-  observeEvent(ignoreNULL = TRUE,
+  observeEvent(ignoreInit = TRUE,
                eventExpr = {
                  input$main_dir
                },
                handlerExpr = {
+                 # update main directory
                  if (!"path" %in% names(dir())) {
                    return()
                  }
                  home <- normalizePath("~")
-                 # update main directory
                  global$main_dir <- file.path(home, paste(unlist(dir()$path[-1]), collapse = .Platform$file.sep))
+                 
+                 # create directory structure in main directory
+                 create_dir(file.path(global$main_dir, "data"))
+                 create_dir(file.path(global$main_dir, "data", "questioned_docs"))
+                 create_dir(file.path(global$main_dir, "data", "questioned_graphs"))
+                 create_dir(file.path(global$main_dir, "data", "model_docs"))
+                 
+                 # copy template to main directory > data
+                 file.copy(file.path("data", "template.RDS"), file.path(global$main_dir, "data", "template.RDS"))
+                 
+                 # enable next button
+                 shinyjs::enable("main_next_button")
   })
   
-  observeEvent(input$main_dir, {
-    # create directory structure copy template there
-    create_dir(file.path(global$main_dir, "data"))
-    create_dir(file.path(global$main_dir, "data", "questioned_docs"))
-    create_dir(file.path(global$main_dir, "data", "questioned_graphs"))
-    create_dir(file.path(global$main_dir, "data", "model_docs"))
-    
-    # copy template to directory
-    file.copy(file.path("data", "template.RDS"), file.path(global$main_dir, "data", "template.RDS"))
-    
-    # enable next button
-    shinyjs::enable("next_main_dir")
+  observeEvent(ignoreInit = TRUE,
+               input$main_dir, {
+
   })
-  
-  observeEvent(input$next_main_dir, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
-  
-  ## Push current bullet data to all bullet data object
-  # observeEvent(input$up_bull,{
-  # 							# if(nrow(bulldata$cbull)==0) return(NULL)
-  # 							allbull <- bulldata$allbull
-  # 							allbull <- allbull[!(allbull$bullet %in% input$bul_x3p_name),]
-  # 							bull <- bulldata$cbull
-  # 							bull$bullet <- input$bul_x3p_name
-  # 							bull$land <- 1:nrow(bull)
-  # 							bulldata$allbull <- rbind(allbull,bull)
-  # 							disable("up_bull")
-  # 			})
   
 
 # QUESTIONED DOCUMENT ----
 
-  # UI to upload questioned document
-  output$qd_ui <- renderUI({fileInput("qd_upload", "Select the questioned document", accept = ".png", multiple=FALSE)})
-  
   # load QD image for display and copy to temp dir > data > questioned_docs
   observeEvent(input$qd_upload, {
     global$qd_path <- input$qd_upload$datapath
@@ -204,6 +194,9 @@ server <- function(input, output, session) {
     
     # copy qd to temp directory
     file.copy(global$qd_path, file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
+    
+    # enable next button
+    shinyjs::enable("qd_next_button")
     
     # testing only
     global$test_qd_docs <- list.files(file.path(global$main_dir, "data", "questioned_docs"))
@@ -231,8 +224,8 @@ server <- function(input, output, session) {
     
     progress <- shiny::Progress$new(); on.exit(progress$close())
     
-    # refresh on Tab Change
-    temp_refresh <- input$prevreport
+    # # refresh on Tab Change
+    # temp_refresh <- input$prevreport
     
     # process and save document to global$main_dir > data > questioned_graphs
     progress$set(message = "Processing document", value = .25)
@@ -279,6 +272,7 @@ server <- function(input, output, session) {
     )
   })
   
+  observeEvent(input$qd_next_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
   
 # KNOWN WRITING ----
   ## UI to upload known writing samples

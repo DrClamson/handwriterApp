@@ -2,51 +2,51 @@ sidebarLayout(tags$div(id="my-sidebar",
   sidebarPanel(width=3,
     fluidPage(
 
-      ## Welcome Page
+      # Welcome UI ----
       conditionalPanel(condition="input.prevreport == 'Welcome'",
                        div(id = "autonomous",
                            tags$h1(class = "responsive-text","GET STARTED"),
                            br(),
-                           helpText("Choose a working folder to get started."),
+                           helpText("Press the following button to start using the app to compare a questioned document to known writing samples."),
                            br(),
-                           shinyDirButton("main_dir", "Working folder", "Upload"),
-                           verbatimTextOutput("dir", placeholder = TRUE),
-                           br(),
-                           actionButton("next_main_dir", "Next")
+                           actionButton("begin_button", "Begin")
                        ),
       ),
       
-      ## Select Questioned Document
-      conditionalPanel(condition="input.prevreport == 'Questioned Document'",
-          fluidRow(column(12, uiOutput("qd_ui")))
+      # Main Folder UI ----
+      conditionalPanel(condition="input.prevreport == 'Main Folder'",
+                       div(id = "autonomous",
+                           helpText("Choose an empty folder or a folder that contains handwriter analyses."),
+                           br(),
+                           shinyDirButton("main_dir", "Main folder", "Select a folder"),
+                           verbatimTextOutput("dir", placeholder = TRUE),
+                           br(),
+                           actionButton("main_next_button", "Next")
+                       ),
       ),
       
-      ## Select Known Writing Samples
+      # Questioned Document UI ----
+      conditionalPanel(condition="input.prevreport == 'Questioned Document'",
+                       div(id = "autonomous",
+                           helpText("Select the questioned document."),
+                           br(),
+                           fileInput("qd_upload", "", accept = ".png", multiple=FALSE),
+                           br(),
+                           actionButton("qd_next_button", "Next"),
+                       ),
+      ),
+      
+      # Known Writing UI ----
       conditionalPanel(condition="input.prevreport == 'Known Writing'",
           uiOutput("known_ui"),
       ),
+      
+      # Report UI ----
       conditionalPanel(condition="input.prevreport == 'Comparison Report'",
           uiOutput("reportSelUI"),
       ),
 
-      ## Bullet Add to Comparison UI
-      # conditionalPanel(condition="input.prevreport == 'Questioned Document'",
-      #     fluidRow(
-      #       column(12,textInput("bul_x3p_name", label="Bullet Name",value="",placeholder="Bullet Name Here ...")),
-      #       column(12,actionButton("up_bull", label = "Add Bullet to Comparison List"),align="center")
-      #     ),
-      #     hr(),
-      # ),
-
-      ## Bullet Comparison UI
-      # conditionalPanel(condition="input.prevreport == 'Questioned Document'",
-      #     fluidRow(
-      #       column(12,uiOutput("bull_sel")),
-      #       column(12,actionButton("doprocess", label = "Compare Bullets"),align="center")
-      #     ),
-      # ),
-
-      ## Download Report Button
+      # Report Button UI ----
       conditionalPanel(condition="input.prevreport == 'Comparison Report'",
           uiOutput("reportDownUI"),
       ),
@@ -54,30 +54,35 @@ sidebarLayout(tags$div(id="my-sidebar",
   mainPanel(
     tabsetPanel(id="prevreport",
 
-      ## Welcome
+      # Welcome Display ----
       tabPanel("Welcome",
                h3("WELCOME TO HANDWRITER!"),
-               p("The handwriter R package compares a questioned document with writing samples from persons of interest. 
-                  This prototype demonstrates how our methods calculates the probability that each person of interest wrote the questioned document. 
-                  It's a work in progress, evolving through feedback from diverse communities."),
+               p("Unlock the power of handwriting analysis with handwriter. Made to aid forensic examiners in their work,
+                 this tool analyzes a handwritten document against a closed set of potential writers to determine the probability
+                 that each writer wrote the document. Whether you are a forensic document examiner, legal professional, academic,
+                 or simply curious about how statistics are applied to handwriting, handwriter provides a cutting-edge way to 
+                 evaluate handwriting samples."),
                br(),
-               h4("Getting Started"),
-               p("Get started by choosing a working folder with the button to the left. The handwriter app will save files to this folder
-                 as you analyze a questioned document. The working folder can be empty if you starting a analysis. If you would like to 
-                 continue an analysis, select the appropriate folder as the working folder."),
+      ),
+      
+      # Main Folder Display ----
+      tabPanel("Main Folder",
+               p("Choose a main folder with the button to the left. The app will save files to this folder
+                 as you analyze a questioned document. The main folder can be empty if you are starting a new analysis. 
+                 If you would like to continue an analysis, select the appropriate folder as the main folder."),
                br()
       ),
 
-      ## Questioned Document 
+      # Questioned Document Display ----
       tabPanel("Questioned Document", 
                uiOutput("qd_display")),
 
-      ## Known Writing
+      # Known Writing Display ----
       tabPanel("Known Writing", 
                uiOutput("known_display")
                ),
 
-      ## Comparison Report
+      # Comparison Report Display ----
       tabPanel("Comparison Report", withSpinner(uiOutput("reportUI")))  
     )
   )
