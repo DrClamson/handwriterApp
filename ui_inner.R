@@ -13,15 +13,26 @@ sidebarLayout(tags$div(id="my-sidebar",
                        ),
       ),
       
-      # Main Folder UI ----
-      conditionalPanel(condition="input.prevreport == 'Main Folder'",
+      # Setup UI ----
+      conditionalPanel(condition="input.prevreport == 'Setup'",
                        div(id = "autonomous",
                            helpText("Choose an empty folder or a folder that contains handwriter analyses."),
                            br(),
                            shinyDirButton("main_dir", "Main folder", "Select a folder"),
                            verbatimTextOutput("dir", placeholder = TRUE),
                            br(),
-                           actionButton("main_next_button", "Next")
+                           actionButton("setup_next_button", "Next")
+                       ),
+      ),
+      
+      # Known Writing UI ----
+      conditionalPanel(condition="input.prevreport == 'Known Writing'",
+                       div(id = "autonomous",
+                           helpText("Select the known writing samples."),
+                           br(),
+                           fileInput("known_upload", "Select files", accept = ".png", multiple=TRUE),
+                           br(),
+                           actionButton("known_next_button", "Next")
                        ),
       ),
       
@@ -34,11 +45,6 @@ sidebarLayout(tags$div(id="my-sidebar",
                            br(),
                            actionButton("qd_next_button", "Next"),
                        ),
-      ),
-      
-      # Known Writing UI ----
-      conditionalPanel(condition="input.prevreport == 'Known Writing'",
-          uiOutput("known_ui"),
       ),
       
       # Report UI ----
@@ -65,25 +71,28 @@ sidebarLayout(tags$div(id="my-sidebar",
                br(),
       ),
       
-      # Main Folder Display ----
-      tabPanel("Main Folder",
+      # Setup Display ----
+      tabPanel("Setup",
                p("Choose a main folder with the button to the left. The app will save files to this folder
                  as you analyze a questioned document. The main folder can be empty if you are starting a new analysis. 
                  If you would like to continue an analysis, select the appropriate folder as the main folder."),
                br()
       ),
-
-      # Questioned Document Display ----
-      tabPanel("Questioned Document", 
-               uiOutput("qd_display")),
-
+      
       # Known Writing Display ----
       tabPanel("Known Writing", 
                uiOutput("known_display")
-               ),
+      ),
+
+      # Questioned Document Display ----
+      tabPanel("Questioned Document", 
+               uiOutput("qd_display")
+      ),
 
       # Comparison Report Display ----
-      tabPanel("Comparison Report", withSpinner(uiOutput("reportUI")))  
+      tabPanel("Comparison Report", 
+               withSpinner(uiOutput("reportUI"))
+      )  
     )
   )
 )

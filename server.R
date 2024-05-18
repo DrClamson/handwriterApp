@@ -43,7 +43,52 @@ parse_plot <- function(x, title){
   )
 }
 
-plot_clusters <- function (clusters, K=40, facet = TRUE) {
+plot_qd_profile <- function (clusters, K=40, facet = TRUE) {
+  counts <- clusters %>% dplyr::select(writer, docname, cluster)
+  # count graphs per cluster
+  counts <- counts %>% 
+    dplyr::group_by(docname, writer, cluster) %>%
+    dplyr::summarize(count = n())
+  
+  # add missing clusters
+  docs <- unique(counts$docname)
+  dfs <- list()
+  dfs <- lapply(docs, function(doc) {
+    doc_df <- counts %>% dplyr::filter(docname == doc)
+    missing_clusters <- setdiff(1:K, doc_df$cluster)
+    # create data frame for missing clusters
+    new_df <- data.frame(docname = rep(doc, length(missing_clusters)),
+                         writer = rep(doc_df$writer[1], length(missing_clusters)),
+                         cluster = missing_clusters, 
+                         count = rep(0, length(missing_clusters)))
+    # add to current data frame
+    doc_df <- rbind(doc_df, new_df)
+    return(doc_df)
+  })
+  # combine individual data frames into a single data frame
+  counts <- do.call(rbind, dfs)
+  
+  single_doc <- ifelse(length(unique(counts$writer)) == 1, TRUE, FALSE)
+  if (single_doc) {
+    p <- counts %>% dplyr::mutate(cluster = as.integer(cluster)) %>% 
+      ggplot2::ggplot(aes(x = cluster, y = count, color = writer)) + 
+      geom_line() + geom_point() + scale_x_continuous(breaks = as.integer(unique(counts$cluster))) + 
+      theme_bw()
+  }
+  else {
+    p <- counts %>% dplyr::mutate(cluster = as.integer(cluster)) %>% 
+      ggplot2::ggplot(aes(x = cluster, y = count, group = interaction(writer, 
+                                                                      doc), color = writer)) + geom_line() + geom_point() + 
+      scale_x_continuous(breaks = as.integer(unique(counts$cluster))) + 
+      theme_bw()
+  }
+  if (facet) {
+    p <- p + facet_wrap(~writer)
+  }
+  return(p)
+}
+
+plot_known_profiles <- function (clusters, K=40, facet = TRUE) {
   counts <- clusters %>% dplyr::select(writer, docname, cluster)
   # count graphs per cluster
   counts <- counts %>% 
@@ -123,13 +168,14 @@ plot_clusters <- function (clusters, K=40, facet = TRUE) {
 server <- function(input, output, session) {
   
 # NEXT BUTTONS ----
-  shinyjs::disable("main_next_button")
+  shinyjs::disable("setup_next_button")
+  shinyjs::disable("known_next_button")
   shinyjs::disable("qd_next_button")
   
-  observeEvent(input$begin_button, {updateTabsetPanel(session, "prevreport", selected = "Main Folder")})
-  observeEvent(input$main_next_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
+  observeEvent(input$begin_button, {updateTabsetPanel(session, "prevreport", selected = "Setup")})
+  observeEvent(input$setup_next_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
+  observeEvent(input$known_next_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
 
-  
 # STORAGE ----
   global <- reactiveValues(main_dir = NULL)
   
@@ -172,12 +218,71 @@ server <- function(input, output, session) {
                  file.copy(file.path("data", "template.RDS"), file.path(global$main_dir, "data", "template.RDS"))
                  
                  # enable next button
-                 shinyjs::enable("main_next_button")
+                 shinyjs::enable("setup_next_button")
   })
   
   observeEvent(ignoreInit = TRUE,
                input$main_dir, {
 
+  })
+
+# KNOWN WRITING ----
+  # load known images and save to temp directory > data > model_docs
+  observeEvent(input$known_upload, {
+    global$known_paths <- input$known_upload$datapath
+    global$known_names <- input$known_upload$name
+    
+    # copy known docs to temp directory > data > model_docs
+    lapply(1:length(global$known_paths), function(i) file.copy(global$known_paths[i], file.path(global$main_dir, "data", "model_docs", global$known_names[i])))
+    
+    # list known docs
+    global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs")))
+    
+    # enable next button
+    shinyjs::enable("known_next_button")
+  })
+  
+  output$known_docs <- renderTable({global$known_docs})
+  
+  output$known_profiles <- renderPlot({handwriter::plot_cluster_fill_counts(formatted_data = global$model,
+                                                                            facet = TRUE)})
+  
+  # UI to display known handwriting samples and plots
+  output$known_display <- renderUI({
+    if(is.null(input$known_upload)) {return(NULL)}
+    
+    progress <- shiny::Progress$new(); on.exit(progress$close())
+    
+    # # refresh on Tab Change
+    # temp_refresh <- input$prevreport
+    
+    # TO-DO: Allow users to change writer indices and doc indices 
+    progress$set(message = "Fitting statistical model", value = .5)
+    # TO-DO: I had to manually delete the problems.txt file from data > model_graphs for fit_model to run
+    global$model <- handwriter::fit_model(template_dir = global$main_dir,
+                                          model_images_dir = file.path(global$main_dir, "data", "model_docs"),
+                                          num_iters = 10,
+                                          num_chains = 1,
+                                          num_cores = 1,
+                                          writer_indices = c(2, 5),
+                                          doc_indices = c(7, 18),
+    )
+    
+    # display
+    navset_card_tab(
+      height = 450,
+      nav_panel(
+        "Samples",
+        full_screen = TRUE,
+        p(class = "text-muted", "These are the selected known writing samples."),
+        tableOutput("known_docs")
+      ),
+      nav_panel(
+        "Known Profiles",
+        full_screen = TRUE,
+        plotOutput("known_profiles")
+      )
+    )
   })
   
 
@@ -215,7 +320,7 @@ server <- function(input, output, session) {
   })
   
   output$qd_profiles <- renderPlot({
-    plot_clusters(global$qd_profiles, K=40)
+    plot_qd_profile(global$qd_profiles, K=40)
   })
   
   # UI to display QD and plots
@@ -273,65 +378,6 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$qd_next_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
-  
-# KNOWN WRITING ----
-  ## UI to upload known writing samples
-  output$known_ui <- renderUI({fileInput("known_upload", "Select the known writing samples", accept = ".png", multiple=TRUE)})
-  
-  # load known images and save to temp directory > data > model_docs
-  observeEvent(input$known_upload, {
-    global$known_paths <- input$known_upload$datapath
-    global$known_names <- input$known_upload$name
-
-    # copy known docs to temp directory > data > model_docs
-    lapply(1:length(global$known_paths), function(i) file.copy(global$known_paths[i], file.path(global$main_dir, "data", "model_docs", global$known_names[i])))
-    
-    # list known docs
-    global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs")))
-  })
-  
-  output$known_docs <- renderTable({global$known_docs})
-  
-  output$known_profiles <- renderPlot({handwriter::plot_cluster_fill_counts(formatted_data = global$model,
-                                                                            facet = TRUE)})
-  
-  # UI to display known handwriting samples and plots
-  output$known_display <- renderUI({
-    if(is.null(input$known_upload)) {return(NULL)}
-    
-    progress <- shiny::Progress$new(); on.exit(progress$close())
-    
-    # # refresh on Tab Change
-    # temp_refresh <- input$prevreport
-    
-    # TO-DO: Allow users to change writer indices and doc indices 
-    progress$set(message = "Fitting statistical model", value = .5)
-    # TO-DO: I had to manually delete the problems.txt file from data > model_graphs for fit_model to run
-    global$model <- handwriter::fit_model(template_dir = global$main_dir,
-                                          model_images_dir = file.path(global$main_dir, "data", "model_docs"),
-                                          num_iters = 10,
-                                          num_chains = 1,
-                                          num_cores = 1,
-                                          writer_indices = c(2, 5),
-                                          doc_indices = c(7, 18),
-    )
-    
-    # display
-    navset_card_tab(
-      height = 450,
-      nav_panel(
-        "Samples",
-        full_screen = TRUE,
-        p(class = "text-muted", "These are the selected known writing samples."),
-        tableOutput("known_docs")
-      ),
-      nav_panel(
-        "Profiles",
-        full_screen = TRUE,
-        plotOutput("known_profiles")
-      )
-    )
-  })
   
   #################################################################################
   ## Preview Bullet Selection
