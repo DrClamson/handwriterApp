@@ -16,21 +16,32 @@ sidebarLayout(tags$div(id="my-sidebar",
       # Setup UI ----
       conditionalPanel(condition="input.prevreport == 'Setup'",
                        div(id = "autonomous",
+                           tags$h1(class = "responsive-text","SETUP"),
                            helpText("Choose an empty folder or a folder that contains handwriter analyses."),
-                           br(),
                            shinyDirButton("main_dir", "Main folder", "Select a folder"),
+                           bsButton("setup_info", label = "", icon = icon("info", lib = "font-awesome"), style = "info", size = "extra-small"), 
                            verbatimTextOutput("dir", placeholder = TRUE),
                            br(),
                            actionButton("setup_next_button", "Next")
+                       ),
+                       bsPopover(
+                         id = "setup_info",
+                         title = "More information",
+                         content = HTML(paste0(
+                           "The app will save files to the main folder as you analyze a questioned document. The main folder can be empty if you are starting a new analysis. If you would like to continue an analysis, select the appropriate folder as the main folder."
+                         )),
+                         placement = "right",
+                         trigger = "hover",
+                         options = list(container = "body")
                        ),
       ),
       
       # Known Writing UI ----
       conditionalPanel(condition="input.prevreport == 'Known Writing'",
                        div(id = "autonomous",
+                           tags$h1(class = "responsive-text","KNOWN WRITING"),
                            helpText("Select the known writing samples."),
-                           br(),
-                           fileInput("known_upload", "Select files", accept = ".png", multiple=TRUE),
+                           fileInput("known_upload", "", accept = ".png", multiple=TRUE),
                            br(),
                            actionButton("known_next_button", "Next")
                        ),
@@ -39,8 +50,8 @@ sidebarLayout(tags$div(id="my-sidebar",
       # Questioned Document UI ----
       conditionalPanel(condition="input.prevreport == 'Questioned Document'",
                        div(id = "autonomous",
+                           tags$h1(class = "responsive-text","QUESTIONED DOCUMENT"),
                            helpText("Select the questioned document."),
-                           br(),
                            fileInput("qd_upload", "", accept = ".png", multiple=FALSE),
                            br(),
                            actionButton("qd_next_button", "Next"),
@@ -73,10 +84,6 @@ sidebarLayout(tags$div(id="my-sidebar",
       
       # Setup Display ----
       tabPanel("Setup",
-               p("Choose a main folder with the button to the left. The app will save files to this folder
-                 as you analyze a questioned document. The main folder can be empty if you are starting a new analysis. 
-                 If you would like to continue an analysis, select the appropriate folder as the main folder."),
-               br()
       ),
       
       # Known Writing Display ----

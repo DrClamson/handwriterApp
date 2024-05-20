@@ -169,6 +169,14 @@ html, body {
   font-weight: 700;
 }
 
+.btn-info {
+  color: white;
+  background-color: #003A70;
+  border: 2px solid #ddd;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
 .modal-content {
     background-color: rgba(0, 58, 111, 0.8); /* Blue with 80% transparency */
     color: white;
