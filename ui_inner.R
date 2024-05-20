@@ -39,7 +39,7 @@ sidebarLayout(tags$div(id="my-sidebar",
       conditionalPanel(condition="input.prevreport == 'Known Writing'",
                        div(id = "autonomous",
                            tags$h1(class = "responsive-text","KNOWN WRITING"),
-                           helpText("Select the known writing samples."),
+                           helpText("Select three known writing samples from each person of interest."),
                            fileInput("known_upload", "", accept = ".png", multiple=TRUE),
                            br(),
                            actionButton("known_next_button", "Next")

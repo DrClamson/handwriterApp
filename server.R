@@ -319,8 +319,8 @@ server <- function(input, output, session) {
     handwriter::plotNodes(global$doc, nodeSize = 2)
   })
   
-  output$qd_profiles <- renderPlot({
-    plot_qd_profile(global$qd_profiles, K=40)
+  output$qd_profile <- renderPlot({
+    plot_cluster_fill_counts(global$analysis, facet=FALSE)
   })
   
   # UI to display QD and plots
@@ -329,27 +329,17 @@ server <- function(input, output, session) {
     
     progress <- shiny::Progress$new(); on.exit(progress$close())
     
-    # # refresh on Tab Change
-    # temp_refresh <- input$prevreport
-    
     # process and save document to global$main_dir > data > questioned_graphs
     progress$set(message = "Processing document", value = .25)
     global$doc <- handwriter::processDocument(file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
     saveRDS(global$doc, file.path(global$main_dir, "data", "questioned_graphs", stringr::str_replace(global$qd_name, ".png", "_proclist.rds")))
     
-    # load template
-    progress$set(message = "Loading cluster template", value = .5)
-    global$template <- readRDS(file.path(global$main_dir, "data", "template.RDS"))
-    
-    # get cluster fill counts
-    progress$set(message = "Getting cluster fill counts", value = .5)
-    # TO-DO: allow user to set writer and doc indices
-    handwriter::get_clusters_batch(template = global$template,
-                                   input_dir = file.path(global$main_dir, "data", "questioned_graphs"),
-                                   output_dir = file.path(global$main_dir, "data", "questioned_clusters"),
-                                   writer_indices = c(2, 5),
-                                   doc_indices = c(7, 13))
-    global$qd_profiles <- readRDS(file.path(global$main_dir, "data", "questioned_clusters", stringr::str_replace(global$qd_name, ".png", ".rds")))
+    global$analysis <- analyze_questioned_documents(template_dir = global$main_dir,
+                                                    questioned_images_dir = file.path(global$main_dir, "data", "questioned_docs"),
+                                                    model = global$model,
+                                                    num_cores = 1,
+                                                    writer_indices = c(2, 5),
+                                                    doc_indices = c(7, 18))
     
     # display QD image, graphs plot, and clusters plot
     navset_card_tab(
@@ -372,7 +362,7 @@ server <- function(input, output, session) {
         p(class = "text-muted", "A writer profile for the questioned document is estimated by grouping the graphs into clusters of 
           similar shapes and counting the number of graphs in each cluster. The idea is that different writers generally produce different
           shapes at differing frequencies."),
-        plotOutput("qd_profiles")
+        plotOutput("qd_profile")
       )
     )
   })
