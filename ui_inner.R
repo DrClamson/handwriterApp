@@ -17,16 +17,15 @@ sidebarLayout(tags$div(id="my-sidebar",
       conditionalPanel(condition="input.prevreport == 'Setup'",
                        div(id = "autonomous",
                            tags$h1(class = "responsive-text","SETUP"),
-                           helpText("Choose an empty folder or a folder that contains handwriter analyses."),
+                           helpText(id='setup_help', "Choose an empty folder or a folder that contains handwriter analyses."),
                            shinyDirButton("main_dir", "Main folder", "Select a folder"),
-                           bsButton("setup_info", label = "", icon = icon("info", lib = "font-awesome"), style = "info", size = "extra-small"), 
                            verbatimTextOutput("dir", placeholder = TRUE),
                            br(),
                            actionButton("setup_next_button", "Next")
                        ),
                        bsPopover(
-                         id = "setup_info",
-                         title = "More information",
+                         id = "setup_help",
+                         title = "Setup Help",
                          content = HTML(paste0(
                            "The app will save files to the main folder as you analyze a questioned document. The main folder can be empty if you are starting a new analysis. If you would like to continue an analysis, select the appropriate folder as the main folder."
                          )),
