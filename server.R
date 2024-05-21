@@ -175,6 +175,7 @@ server <- function(input, output, session) {
   observeEvent(input$begin_button, {updateTabsetPanel(session, "prevreport", selected = "Setup")})
   observeEvent(input$setup_next_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
   observeEvent(input$known_next_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
+  observeEvent(input$qd_next_button, {updateTabsetPanel(session, "prevreport", selected = "Report")})
 
 # STORAGE ----
   global <- reactiveValues(main_dir = NULL)
@@ -371,7 +372,8 @@ server <- function(input, output, session) {
     )
   })
   
-  observeEvent(input$qd_next_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
+# Report
+
   
   #################################################################################
   ## Preview Bullet Selection

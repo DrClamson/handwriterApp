@@ -56,15 +56,14 @@ sidebarLayout(tags$div(id="my-sidebar",
                            actionButton("qd_next_button", "Next"),
                        ),
       ),
-      
-      # Report UI ----
-      conditionalPanel(condition="input.prevreport == 'Comparison Report'",
-          uiOutput("reportSelUI"),
-      ),
 
       # Report Button UI ----
-      conditionalPanel(condition="input.prevreport == 'Comparison Report'",
-          uiOutput("reportDownUI"),
+      conditionalPanel(condition="input.prevreport == 'Report'",
+                       div(id = "autonomous",
+                           tags$h1(class = "responsive-text","REPORT"),
+                           br(),
+                           fluidRow(column(12, screenshotButton(id = "report_button", label = "Download Report",  filename="Bullet Comparison Report", scale=2), align="center"))
+                       ),
       ),
   ))),
   mainPanel(
@@ -96,8 +95,8 @@ sidebarLayout(tags$div(id="my-sidebar",
       ),
 
       # Comparison Report Display ----
-      tabPanel("Comparison Report", 
-               withSpinner(uiOutput("reportUI"))
+      tabPanel("Report", 
+               
       )  
     )
   )
