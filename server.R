@@ -168,17 +168,39 @@ plot_known_profiles <- function (clusters, K=40, facet = TRUE) {
 server <- function(input, output, session) {
   
 # NEXT BUTTONS ----
+  # disable next buttons at start
   shinyjs::disable("setup_next_button")
   shinyjs::disable("known_next_button")
   shinyjs::disable("qd_next_button")
   
+  # enable next buttons
+  observe({
+    # main_dir needs to be defined
+    req(global$main_dir)
+    shinyjs::enable("setup_next_button")
+  })
+  observe({
+    # model needs to be loaded
+    req(global$model)
+    shinyjs::enable("known_next_button")
+  })
+  observe({
+    # analysis needs to be loaded
+    req(global$analysis)
+    shinyjs::enable("qd_next_button")
+  })
+  
+  # change selected tab in main panel
   observeEvent(input$begin_button, {updateTabsetPanel(session, "prevreport", selected = "Setup")})
   observeEvent(input$setup_next_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
   observeEvent(input$known_next_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
   observeEvent(input$qd_next_button, {updateTabsetPanel(session, "prevreport", selected = "Report")})
 
+  
 # STORAGE ----
-  global <- reactiveValues(main_dir = NULL)
+  global <- reactiveValues(main_dir = NULL,
+                           model = NULL,
+                           analysis = NULL)
   
 
 # FOLDERS ----
@@ -209,23 +231,37 @@ server <- function(input, output, session) {
                  home <- normalizePath("~")
                  global$main_dir <- file.path(home, paste(unlist(dir()$path[-1]), collapse = .Platform$file.sep))
                  
-                 # create directory structure in main directory
-                 create_dir(file.path(global$main_dir, "data"))
-                 create_dir(file.path(global$main_dir, "data", "questioned_docs"))
-                 create_dir(file.path(global$main_dir, "data", "questioned_graphs"))
-                 create_dir(file.path(global$main_dir, "data", "model_docs"))
-                 
-                 # copy template to main directory > data
-                 file.copy(file.path("data", "template.RDS"), file.path(global$main_dir, "data", "template.RDS"))
-                 
-                 # enable next button
-                 shinyjs::enable("setup_next_button")
+                 if (length(list.files(global$main_dir)) == 0){
+                   # create directory structure in main directory
+                   create_dir(file.path(global$main_dir, "data"))
+                   create_dir(file.path(global$main_dir, "data", "questioned_docs"))
+                   create_dir(file.path(global$main_dir, "data", "questioned_graphs"))
+                   create_dir(file.path(global$main_dir, "data", "model_docs"))
+                   
+                   # copy template to main directory > data
+                   file.copy(file.path("data", "template.RDS"), file.path(global$main_dir, "data", "template.RDS"))
+                 } else {
+                   # load files if they exist
+                   if (file.exists(file.path(global$main_dir, "data", "model_docs"))){
+                     global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs")))
+                   }
+                   if (file.exists(file.path(global$main_dir, "data", "model.rds"))){
+                     global$model <- readRDS(file.path(global$main_dir, "data", "model.rds"))
+                   }
+                   if (length(file.path(global$main_dir, "data", "questioned_docs")) == 1){
+                     global$qd_path <- list.files(file.path(global$main_dir, "data", "questioned_docs"), full.names = TRUE)[1]
+                     global$qd_image <- magick::image_read(global$qd_path)
+                   }
+                   if (length(file.path(global$main_dir, "data", "questioned_graphs")) == 1){
+                     graphs <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), full.names = TRUE)[1]
+                     global$doc <- readRDS(graphs)
+                   }
+                   if (file.exists(file.path(global$main_dir, "data", "analysis.rds"))){
+                     global$analysis <- readRDS(file.path(global$main_dir, "data", "analysis.rds"))
+                   }
+                 }
   })
   
-  observeEvent(ignoreInit = TRUE,
-               input$main_dir, {
-
-  })
 
 # KNOWN WRITING ----
   # load known images and save to temp directory > data > model_docs
@@ -239,20 +275,6 @@ server <- function(input, output, session) {
     # list known docs
     global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs")))
     
-    # enable next button
-    shinyjs::enable("known_next_button")
-  })
-  
-  output$known_docs <- renderTable({global$known_docs})
-  
-  output$known_profiles <- renderPlot({handwriter::plot_cluster_fill_counts(formatted_data = global$model,
-                                                                            facet = TRUE)})
-  
-  # UI to display known handwriting samples and plots
-  output$known_display <- renderUI({
-    if(is.null(input$known_upload)) {return(NULL)}
-    
-    # TO-DO: Allow users to change writer indices and doc indices 
     # TO-DO: I had to manually delete the problems.txt file from data > model_graphs for fit_model to run
     global$model <- handwriter::fit_model(template_dir = global$main_dir,
                                           model_images_dir = file.path(global$main_dir, "data", "model_docs"),
@@ -262,28 +284,22 @@ server <- function(input, output, session) {
                                           writer_indices = c(input$known_writer_start_chr, input$known_writer_end_chr),
                                           doc_indices = c(input$known_doc_start_chr, input$known_doc_end_chr),
     )
+  })
+  
+  output$known_docs <- renderTable({global$known_docs})
+  
+  output$known_profiles <- renderPlot({handwriter::plot_cluster_fill_counts(formatted_data = global$model,
+                                                                            facet = TRUE)})
+  
+  # UI to display known handwriting samples and plots
+  output$known_display <- renderUI({
+    if(is.null(global$model)) {return(NULL)}
     
     # display
-    bsCollapse(id = "known_display", open = "Panel 1",
+    bsCollapse(id = "known_display",
                bsCollapsePanel("Known writing samples", tableOutput("known_docs")),
                bsCollapsePanel("Writer profiles", plotOutput("known_profiles"))
     )
-    
-    # display
-    # navset_card_tab(
-    #   height = 450,
-    #   nav_panel(
-    #     "Samples",
-    #     full_screen = TRUE,
-    #     p(class = "text-muted", "These are the selected known writing samples."),
-    #     tableOutput("known_docs")
-    #   ),
-    #   nav_panel(
-    #     "Writer Profiles",
-    #     full_screen = TRUE,
-    #     plotOutput("known_profiles")
-    #   )
-    # )
   })
   
 
@@ -296,16 +312,21 @@ server <- function(input, output, session) {
     
     global$qd_image <- NULL
     global$qd_image <- magick::image_read(global$qd_path)
-    # info <- image_info(global$qd_image)
     
     # copy qd to temp directory
     file.copy(global$qd_path, file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
     
-    # enable next button
-    shinyjs::enable("qd_next_button")
+    # process and save to global$main_dir > data > questioned_graphs
+    global$doc <- handwriter::processDocument(file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
+    saveRDS(global$doc, file.path(global$main_dir, "data", "questioned_graphs", stringr::str_replace(global$qd_name, ".png", "_proclist.rds")))
     
-    # testing only
-    global$test_qd_docs <- list.files(file.path(global$main_dir, "data", "questioned_docs"))
+    # analyze
+    global$analysis <- analyze_questioned_documents(template_dir = global$main_dir,
+                                                    questioned_images_dir = file.path(global$main_dir, "data", "questioned_docs"),
+                                                    model = global$model,
+                                                    num_cores = 1,
+                                                    writer_indices = c(input$known_writer_start_char, input$known_writer_end_char),
+                                                    doc_indices = c(input$known_doc_start_char, input$known_doc_start_char))
   })
   
   output$qd_image <- renderImage({
@@ -333,56 +354,37 @@ server <- function(input, output, session) {
   
   # UI to display QD and plots
   output$qd_display <- renderUI({
-    if(is.null(input$qd_upload)) {return(NULL)}
-    
-    # process and save document to global$main_dir > data > questioned_graphs
-    global$doc <- handwriter::processDocument(file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
-    saveRDS(global$doc, file.path(global$main_dir, "data", "questioned_graphs", stringr::str_replace(global$qd_name, ".png", "_proclist.rds")))
-    
-    global$analysis <- analyze_questioned_documents(template_dir = global$main_dir,
-                                                    questioned_images_dir = file.path(global$main_dir, "data", "questioned_docs"),
-                                                    model = global$model,
-                                                    num_cores = 1,
-                                                    writer_indices = c(input$known_writer_start_char, input$known_writer_end_char),
-                                                    doc_indices = c(input$known_doc_start_char, input$known_doc_start_char))
+    if(is.null(global$analysis)) {return(NULL)}
     
     # display QD image, graphs plot, and clusters plot
-    navset_card_tab(
-      height = 450,
-      nav_panel(
-        "Preview",
-        full_screen = TRUE,
-        p(class = "text-muted", "Here is a preview of the selected questioned document."),
-        imageOutput("qd_image")
-      ),
-      nav_panel(
-        "Graphs",
-        full_screen = TRUE,
-        p(class = "text-muted", "The handwriting is split into component shapes called graphs."),
-        plotOutput("qd_nodes")
-      ),
-      nav_panel(
-        "Writer Profile",
-        full_screen = TRUE,
-        p(class = "text-muted", "A writer profile for the questioned document is estimated by grouping the graphs into clusters of 
-          similar shapes and counting the number of graphs in each cluster. The idea is that different writers generally produce different
-          shapes at differing frequencies."),
-        plotOutput("qd_profile")
-      ),
-      nav_panel(
-        "Writership Analysis",
-        full_screen = TRUE,
-        p(class = "text-muted", "The posterior probability that each writer in the closed-set of writers wrote the questioned document."),
-        tableOutput("qd_analysis")
-      )
+    bsCollapse(id = "qd_display",
+               bsCollapsePanel("Preview", 
+                               card(
+                                 card_header(class = "bg-dark", ""),
+                                 # max_height = 300,
+                                 full_screen = TRUE,
+                                 imageOutput("qd_image"))
+                               ),
+               bsCollapsePanel("Processed", 
+                               p(class = "text-muted", "The handwriting in the questioned document is split into 
+                                        component shapes called graphs."),
+                               plotOutput("qd_nodes")),
+               bsCollapsePanel("Writer profile", plotOutput("qd_profile")),
+               bsCollapsePanel("Writership analysis", 
+                               p(class = "text-muted", "The posterior probability that each writer in the closed-set of writers wrote the questioned document."),
+                               tableOutput("qd_analysis"))
     )
   })
   
 # REPORT ----
   
-  output$report_qd_image <- renderPlot({
-    handwriter::plotImage(global$doc)
-  })
+  output$report_qd_image <- renderImage({
+    tmp <- global$qd_image %>%
+      image_write(tempfile(fileext='png'), format = 'png')
+    
+    # return a list
+    list(src = tmp, contentType = "image/png")
+  }, deleteFile = FALSE)
 
   output$report_display <- renderUI({
     if(is.null(global$analysis)) {return(NULL)}
