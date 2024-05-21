@@ -17,29 +17,29 @@ sidebarLayout(tags$div(id="my-sidebar",
       conditionalPanel(condition="input.prevreport == 'Setup'",
                        div(id = "autonomous",
                            tags$h1(class = "responsive-text","SETUP"),
-                           helpText(id='setup_help', "Choose an empty folder or a folder that contains handwriter analyses."),
+                           helpText(id='setup_help', "The app saves files to the main folder as you analyze a questioned document. The main folder can be empty if you are starting a new analysis. If you want to continue an analysis, select that folder."),
                            shinyDirButton("main_dir", "Main folder", "Select a folder"),
                            verbatimTextOutput("dir", placeholder = TRUE),
                            br(),
                            actionButton("setup_next_button", "Next")
                        ),
-                       bsPopover(
-                         id = "setup_help",
-                         title = "Setup Help",
-                         content = HTML(paste0(
-                           "The app will save files to the main folder as you analyze a questioned document. The main folder can be empty if you are starting a new analysis. If you would like to continue an analysis, select the appropriate folder as the main folder."
-                         )),
-                         placement = "right",
-                         trigger = "hover",
-                         options = list(container = "body")
-                       ),
+                       # bsPopover(
+                       #   id = "setup_help",
+                       #   title = "Setup Help",
+                       #   content = HTML(paste0(
+                       #     ""
+                       #   )),
+                       #   placement = "right",
+                       #   trigger = "hover",
+                       #   options = list(container = "body")
+                       # ),
       ),
       
       # Known Writing UI ----
       conditionalPanel(condition="input.prevreport == 'Known Writing'",
                        div(id = "autonomous",
                            tags$h1(class = "responsive-text","KNOWN WRITING"),
-                           helpText("Select three known writing samples from each person of interest."),
+                           helpText("Select three known writing samples from each person of interest. The files must be PNG."),
                            fileInput("known_upload", "", accept = ".png", multiple=TRUE),
                            br(),
                            actionButton("known_next_button", "Next")
@@ -50,7 +50,7 @@ sidebarLayout(tags$div(id="my-sidebar",
       conditionalPanel(condition="input.prevreport == 'Questioned Document'",
                        div(id = "autonomous",
                            tags$h1(class = "responsive-text","QUESTIONED DOCUMENT"),
-                           helpText("Select the questioned document."),
+                           helpText("Select the questioned document. The file must be PNG."),
                            fileInput("qd_upload", "", accept = ".png", multiple=FALSE),
                            br(),
                            actionButton("qd_next_button", "Next"),
