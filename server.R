@@ -264,20 +264,26 @@ server <- function(input, output, session) {
     )
     
     # display
-    navset_card_tab(
-      height = 450,
-      nav_panel(
-        "Samples",
-        full_screen = TRUE,
-        p(class = "text-muted", "These are the selected known writing samples."),
-        tableOutput("known_docs")
-      ),
-      nav_panel(
-        "Writer Profiles",
-        full_screen = TRUE,
-        plotOutput("known_profiles")
-      )
+    bsCollapse(id = "known_display", open = "Panel 1",
+               bsCollapsePanel("Known writing samples", tableOutput("known_docs")),
+               bsCollapsePanel("Writer profiles", plotOutput("known_profiles"))
     )
+    
+    # display
+    # navset_card_tab(
+    #   height = 450,
+    #   nav_panel(
+    #     "Samples",
+    #     full_screen = TRUE,
+    #     p(class = "text-muted", "These are the selected known writing samples."),
+    #     tableOutput("known_docs")
+    #   ),
+    #   nav_panel(
+    #     "Writer Profiles",
+    #     full_screen = TRUE,
+    #     plotOutput("known_profiles")
+    #   )
+    # )
   })
   
 
@@ -337,8 +343,8 @@ server <- function(input, output, session) {
                                                     questioned_images_dir = file.path(global$main_dir, "data", "questioned_docs"),
                                                     model = global$model,
                                                     num_cores = 1,
-                                                    writer_indices = c(2, 5),
-                                                    doc_indices = c(7, 13))
+                                                    writer_indices = c(input$known_writer_start_char, input$known_writer_end_char),
+                                                    doc_indices = c(input$known_doc_start_char, input$known_doc_start_char))
     
     # display QD image, graphs plot, and clusters plot
     navset_card_tab(
