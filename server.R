@@ -261,7 +261,7 @@ server <- function(input, output, session) {
     # TO-DO: I had to manually delete the problems.txt file from data > model_graphs for fit_model to run
     global$model <- handwriter::fit_model(template_dir = global$main_dir,
                                           model_images_dir = file.path(global$main_dir, "data", "model_docs"),
-                                          num_iters = 10,
+                                          num_iters = 4000,
                                           num_chains = 1,
                                           num_cores = 1,
                                           writer_indices = c(2, 5),
@@ -278,7 +278,7 @@ server <- function(input, output, session) {
         tableOutput("known_docs")
       ),
       nav_panel(
-        "Known Profiles",
+        "Writer Profiles",
         full_screen = TRUE,
         plotOutput("known_profiles")
       )
@@ -323,6 +323,13 @@ server <- function(input, output, session) {
     plot_cluster_fill_counts(global$analysis, facet=FALSE)
   })
   
+  output$qd_analysis <- renderTable({
+    df <- global$analysis$posterior_probabilities
+    colnames(df) <- c("Known Writer", "Posterior Probability of Writership")
+    df <- df %>% dplyr::mutate(`Posterior Probability of Writership` = paste0(100*`Posterior Probability of Writership`, 
+                                                                              "%"))
+  })
+  
   # UI to display QD and plots
   output$qd_display <- renderUI({
     if(is.null(input$qd_upload)) {return(NULL)}
@@ -363,6 +370,12 @@ server <- function(input, output, session) {
           similar shapes and counting the number of graphs in each cluster. The idea is that different writers generally produce different
           shapes at differing frequencies."),
         plotOutput("qd_profile")
+      ),
+      nav_panel(
+        "Writership Analysis",
+        full_screen = TRUE,
+        p(class = "text-muted", "The posterior probability that each writer in the closed-set of writers wrote the questioned document."),
+        tableOutput("qd_analysis")
       )
     )
   })

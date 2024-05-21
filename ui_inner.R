@@ -87,12 +87,12 @@ sidebarLayout(tags$div(id="my-sidebar",
       
       # Known Writing Display ----
       tabPanel("Known Writing", 
-               uiOutput("known_display")
+               withSpinner(uiOutput("known_display"))
       ),
 
       # Questioned Document Display ----
       tabPanel("Questioned Document", 
-               uiOutput("qd_display")
+               withSpinner(uiOutput("qd_display"))
       ),
 
       # Comparison Report Display ----
