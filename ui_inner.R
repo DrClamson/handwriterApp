@@ -23,28 +23,40 @@ sidebarLayout(tags$div(id="my-sidebar",
                            br(),
                            actionButton("setup_next_button", "Next")
                        ),
-                       # bsPopover(
-                       #   id = "setup_help",
-                       #   title = "Setup Help",
-                       #   content = HTML(paste0(
-                       #     ""
-                       #   )),
-                       #   placement = "right",
-                       #   trigger = "hover",
-                       #   options = list(container = "body")
-                       # ),
       ),
       
       # Known Writing UI ----
       conditionalPanel(condition="input.prevreport == 'Known Writing'",
                        div(id = "autonomous",
                            tags$h1(class = "responsive-text","KNOWN WRITING"),
+                           helpText(id="known_writerID_help", "Where are the writer IDs located in the file names?"),
+                           fluidRow(column(5, numericInput("known_writer_start_char", label="Start location", value=2, min=1, max=100)),
+                                    column(5, numericInput("known_writer_end_char", label="End location", value=5, min=1, max=100))),
+                           helpText(id="known_docID_help", "Where are the document numbers located in the file names?"),
+                           fluidRow(column(5, numericInput("known_doc_start_char", label="Start location", value=7, min=1, max=100)),
+                                    column(5, numericInput("known_doc_end_char", label="End location", value=13, min=1, max=100))),
                            helpText("Select three known writing samples from each person of interest. The files must be PNG."),
                            fileInput("known_upload", "", accept = ".png", multiple=TRUE),
                            br(),
-                           actionButton("known_next_button", "Next")
+                           actionButton("known_next_button", "Next"),
                        ),
       ),
+      bsPopover(id="known_writerID_help", title="Help",
+                content=paste("The app needs to know persons of interest submitted which known writing samples.",
+                              "The sample file names need to contain writer IDs and sample numbers, and the writer IDs and sample numbers need to be in the same location in every file name.",
+                              "For example, if you have two persons of interest with writer IDs 0101 and 0107 respectively and both people submitted two writing samples, the file names could be<br>",
+                              "<ul><li>w0101_sample1.png</li><li>w0101_sample2.png</li><li>w0107_sample1.png</li><li>w0101_sample2.png</li></ul>",
+                              "The writer IDs are located in characters 2-5 and the sample numbers are located in characters 7-13."),
+                "right",
+                options = list(container = "body")),
+      bsPopover(id="known_docID_help", title="Help",
+                content=paste("The app needs to know persons of interest submitted which known writing samples.",
+                              "The sample file names need to contain writer IDs and sample numbers, and the writer IDs and sample numbers need to be in the same location in every file name.",
+                              "For example, if you have two persons of interest with writer IDs 0101 and 0107 respectively and both people submitted two writing samples, the file names could be<br>",
+                              "<ul><li>w0101_sample1.png</li><li>w0101_sample2.png</li><li>w0107_sample1.png</li><li>w0101_sample2.png</li></ul>",
+                              "The writer IDs are located in characters 2-5 and the sample numbers are located in characters 7-13."),
+                "right",
+                options = list(container = "body")),
       
       # Questioned Document UI ----
       conditionalPanel(condition="input.prevreport == 'Questioned Document'",
@@ -96,7 +108,7 @@ sidebarLayout(tags$div(id="my-sidebar",
 
       # Comparison Report Display ----
       tabPanel("Report", 
-               
+               withSpinner(uiOutput("report_display"))
       )  
     )
   )
