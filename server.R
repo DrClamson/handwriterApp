@@ -251,13 +251,7 @@ server <- function(input, output, session) {
   output$known_display <- renderUI({
     if(is.null(input$known_upload)) {return(NULL)}
     
-    progress <- shiny::Progress$new(); on.exit(progress$close())
-    
-    # # refresh on Tab Change
-    # temp_refresh <- input$prevreport
-    
     # TO-DO: Allow users to change writer indices and doc indices 
-    progress$set(message = "Fitting statistical model", value = .5)
     # TO-DO: I had to manually delete the problems.txt file from data > model_graphs for fit_model to run
     global$model <- handwriter::fit_model(template_dir = global$main_dir,
                                           model_images_dir = file.path(global$main_dir, "data", "model_docs"),
@@ -334,10 +328,7 @@ server <- function(input, output, session) {
   output$qd_display <- renderUI({
     if(is.null(input$qd_upload)) {return(NULL)}
     
-    progress <- shiny::Progress$new(); on.exit(progress$close())
-    
     # process and save document to global$main_dir > data > questioned_graphs
-    progress$set(message = "Processing document", value = .25)
     global$doc <- handwriter::processDocument(file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
     saveRDS(global$doc, file.path(global$main_dir, "data", "questioned_graphs", stringr::str_replace(global$qd_name, ".png", "_proclist.rds")))
     
