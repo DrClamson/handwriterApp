@@ -198,9 +198,15 @@ server <- function(input, output, session) {
 
   
 # STORAGE ----
-  global <- reactiveValues(main_dir = NULL,
-                           model = NULL,
-                           analysis = NULL)
+  global <- reactiveValues(
+    analysis = NULL,
+    known_docs = NULL,
+    main_dir = NULL,
+    model = NULL,
+    qd_image = NULL,
+    qd_name = NULL,
+    qd_path = NULL,
+  )
   
 
 # FOLDERS ----
@@ -266,11 +272,11 @@ server <- function(input, output, session) {
 # KNOWN WRITING ----
   # load known images and save to temp directory > data > model_docs
   observeEvent(input$known_upload, {
-    global$known_paths <- input$known_upload$datapath
-    global$known_names <- input$known_upload$name
+    known_paths <- input$known_upload$datapath
+    known_names <- input$known_upload$name
     
     # copy known docs to temp directory > data > model_docs
-    lapply(1:length(global$known_paths), function(i) file.copy(global$known_paths[i], file.path(global$main_dir, "data", "model_docs", global$known_names[i])))
+    lapply(1:length(known_paths), function(i) file.copy(known_paths[i], file.path(global$main_dir, "data", "model_docs", known_names[i])))
     
     # list known docs
     global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs")))
@@ -385,17 +391,46 @@ server <- function(input, output, session) {
     # return a list
     list(src = tmp, contentType = "image/png")
   }, deleteFile = FALSE)
+  
+  output$report <- downloadHandler(
+    # For PDF output, change this to "report.pdf"
+    filename = "report.html",
+    content = function(file) {
+      # Copy the report file to a temporary directory before processing it, in
+      # case we don't have write permissions to the current working dir (which
+      # can happen when deployed).
+      tempReport <- file.path(tempdir(), "report.Rmd")
+      file.copy("report.Rmd", tempReport, overwrite = TRUE)
+      
+      # Set up parameters to pass to Rmd document
+      params <- list(
+        analysis = global$analysis,
+        known_docs = global$known_docs,
+        model = global$model,
+        qd_path = global$qd_path,
+        qd_doc = global$doc
+      )
+      
+      # Knit the document, passing in the `params` list, and eval it in a
+      # child of the global environment (this isolates the code in the document
+      # from the code in this app).
+      rmarkdown::render(tempReport, output_file = file,
+                        params = params,
+                        envir = new.env(parent = globalenv())
+      )
+    }
+  )
 
-  output$report_display <- renderUI({
-    if(is.null(global$analysis)) {return(NULL)}
-    
-    bsCollapse(id = "collapseReport", open = "Panel 1",
-               bsCollapsePanel("QD Preview", 
-                               plotOutput("report_qd_image")
-                               ),
-               bsCollapsePanel("Panel 2", "This panel has a generic plot. ",
-                               "and a 'success' style.")
-    )
-  })
+  # output$report_display <- renderUI({
+  #   if(is.null(global$analysis)) {return(NULL)}
+  #   
+  #   bsCollapse(id = "collapseReport", open = "Panel 1",
+  #              bsCollapsePanel("QD Preview", 
+  #                              plotOutput("report_qd_image")
+  #                              ),
+  #              bsCollapsePanel("Panel 2", "This panel has a generic plot. ",
+  #                              "and a 'success' style.")
+  #   )
+  # })
 
 }

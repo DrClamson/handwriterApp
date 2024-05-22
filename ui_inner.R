@@ -74,7 +74,7 @@ sidebarLayout(tags$div(id="my-sidebar",
                        div(id = "autonomous",
                            tags$h1(class = "responsive-text","REPORT"),
                            br(),
-                           fluidRow(column(12, screenshotButton(id = "report_button", label = "Download Report",  filename="Bullet Comparison Report", scale=2), align="center"))
+                           fluidRow(column(12, downloadButton("report", "Generate report"), align="center"))
                        ),
       ),
   ))),
@@ -108,7 +108,7 @@ sidebarLayout(tags$div(id="my-sidebar",
 
       # Comparison Report Display ----
       tabPanel("Report", 
-               withSpinner(uiOutput("report_display"))
+               # withSpinner(uiOutput("report_display"))
       )  
     )
   )
