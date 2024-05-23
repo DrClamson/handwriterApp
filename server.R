@@ -420,16 +420,6 @@ server <- function(input, output, session) {
                         params = params,
                         envir = new.env(parent = globalenv())
       )
-
-      # library(rmarkdown)
-      # out <- rmarkdown::render('report.Rmd',
-      #                          output_format = switch(
-      #                           input$format,
-      #                           PDF = bookdown::pdf_document2(), HTML = bookdown::html_document2(), Word = word_document()
-      #                         ),
-      #                         params = params,
-      #                         envir = new.env(parent = globalenv()))
-      # file.rename(out, file)
     }
   )
 

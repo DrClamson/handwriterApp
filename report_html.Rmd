@@ -1,5 +1,5 @@
 ---
-title: "Writership Analaysis Report"
+title: "Writership Analysis Report"
 output: bookdown::html_document2
 params:
   analysis: NA

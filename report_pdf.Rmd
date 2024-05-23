@@ -1,8 +1,8 @@
 ---
-title: "Writership Analaysis Report"
+title: "Writership Analysis Report"
 output:
   bookdown::pdf_document2:
-    extra_dependencies: ["flafter"]
+    extra_dependencies: ["float"]
 params:
   analysis: NA
   known_docs: NA
@@ -14,6 +14,7 @@ params:
 ```{r setup, include=FALSE}
 library(handwriter)
 library(magick)
+knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
 ```
 
 # Questioned Document
