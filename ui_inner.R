@@ -74,7 +74,7 @@ sidebarLayout(tags$div(id="my-sidebar",
                        div(id = "autonomous",
                            tags$h1(class = "responsive-text","REPORT"),
                            br(),
-                           radioButtons('format', 'Document format', c('PDF', 'HTML', 'Word'),
+                           radioButtons('format', 'Document format', c('PDF', 'Word', 'HTML'),
                                         inline = TRUE),
                            fluidRow(column(12, downloadButton("report", "Generate report"), align="center"))
                        ),

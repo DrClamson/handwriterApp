@@ -391,11 +391,17 @@ server <- function(input, output, session) {
         input$format, PDF = 'pdf', HTML = 'html', Word = 'docx'))
     },
     content = function(file) {
+      rmd_name <- switch(input$format,
+                    PDF = 'report_pdf.Rmd', 
+                    HTML = 'report_html.Rmd', 
+                    Word = 'report_word.Rmd')
+      src <- normalizePath(rmd_name)
+      
       # Copy the report file to a temporary directory before processing it, in
       # case we don't have write permissions to the current working dir (which
       # can happen when deployed).
-      tempReport <- file.path(tempdir(), "report.Rmd")
-      file.copy("report.Rmd", tempReport, overwrite = TRUE)
+      tempReport <- file.path(tempdir(), rmd_name)
+      file.copy(src, tempReport, overwrite = TRUE)
       
       # Set up parameters to pass to Rmd document
       params <- list(
@@ -409,20 +415,21 @@ server <- function(input, output, session) {
       # Knit the document, passing in the `params` list, and eval it in a
       # child of the global environment (this isolates the code in the document
       # from the code in this app).
-      # rmarkdown::render(tempReport, output_file = file,
-      #                   params = params,
-      #                   envir = new.env(parent = globalenv())
-      # )
-      # 
-      library(rmarkdown)
-      out <- render('report.Rmd',
-                    switch(
-                      input$format,
-                      PDF = bookdown::pdf_document2(), HTML = bookdown::html_document2(), Word = word_document()
-                    ),
-                    params = params,
-                    envir = new.env(parent = globalenv()))
-      file.rename(out, file)
+      rmarkdown::render(tempReport, 
+                        output_file = file,
+                        params = params,
+                        envir = new.env(parent = globalenv())
+      )
+
+      # library(rmarkdown)
+      # out <- rmarkdown::render('report.Rmd',
+      #                          output_format = switch(
+      #                           input$format,
+      #                           PDF = bookdown::pdf_document2(), HTML = bookdown::html_document2(), Word = word_document()
+      #                         ),
+      #                         params = params,
+      #                         envir = new.env(parent = globalenv()))
+      # file.rename(out, file)
     }
   )
 
