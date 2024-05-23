@@ -294,8 +294,8 @@ server <- function(input, output, session) {
   
   output$known_docs <- renderTable({global$known_docs})
   
-  output$known_profiles <- renderPlot({handwriter::plot_cluster_fill_counts(formatted_data = global$model,
-                                                                            facet = TRUE)})
+  output$known_profiles <- renderPlot({handwriter::plot_credible_intervals(model = global$model,
+                                                                           facet = TRUE)})
   
   # UI to display known handwriting samples and plots
   output$known_display <- renderUI({
