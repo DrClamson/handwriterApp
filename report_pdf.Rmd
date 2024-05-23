@@ -1,6 +1,8 @@
 ---
 title: "Writership Analaysis Report"
-output: bookdown::pdf_document2
+output:
+  bookdown::pdf_document2:
+    extra_dependencies: ["flafter"]
 params:
   analysis: NA
   known_docs: NA
