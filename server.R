@@ -272,24 +272,8 @@ server <- function(input, output, session) {
 # KNOWN WRITING ----
   # load known images and save to temp directory > data > model_docs
   observeEvent(input$known_upload, {
-    known_paths <- input$known_upload$datapath
-    known_names <- input$known_upload$name
-    
-    # copy known docs to temp directory > data > model_docs
-    lapply(1:length(known_paths), function(i) file.copy(known_paths[i], file.path(global$main_dir, "data", "model_docs", known_names[i])))
-    
-    # list known docs
-    global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs")))
-    
-    # TO-DO: I had to manually delete the problems.txt file from data > model_graphs for fit_model to run
-    global$model <- handwriter::fit_model(template_dir = global$main_dir,
-                                          model_images_dir = file.path(global$main_dir, "data", "model_docs"),
-                                          num_iters = 4000,
-                                          num_chains = 1,
-                                          num_cores = 1,
-                                          writer_indices = c(2, 5),
-                                          doc_indices = c(7, 13)
-    )
+    global$known_paths <- input$known_upload$datapath
+    global$known_names <- input$known_upload$name
   })
   
   output$known_docs <- renderTable({global$known_docs})
@@ -299,13 +283,39 @@ server <- function(input, output, session) {
   
   # UI to display known handwriting samples and plots
   output$known_display <- renderUI({
-    if(is.null(global$model)) {return(NULL)}
-    
-    # display
-    bsCollapse(id = "known_display",
-               bsCollapsePanel("Known writing samples", tableOutput("known_docs")),
-               bsCollapsePanel("Writer profiles", plotOutput("known_profiles"))
-    )
+    # skip processing if model already exists in main dir
+    if(!is.null(global$model)) {
+      # display
+      bsCollapse(id = "known_display",
+                 bsCollapsePanel("Known writing samples", tableOutput("known_docs")),
+                 bsCollapsePanel("Writer profiles", plotOutput("known_profiles"))
+      ) 
+    } else if (!is.null(input$known_upload)) {
+      # fit model when user selects known writing samples
+      
+      # copy known docs to temp directory > data > model_docs
+      lapply(1:length(global$known_paths), function(i) file.copy(global$known_paths[i], file.path(global$main_dir, "data", "model_docs", global$known_names[i])))
+      
+      # list known docs
+      global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs")))
+      
+      # TO-DO: I had to manually delete the problems.txt file from data > model_graphs for fit_model to run
+      # TO-DO: Fix user selection of start and stop characters in file name
+      global$model <- handwriter::fit_model(template_dir = global$main_dir,
+                                            model_images_dir = file.path(global$main_dir, "data", "model_docs"),
+                                            num_iters = 4000,
+                                            num_chains = 1,
+                                            num_cores = 1,
+                                            writer_indices = c(2, 5),
+                                            doc_indices = c(7, 13))
+      # display
+      bsCollapse(id = "known_display",
+                 bsCollapsePanel("Known writing samples", tableOutput("known_docs")),
+                 bsCollapsePanel("Writer profiles", plotOutput("known_profiles"))
+      ) 
+    } else {
+      return(NULL)
+    }
   })
   
 
@@ -327,6 +337,7 @@ server <- function(input, output, session) {
     saveRDS(global$doc, file.path(global$main_dir, "data", "questioned_graphs", stringr::str_replace(global$qd_name, ".png", "_proclist.rds")))
     
     # analyze
+    # TO-DO: Fix user selection of start and stop characters in file name
     global$analysis <- analyze_questioned_documents(template_dir = global$main_dir,
                                                     questioned_images_dir = file.path(global$main_dir, "data", "questioned_docs"),
                                                     model = global$model,
@@ -422,17 +433,5 @@ server <- function(input, output, session) {
       )
     }
   )
-
-  # output$report_display <- renderUI({
-  #   if(is.null(global$analysis)) {return(NULL)}
-  #   
-  #   bsCollapse(id = "collapseReport", open = "Panel 1",
-  #              bsCollapsePanel("QD Preview", 
-  #                              plotOutput("report_qd_image")
-  #                              ),
-  #              bsCollapsePanel("Panel 2", "This panel has a generic plot. ",
-  #                              "and a 'success' style.")
-  #   )
-  # })
 
 }
