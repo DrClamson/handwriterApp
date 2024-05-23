@@ -59,7 +59,7 @@ Each known writing sample was processed with the handwriter package with the sam
 2. Thinning the writing so that it is only one pixel wide
 3. Splitting the writing into component shapes called *graphs*
 
-Next, handwriter estimated a writer profile each person of interest by first assigning the graphs from the known writing samples to the cluster template and counting the number of graphs in each cluster. Then handwriter fit a statistical model, called a Bayesian hierarchical model, to the cluster fill counts of all known writing samples to estimate the true writer profile of each person of interest. The estimated writer profiles of the persons of interest are displayed in \@ref(fig:knownprofiles).
+Next, handwriter estimated a writer profile each person of interest by first assigning the graphs from the known writing samples to the cluster template and counting the number of graphs in each cluster. Then handwriter fit a statistical model, called a Bayesian hierarchical model, to the cluster fill counts of all known writing samples to estimate the true writer profile of each person of interest. The estimated writer profiles of the persons of interest are displayed in Figure \@ref(fig:knownprofiles).
 ```{r knownprofiles, echo=FALSE, fig.cap="Estimates of the writer profiles of the persons of interest. The error bars show the 2.5% and 9.75% credible intervals.", fig.align="center"}
 handwriter::plot_credible_intervals(params$model, facet=TRUE)
 ```
