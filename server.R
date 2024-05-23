@@ -254,11 +254,11 @@ server <- function(input, output, session) {
                    if (file.exists(file.path(global$main_dir, "data", "model.rds"))){
                      global$model <- readRDS(file.path(global$main_dir, "data", "model.rds"))
                    }
-                   if (length(file.path(global$main_dir, "data", "questioned_docs")) == 1){
+                   if (length(list.files(file.path(global$main_dir, "data", "questioned_docs"))) == 1){
                      global$qd_path <- list.files(file.path(global$main_dir, "data", "questioned_docs"), full.names = TRUE)[1]
                      global$qd_image <- magick::image_read(global$qd_path)
                    }
-                   if (length(file.path(global$main_dir, "data", "questioned_graphs")) == 1){
+                   if (length(list.files(file.path(global$main_dir, "data", "questioned_graphs"))) == 1){
                      graphs <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), full.names = TRUE)[1]
                      global$doc <- readRDS(graphs)
                    }
@@ -287,8 +287,8 @@ server <- function(input, output, session) {
                                           num_iters = 4000,
                                           num_chains = 1,
                                           num_cores = 1,
-                                          writer_indices = c(input$known_writer_start_chr, input$known_writer_end_chr),
-                                          doc_indices = c(input$known_doc_start_chr, input$known_doc_end_chr),
+                                          writer_indices = c(2, 5),
+                                          doc_indices = c(7, 13)
     )
   })
   
@@ -331,8 +331,8 @@ server <- function(input, output, session) {
                                                     questioned_images_dir = file.path(global$main_dir, "data", "questioned_docs"),
                                                     model = global$model,
                                                     num_cores = 1,
-                                                    writer_indices = c(input$known_writer_start_char, input$known_writer_end_char),
-                                                    doc_indices = c(input$known_doc_start_char, input$known_doc_start_char))
+                                                    writer_indices = c(2, 5),
+                                                    doc_indices = c(7, 13))
   })
   
   output$qd_image <- renderImage({
@@ -383,18 +383,13 @@ server <- function(input, output, session) {
   })
   
 # REPORT ----
-  
-  output$report_qd_image <- renderImage({
-    tmp <- global$qd_image %>%
-      image_write(tempfile(fileext='png'), format = 'png')
-    
-    # return a list
-    list(src = tmp, contentType = "image/png")
-  }, deleteFile = FALSE)
-  
+
   output$report <- downloadHandler(
     # For PDF output, change this to "report.pdf"
-    filename = "report.html",
+    filename = function() {
+      paste('report', sep = '.', switch(
+        input$format, PDF = 'pdf', HTML = 'html', Word = 'docx'))
+    },
     content = function(file) {
       # Copy the report file to a temporary directory before processing it, in
       # case we don't have write permissions to the current working dir (which
@@ -414,10 +409,20 @@ server <- function(input, output, session) {
       # Knit the document, passing in the `params` list, and eval it in a
       # child of the global environment (this isolates the code in the document
       # from the code in this app).
-      rmarkdown::render(tempReport, output_file = file,
-                        params = params,
-                        envir = new.env(parent = globalenv())
-      )
+      # rmarkdown::render(tempReport, output_file = file,
+      #                   params = params,
+      #                   envir = new.env(parent = globalenv())
+      # )
+      # 
+      library(rmarkdown)
+      out <- render('report.Rmd',
+                    switch(
+                      input$format,
+                      PDF = bookdown::pdf_document2(), HTML = bookdown::html_document2(), Word = word_document()
+                    ),
+                    params = params,
+                    envir = new.env(parent = globalenv()))
+      file.rename(out, file)
     }
   )
 
