@@ -328,22 +328,6 @@ server <- function(input, output, session) {
     
     global$qd_image <- NULL
     global$qd_image <- magick::image_read(global$qd_path)
-    
-    # copy qd to temp directory
-    file.copy(global$qd_path, file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
-    
-    # process and save to global$main_dir > data > questioned_graphs
-    global$doc <- handwriter::processDocument(file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
-    saveRDS(global$doc, file.path(global$main_dir, "data", "questioned_graphs", stringr::str_replace(global$qd_name, ".png", "_proclist.rds")))
-    
-    # analyze
-    # TO-DO: Fix user selection of start and stop characters in file name
-    global$analysis <- analyze_questioned_documents(template_dir = global$main_dir,
-                                                    questioned_images_dir = file.path(global$main_dir, "data", "questioned_docs"),
-                                                    model = global$model,
-                                                    num_cores = 1,
-                                                    writer_indices = c(2, 5),
-                                                    doc_indices = c(7, 13))
   })
   
   output$qd_image <- renderImage({
@@ -371,26 +355,61 @@ server <- function(input, output, session) {
   
   # UI to display QD and plots
   output$qd_display <- renderUI({
-    if(is.null(global$analysis)) {return(NULL)}
-    
-    # display QD image, graphs plot, and clusters plot
-    bsCollapse(id = "qd_display",
-               bsCollapsePanel("Preview", 
-                               card(
-                                 card_header(class = "bg-dark", ""),
-                                 # max_height = 300,
-                                 full_screen = TRUE,
-                                 imageOutput("qd_image"))
-                               ),
-               bsCollapsePanel("Processed", 
-                               p(class = "text-muted", "The handwriting in the questioned document is split into 
-                                        component shapes called graphs."),
-                               plotOutput("qd_nodes")),
-               bsCollapsePanel("Writer profile", plotOutput("qd_profile")),
-               bsCollapsePanel("Writership analysis", 
-                               p(class = "text-muted", "The posterior probability that each writer in the closed-set of writers wrote the questioned document."),
-                               tableOutput("qd_analysis"))
-    )
+    if(!is.null(global$analysis)) {
+      # display QD image, graphs plot, and clusters plot
+      bsCollapse(id = "qd_display",
+                 bsCollapsePanel("Preview", 
+                                 card(
+                                   card_header(class = "bg-dark", ""),
+                                   # max_height = 300,
+                                   full_screen = TRUE,
+                                   imageOutput("qd_image"))
+                                 ),
+                 bsCollapsePanel("Processed", 
+                                 p(class = "text-muted", "The handwriting in the questioned document is split into 
+                                          component shapes called graphs."),
+                                 plotOutput("qd_nodes")),
+                 bsCollapsePanel("Writer profile", plotOutput("qd_profile")),
+                 bsCollapsePanel("Writership analysis", 
+                                 p(class = "text-muted", "The posterior probability that each writer in the closed-set of writers wrote the questioned document."),
+                                 tableOutput("qd_analysis")))
+    } else if (!is.null(input$qd_upload)){
+      # copy qd to temp directory
+      file.copy(global$qd_path, file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
+      
+      # process and save to global$main_dir > data > questioned_graphs
+      global$doc <- handwriter::processDocument(file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
+      saveRDS(global$doc, file.path(global$main_dir, "data", "questioned_graphs", stringr::str_replace(global$qd_name, ".png", "_proclist.rds")))
+      
+      # analyze
+      # TO-DO: Fix user selection of start and stop characters in file name
+      global$analysis <- analyze_questioned_documents(template_dir = global$main_dir,
+                                                      questioned_images_dir = file.path(global$main_dir, "data", "questioned_docs"),
+                                                      model = global$model,
+                                                      num_cores = 1,
+                                                      writer_indices = c(2, 5),
+                                                      doc_indices = c(7, 13))
+      
+      # display QD image, graphs plot, and clusters plot
+      bsCollapse(id = "qd_display",
+                 bsCollapsePanel("Preview", 
+                                 card(
+                                   card_header(class = "bg-dark", ""),
+                                   # max_height = 300,
+                                   full_screen = TRUE,
+                                   imageOutput("qd_image"))
+                 ),
+                 bsCollapsePanel("Processed", 
+                                 p(class = "text-muted", "The handwriting in the questioned document is split into 
+                                          component shapes called graphs."),
+                                 plotOutput("qd_nodes")),
+                 bsCollapsePanel("Writer profile", plotOutput("qd_profile")),
+                 bsCollapsePanel("Writership analysis", 
+                                 p(class = "text-muted", "The posterior probability that each writer in the closed-set of writers wrote the questioned document."),
+                                 tableOutput("qd_analysis")))
+    } else {
+      return(NULL)
+    }
   })
   
 # REPORT ----
