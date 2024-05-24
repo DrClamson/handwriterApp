@@ -306,8 +306,8 @@ server <- function(input, output, session) {
                                             num_iters = 4000,
                                             num_chains = 1,
                                             num_cores = 1,
-                                            writer_indices = c(2, 5),
-                                            doc_indices = c(7, 13))
+                                            writer_indices = c(input$known_writer_start_char, input$known_writer_end_char),
+                                            doc_indices = c(input$known_doc_start_char, input$known_doc_end_char))
       # display
       bsCollapse(id = "known_display",
                  bsCollapsePanel("Known writing samples", tableOutput("known_docs")),
@@ -387,8 +387,8 @@ server <- function(input, output, session) {
                                                       questioned_images_dir = file.path(global$main_dir, "data", "questioned_docs"),
                                                       model = global$model,
                                                       num_cores = 1,
-                                                      writer_indices = c(2, 5),
-                                                      doc_indices = c(7, 13))
+                                                      writer_indices = c(input$known_writer_start_char, input$known_writer_end_char),
+                                                      doc_indices = c(input$known_doc_start_char, input$known_doc_end_char))
       
       # display QD image, graphs plot, and clusters plot
       bsCollapse(id = "qd_display",
