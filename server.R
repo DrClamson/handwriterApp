@@ -249,17 +249,17 @@ server <- function(input, output, session) {
                  } else {
                    # load files if they exist
                    if (file.exists(file.path(global$main_dir, "data", "model_docs"))){
-                     global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs")))
+                     global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs"), pattern = ".png"))
                    }
                    if (file.exists(file.path(global$main_dir, "data", "model.rds"))){
                      global$model <- readRDS(file.path(global$main_dir, "data", "model.rds"))
                    }
-                   if (length(list.files(file.path(global$main_dir, "data", "questioned_docs"))) == 1){
-                     global$qd_path <- list.files(file.path(global$main_dir, "data", "questioned_docs"), full.names = TRUE)[1]
+                   if (length(list.files(file.path(global$main_dir, "data", "questioned_docs"), pattern = ".png")) == 1){
+                     global$qd_path <- list.files(file.path(global$main_dir, "data", "questioned_docs"), pattern = ".png", full.names = TRUE)[1]
                      global$qd_image <- magick::image_read(global$qd_path)
                    }
-                   if (length(list.files(file.path(global$main_dir, "data", "questioned_graphs"))) == 1){
-                     graphs <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), full.names = TRUE)[1]
+                   if (length(list.files(file.path(global$main_dir, "data", "questioned_graphs"), pattern = ".rds")) == 1){
+                     graphs <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), pattern = ".rds", full.names = TRUE)[1]
                      global$doc <- readRDS(graphs)
                    }
                    if (file.exists(file.path(global$main_dir, "data", "analysis.rds"))){
@@ -294,15 +294,16 @@ server <- function(input, output, session) {
       # fit model when user selects known writing samples
       
       # copy known docs to temp directory > data > model_docs
+      if (!dir.exists(file.path(global$main_dir, "data", "model_docs"))){
+        dir.create(file.path(global$main_dir, "data", "model_docs"))
+      }
       lapply(1:length(global$known_paths), function(i) file.copy(global$known_paths[i], file.path(global$main_dir, "data", "model_docs", global$known_names[i])))
       
       # list known docs
-      global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs")))
+      global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs"), pattern = ".rds"))
       
-      # TO-DO: I had to manually delete the problems.txt file from data > model_graphs for fit_model to run
-      # TO-DO: Fix user selection of start and stop characters in file name
-      global$model <- handwriter::fit_model(template_dir = global$main_dir,
-                                            model_images_dir = file.path(global$main_dir, "data", "model_docs"),
+      global$model <- handwriter::fit_model(main_dir = global$main_dir,
+                                            model_docs = file.path(global$main_dir, "data", "model_docs"),
                                             num_iters = 4000,
                                             num_chains = 1,
                                             num_cores = 1,
@@ -356,6 +357,10 @@ server <- function(input, output, session) {
   # UI to display QD and plots
   output$qd_display <- renderUI({
     if(!is.null(global$analysis)) {
+      # load processed question doc for report
+      qd_path <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), pattern = '.rds', full.names = TRUE)[1]
+      global$doc <- readRDS(qd_path)
+      
       # display QD image, graphs plot, and clusters plot
       bsCollapse(id = "qd_display",
                  bsCollapsePanel("Preview", 
@@ -374,21 +379,23 @@ server <- function(input, output, session) {
                                  p(class = "text-muted", "The posterior probability that each writer in the closed-set of writers wrote the questioned document."),
                                  tableOutput("qd_analysis")))
     } else if (!is.null(input$qd_upload)){
-      # copy qd to temp directory
+      # copy qd to main directory
+      if (!dir.exists(file.path(global$main_dir, "data", "questioned_docs"))){
+        dir.create(file.path(global$main_dir, "data", "questioned_docs"))
+      }
       file.copy(global$qd_path, file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
       
-      # process and save to global$main_dir > data > questioned_graphs
-      global$doc <- handwriter::processDocument(file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
-      saveRDS(global$doc, file.path(global$main_dir, "data", "questioned_graphs", stringr::str_replace(global$qd_name, ".png", "_proclist.rds")))
-      
       # analyze
-      # TO-DO: Fix user selection of start and stop characters in file name
-      global$analysis <- analyze_questioned_documents(template_dir = global$main_dir,
-                                                      questioned_images_dir = file.path(global$main_dir, "data", "questioned_docs"),
+      global$analysis <- analyze_questioned_documents(main_dir = global$main_dir,
+                                                      questioned_docs = file.path(global$main_dir, "data", "questioned_docs"),
                                                       model = global$model,
                                                       num_cores = 1,
-                                                      writer_indices = c(input$known_writer_start_char, input$known_writer_end_char),
-                                                      doc_indices = c(input$known_doc_start_char, input$known_doc_end_char))
+                                                      writer_indices = c(input$qd_writer_start_char, input$qd_writer_end_char),
+                                                      doc_indices = c(input$qd_doc_start_char, input$qd_doc_end_char))
+      
+      # load processed question doc for report
+      qd_path <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), pattern = '.rds')[1]
+      global$doc <- readRDS(qd_path)
       
       # display QD image, graphs plot, and clusters plot
       bsCollapse(id = "qd_display",
@@ -435,10 +442,10 @@ server <- function(input, output, session) {
       
       # Set up parameters to pass to Rmd document
       params <- list(
+        main_dir = global$main_dir,
         analysis = global$analysis,
         known_docs = global$known_docs,
         model = global$model,
-        qd_path = global$qd_path,
         qd_doc = global$doc
       )
       

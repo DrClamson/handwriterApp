@@ -6,6 +6,7 @@ output:
     number_sections: true
     global_numbering: true
 params:
+  main_dir: NA
   analysis: NA
   known_docs: NA
   model: NA
@@ -23,7 +24,8 @@ library(magick)
 The questioned document is shown in Figure \@ref(fig:qd).
 
 ```{r qd, echo=FALSE, fig.cap="The questioned document scaled to the width of the page.", fig.align="center", out.width= "100%"}
-qd_image <- magick::image_read(params$qd_path)
+qd_path <- list.files(file.path(params$main_dir, "data", "questioned_docs"), pattern = ".png", full.names = TRUE) 
+qd_image <- magick::image_read(qd_path)
 qd_image
 ```
 
