@@ -18,156 +18,10 @@ options(shiny.maxRequestSize = 30*1024^2)
 addResourcePath("images", "images")
 
 
-# HELPER FUNCTIONS --------------------------------------------------------
-create_dir <- function(folder){
-  if (!dir.exists(folder)){
-    dir.create(folder)
-  }
-}
-
-parse_image <- function(x, title){
-  card(
-    card_header(class = "bg-dark", title),
-    max_height = 300,
-    full_screen = TRUE,
-    imageOutput(x, height=300,width=400),
-  )
-}
-
-parse_plot <- function(x, title){
-  card(
-    card_header(class = "bg-dark", title),
-    max_height = 300,
-    full_screen = TRUE,
-    plotOutput(x),
-  )
-}
-
-plot_qd_profile <- function (clusters, K=40, facet = TRUE) {
-  counts <- clusters %>% dplyr::select(writer, docname, cluster)
-  # count graphs per cluster
-  counts <- counts %>% 
-    dplyr::group_by(docname, writer, cluster) %>%
-    dplyr::summarize(count = n())
-  
-  # add missing clusters
-  docs <- unique(counts$docname)
-  dfs <- list()
-  dfs <- lapply(docs, function(doc) {
-    doc_df <- counts %>% dplyr::filter(docname == doc)
-    missing_clusters <- setdiff(1:K, doc_df$cluster)
-    # create data frame for missing clusters
-    new_df <- data.frame(docname = rep(doc, length(missing_clusters)),
-                         writer = rep(doc_df$writer[1], length(missing_clusters)),
-                         cluster = missing_clusters, 
-                         count = rep(0, length(missing_clusters)))
-    # add to current data frame
-    doc_df <- rbind(doc_df, new_df)
-    return(doc_df)
-  })
-  # combine individual data frames into a single data frame
-  counts <- do.call(rbind, dfs)
-  
-  single_doc <- ifelse(length(unique(counts$writer)) == 1, TRUE, FALSE)
-  if (single_doc) {
-    p <- counts %>% dplyr::mutate(cluster = as.integer(cluster)) %>% 
-      ggplot2::ggplot(aes(x = cluster, y = count, color = writer)) + 
-      geom_line() + geom_point() + scale_x_continuous(breaks = as.integer(unique(counts$cluster))) + 
-      theme_bw()
-  }
-  else {
-    p <- counts %>% dplyr::mutate(cluster = as.integer(cluster)) %>% 
-      ggplot2::ggplot(aes(x = cluster, y = count, group = interaction(writer, 
-                                                                      doc), color = writer)) + geom_line() + geom_point() + 
-      scale_x_continuous(breaks = as.integer(unique(counts$cluster))) + 
-      theme_bw()
-  }
-  if (facet) {
-    p <- p + facet_wrap(~writer)
-  }
-  return(p)
-}
-
-plot_known_profiles <- function (clusters, K=40, facet = TRUE) {
-  counts <- clusters %>% dplyr::select(writer, docname, cluster)
-  # count graphs per cluster
-  counts <- counts %>% 
-    dplyr::group_by(docname, writer, cluster) %>%
-    dplyr::summarize(count = n())
-  
-  # add missing clusters
-  docs <- unique(counts$docname)
-  dfs <- list()
-  dfs <- lapply(docs, function(doc) {
-    doc_df <- counts %>% dplyr::filter(docname == doc)
-    missing_clusters <- setdiff(1:K, doc_df$cluster)
-    # create data frame for missing clusters
-    new_df <- data.frame(docname = rep(doc, length(missing_clusters)),
-                         writer = rep(doc_df$writer[1], length(missing_clusters)),
-                         cluster = missing_clusters, 
-                         count = rep(0, length(missing_clusters)))
-    # add to current data frame
-    doc_df <- rbind(doc_df, new_df)
-    return(doc_df)
-  })
-  # combine individual data frames into a single data frame
-  counts <- do.call(rbind, dfs)
-  
-  single_doc <- ifelse(length(unique(counts$writer)) == 1, TRUE, FALSE)
-  if (single_doc) {
-    p <- counts %>% dplyr::mutate(cluster = as.integer(cluster)) %>% 
-      ggplot2::ggplot(aes(x = cluster, y = count, color = writer)) + 
-      geom_line() + geom_point() + scale_x_continuous(breaks = as.integer(unique(counts$cluster))) + 
-      theme_bw()
-  }
-  else {
-    p <- counts %>% dplyr::mutate(cluster = as.integer(cluster)) %>% 
-      ggplot2::ggplot(aes(x = cluster, y = count, group = interaction(writer, 
-                                                                      doc), color = writer)) + geom_line() + geom_point() + 
-      scale_x_continuous(breaks = as.integer(unique(counts$cluster))) + 
-      theme_bw()
-  }
-  if (facet) {
-    p <- p + facet_wrap(~writer)
-  }
-  return(p)
-}
-
-## Render RGL Widget UI
-# parse_rglui <- function(x)
-# {
-# 	card(
-# 		card_header(class = "bg-dark",paste0("Land ",x)),
-# 		max_height = 300,
-# 		full_screen = FALSE,
-# 		rglwidgetOutput(paste0("x3prgl",x),height=300,width=400),
-# 	)
-# }
-# parse_rgluiprev <- function(x)
-# {
-# 	card(
-# 		card_header(class = "bg-dark",paste0("Land ",x)),
-# 		max_height = 300,
-# 		full_screen = FALSE,
-# 		rglwidgetOutput(paste0("x3prglprev",x),height=300,width=400),
-# 	)
-# }
-# 
-# ## Render Land into image with CrossCut line
-# render_land <- function(src,x3p,ccut)
-# {
-# 	imgsrc <- gsub(".x3p$",".png",src)
-# 	image_x3p(x3p_sample(x3p_add_vline(x3p,xintercept = ccut, size = 20, color = "#ea2b1f"),m=5),zoom=1)
-# 	snapshot3d(imgsrc,webshot=TRUE)
-# 	return(imgsrc)
-# }
-
-
 # SERVER ------------------------------------------------------------------
-
 server <- function(input, output, session) {
   
-# NEXT BUTTONS ----
+  # NEXT BUTTONS ----
   # disable next buttons at start
   shinyjs::disable("setup_next_button")
   shinyjs::disable("known_next_button")
@@ -195,9 +49,9 @@ server <- function(input, output, session) {
   observeEvent(input$setup_next_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
   observeEvent(input$known_next_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
   observeEvent(input$qd_next_button, {updateTabsetPanel(session, "prevreport", selected = "Report")})
-
   
-# STORAGE ----
+  
+  # STORAGE ----
   global <- reactiveValues(
     analysis = NULL,
     known_docs = NULL,
@@ -208,8 +62,8 @@ server <- function(input, output, session) {
     qd_path = NULL,
   )
   
-
-# FOLDERS ----
+  
+  # FOLDERS ----
   shinyDirChoose(
     input,
     'main_dir',
@@ -237,39 +91,23 @@ server <- function(input, output, session) {
                  home <- normalizePath("~")
                  global$main_dir <- file.path(home, paste(unlist(dir()$path[-1]), collapse = .Platform$file.sep))
                  
+                 # setup main directory or load previous analysis
                  if (length(list.files(global$main_dir)) == 0){
-                   # create directory structure in main directory
-                   create_dir(file.path(global$main_dir, "data"))
-                   create_dir(file.path(global$main_dir, "data", "questioned_docs"))
-                   create_dir(file.path(global$main_dir, "data", "questioned_graphs"))
-                   create_dir(file.path(global$main_dir, "data", "model_docs"))
-                   
-                   # copy template to main directory > data
-                   file.copy(file.path("data", "template.RDS"), file.path(global$main_dir, "data", "template.RDS"))
+                   # setup directory for new analysis
+                   setup_main_dir(global$main_dir)
                  } else {
-                   # load files if they exist
-                   if (file.exists(file.path(global$main_dir, "data", "model_docs"))){
-                     global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs"), pattern = ".png"))
-                   }
-                   if (file.exists(file.path(global$main_dir, "data", "model.rds"))){
-                     global$model <- readRDS(file.path(global$main_dir, "data", "model.rds"))
-                   }
-                   if (length(list.files(file.path(global$main_dir, "data", "questioned_docs"), pattern = ".png")) == 1){
-                     global$qd_path <- list.files(file.path(global$main_dir, "data", "questioned_docs"), pattern = ".png", full.names = TRUE)[1]
-                     global$qd_image <- magick::image_read(global$qd_path)
-                   }
-                   if (length(list.files(file.path(global$main_dir, "data", "questioned_graphs"), pattern = ".rds")) == 1){
-                     graphs <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), pattern = ".rds", full.names = TRUE)[1]
-                     global$doc <- readRDS(graphs)
-                   }
-                   if (file.exists(file.path(global$main_dir, "data", "analysis.rds"))){
-                     global$analysis <- readRDS(file.path(global$main_dir, "data", "analysis.rds"))
-                   }
+                   # load files if they exist to continue previously started analysis
+                   global$known_docs <- list_model_docs(global$main_dir, output_dataframe = TRUE)
+                   global$model <- load_model(global$main_dir)
+                   global$qd_path <- list_qd(global$main_dir)
+                   global$qd_image <- load_qd(global$qd_path)
+                   global$doc <- load_processed_qd(global$main_dir)
+                   global$analysis <- load_analysis(global$main_dir)
                  }
-  })
+               })
   
-
-# KNOWN WRITING ----
+  
+  # KNOWN WRITING ----
   # load known images and save to temp directory > data > model_docs
   observeEvent(input$known_upload, {
     global$known_paths <- input$known_upload$datapath
@@ -278,8 +116,7 @@ server <- function(input, output, session) {
   
   output$known_docs <- renderTable({global$known_docs})
   
-  output$known_profiles <- renderPlot({handwriter::plot_credible_intervals(model = global$model,
-                                                                           facet = TRUE)})
+  output$known_profiles <- renderPlot({handwriter::plot_credible_intervals(model = global$model, facet = TRUE)})
   
   # UI to display known handwriting samples and plots
   output$known_display <- renderUI({
@@ -294,13 +131,11 @@ server <- function(input, output, session) {
       # fit model when user selects known writing samples
       
       # copy known docs to temp directory > data > model_docs
-      if (!dir.exists(file.path(global$main_dir, "data", "model_docs"))){
-        dir.create(file.path(global$main_dir, "data", "model_docs"))
-      }
-      lapply(1:length(global$known_paths), function(i) file.copy(global$known_paths[i], file.path(global$main_dir, "data", "model_docs", global$known_names[i])))
+      create_dir(file.path(global$main_dir, "data", "model_docs"))
+      copy_known_files_to_project(global$main_dir, global$known_paths, global$known_names)
       
       # list known docs
-      global$known_docs <- data.frame('files' = list.files(file.path(global$main_dir, "data", "model_docs"), pattern = ".rds"))
+      global$known_docs <- list_model_docs(global$main_dir, output_dataframe = TRUE)
       
       global$model <- handwriter::fit_model(main_dir = global$main_dir,
                                             model_docs = file.path(global$main_dir, "data", "model_docs"),
@@ -319,16 +154,16 @@ server <- function(input, output, session) {
     }
   })
   
-
-# QUESTIONED DOCUMENT ----
-
+  
+  # QUESTIONED DOCUMENT ----
+  
   # load QD image for display and copy to temp dir > data > questioned_docs
   observeEvent(input$qd_upload, {
     global$qd_path <- input$qd_upload$datapath
     global$qd_name <- input$qd_upload$name
     
     global$qd_image <- NULL
-    global$qd_image <- magick::image_read(global$qd_path)
+    global$qd_image <- load_qd(global$qd_path)
   })
   
   output$qd_image <- renderImage({
@@ -344,22 +179,18 @@ server <- function(input, output, session) {
   })
   
   output$qd_profile <- renderPlot({
-    plot_cluster_fill_counts(global$analysis, facet=FALSE)
+    handwriter::plot_cluster_fill_counts(global$analysis, facet=FALSE)
   })
   
   output$qd_analysis <- renderTable({
-    df <- global$analysis$posterior_probabilities
-    colnames(df) <- c("Known Writer", "Posterior Probability of Writership")
-    df <- df %>% dplyr::mutate(`Posterior Probability of Writership` = paste0(100*`Posterior Probability of Writership`, 
-                                                                              "%"))
+    make_posteriors_df(global$analysis)
   })
   
   # UI to display QD and plots
   output$qd_display <- renderUI({
     if(!is.null(global$analysis)) {
       # load processed question doc for report
-      qd_path <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), pattern = '.rds', full.names = TRUE)[1]
-      global$doc <- readRDS(qd_path)
+      global$doc <- load_processed_qd(global$main_dir)
       
       # display QD image, graphs plot, and clusters plot
       bsCollapse(id = "qd_display",
@@ -369,7 +200,7 @@ server <- function(input, output, session) {
                                    # max_height = 300,
                                    full_screen = TRUE,
                                    imageOutput("qd_image"))
-                                 ),
+                 ),
                  bsCollapsePanel("Processed", 
                                  p(class = "text-muted", "The handwriting in the questioned document is split into 
                                           component shapes called graphs."),
@@ -380,10 +211,8 @@ server <- function(input, output, session) {
                                  tableOutput("qd_analysis")))
     } else if (!is.null(input$qd_upload)){
       # copy qd to main directory
-      if (!dir.exists(file.path(global$main_dir, "data", "questioned_docs"))){
-        dir.create(file.path(global$main_dir, "data", "questioned_docs"))
-      }
-      file.copy(global$qd_path, file.path(global$main_dir, "data", "questioned_docs", global$qd_name))
+      create_dir(file.path(global$main_dir, "data", "questioned_docs"))
+      copy_qd_to_project(main_dir = global$main_dir, qd_path = global$qd_path, qd_name = global$qd_name)
       
       # analyze
       global$analysis <- analyze_questioned_documents(main_dir = global$main_dir,
@@ -394,8 +223,7 @@ server <- function(input, output, session) {
                                                       doc_indices = c(input$qd_doc_start_char, input$qd_doc_end_char))
       
       # load processed question doc for report
-      qd_path <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), pattern = '.rds', full.names = TRUE)[1]
-      global$doc <- readRDS(qd_path)
+      global$doc <- load_processed_qd(global$main_dir)
       
       # display QD image, graphs plot, and clusters plot
       bsCollapse(id = "qd_display",
@@ -419,19 +247,23 @@ server <- function(input, output, session) {
     }
   })
   
-# REPORT ----
-
+  # REPORT ----
+  
   output$report <- downloadHandler(
     # For PDF output, change this to "report.pdf"
     filename = function() {
-      paste('report', sep = '.', switch(
-        input$format, PDF = 'pdf', HTML = 'html', Word = 'docx'))
+      paste('report', 
+            sep = '.', 
+            switch(input$format, 
+                   PDF = 'pdf', 
+                   HTML = 'html', 
+                   Word = 'docx'))
     },
     content = function(file) {
       rmd_name <- switch(input$format,
-                    PDF = 'report_pdf.Rmd', 
-                    HTML = 'report_html.Rmd', 
-                    Word = 'report_word.Rmd')
+                         PDF = 'report_pdf.Rmd', 
+                         HTML = 'report_html.Rmd', 
+                         Word = 'report_word.Rmd')
       src <- normalizePath(rmd_name)
       
       # Copy the report file to a temporary directory before processing it, in
@@ -459,5 +291,5 @@ server <- function(input, output, session) {
       )
     }
   )
-
+  
 }
