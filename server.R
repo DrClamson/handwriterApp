@@ -394,7 +394,7 @@ server <- function(input, output, session) {
                                                       doc_indices = c(input$qd_doc_start_char, input$qd_doc_end_char))
       
       # load processed question doc for report
-      qd_path <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), pattern = '.rds')[1]
+      qd_path <- list.files(file.path(global$main_dir, "data", "questioned_graphs"), pattern = '.rds', full.names = TRUE)[1]
       global$doc <- readRDS(qd_path)
       
       # display QD image, graphs plot, and clusters plot
