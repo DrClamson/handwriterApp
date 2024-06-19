@@ -50,7 +50,6 @@ server <- function(input, output, session) {
   observeEvent(input$known_next_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
   observeEvent(input$qd_next_button, {updateTabsetPanel(session, "prevreport", selected = "Report")})
   
-  
   # STORAGE ----
   global <- reactiveValues(
     analysis = NULL,
@@ -62,7 +61,6 @@ server <- function(input, output, session) {
     qd_path = NULL,
   )
   
-  
   # MAIN DIRECTORY ----
   maindirServer('maindir1', global)
 
@@ -73,48 +71,6 @@ server <- function(input, output, session) {
   qdServer('qd1', global)
   
   # REPORT ----
-  
-  output$report <- downloadHandler(
-    # For PDF output, change this to "report.pdf"
-    filename = function() {
-      paste('report', 
-            sep = '.', 
-            switch(input$format, 
-                   PDF = 'pdf', 
-                   HTML = 'html', 
-                   Word = 'docx'))
-    },
-    content = function(file) {
-      rmd_name <- switch(input$format,
-                         PDF = 'report_pdf.Rmd', 
-                         HTML = 'report_html.Rmd', 
-                         Word = 'report_word.Rmd')
-      src <- normalizePath(rmd_name)
-      
-      # Copy the report file to a temporary directory before processing it, in
-      # case we don't have write permissions to the current working dir (which
-      # can happen when deployed).
-      tempReport <- file.path(tempdir(), rmd_name)
-      file.copy(src, tempReport, overwrite = TRUE)
-      
-      # Set up parameters to pass to Rmd document
-      params <- list(
-        main_dir = global$main_dir,
-        analysis = global$analysis,
-        known_docs = global$known_docs,
-        model = global$model,
-        qd_doc = global$doc
-      )
-      
-      # Knit the document, passing in the `params` list, and eval it in a
-      # child of the global environment (this isolates the code in the document
-      # from the code in this app).
-      rmarkdown::render(tempReport, 
-                        output_file = file,
-                        params = params,
-                        envir = new.env(parent = globalenv())
-      )
-    }
-  )
+  reportServer('report1', global)
   
 }

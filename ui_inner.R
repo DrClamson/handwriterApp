@@ -50,11 +50,9 @@ sidebarLayout(tags$div(id="my-sidebar",
                                       # Report Button UI ----
                                       conditionalPanel(condition="input.prevreport == 'Report'",
                                                        div(id = "autonomous",
-                                                           tags$h1(class = "responsive-text", "REPORT"),
-                                                           br(),
-                                                           radioButtons('format', 'Document format', c('PDF', 'Word', 'HTML'),
-                                                                        inline = TRUE),
-                                                           fluidRow(column(12, downloadButton("report", "Generate report"), align="center"))
+                                                           format_sidebar(title = "REPORT",
+                                                                          help_text = "Choose a document format and download the report.",
+                                                                          module = reportSidebarUI('report1'))
                                                        ),
                                       ),
                                     ))),
@@ -79,7 +77,6 @@ sidebarLayout(tags$div(id="my-sidebar",
                             # Known Writing Display ----
                             tabPanel("Known Writing", 
                                      knownBodyUI('known1')
-                                     # withSpinner(uiOutput("known_display"))
                             ),
                             
                             # Questioned Document Display ----
@@ -88,8 +85,7 @@ sidebarLayout(tags$div(id="my-sidebar",
                             ),
                             
                             # Comparison Report Display ----
-                            tabPanel("Report", 
-                                     # withSpinner(uiOutput("report_display"))
+                            tabPanel("Report",
                             )  
                 )
               )
