@@ -67,52 +67,7 @@ server <- function(input, output, session) {
   maindirServer('maindir1', global)
 
   # KNOWN WRITING ----
-  # load known images and save to temp directory > data > model_docs
-  observeEvent(input$known_upload, {
-    global$known_paths <- input$known_upload$datapath
-    global$known_names <- input$known_upload$name
-  })
-  
-  output$known_docs <- renderTable({global$known_docs})
-  
-  output$known_profiles <- renderPlot({handwriter::plot_credible_intervals(model = global$model, facet = TRUE)})
-  
-  # UI to display known handwriting samples and plots
-  output$known_display <- renderUI({
-    # skip processing if model already exists in main dir
-    if(!is.null(global$model)) {
-      # display
-      bsCollapse(id = "known_display",
-                 bsCollapsePanel("Known writing samples", tableOutput("known_docs")),
-                 bsCollapsePanel("Writer profiles", plotOutput("known_profiles"))
-      ) 
-    } else if (!is.null(input$known_upload)) {
-      # fit model when user selects known writing samples
-      
-      # copy known docs to temp directory > data > model_docs
-      create_dir(file.path(global$main_dir, "data", "model_docs"))
-      copy_known_files_to_project(global$main_dir, global$known_paths, global$known_names)
-      
-      # list known docs
-      global$known_docs <- list_model_docs(global$main_dir, output_dataframe = TRUE)
-      
-      global$model <- handwriter::fit_model(main_dir = global$main_dir,
-                                            model_docs = file.path(global$main_dir, "data", "model_docs"),
-                                            num_iters = 4000,
-                                            num_chains = 1,
-                                            num_cores = 1,
-                                            writer_indices = c(input$known_writer_start_char, input$known_writer_end_char),
-                                            doc_indices = c(input$known_doc_start_char, input$known_doc_end_char))
-      # display
-      bsCollapse(id = "known_display",
-                 bsCollapsePanel("Known writing samples", tableOutput("known_docs")),
-                 bsCollapsePanel("Writer profiles", plotOutput("known_profiles"))
-      ) 
-    } else {
-      return(NULL)
-    }
-  })
-  
+  knownSidebarServer('known1', global)
   
   # QUESTIONED DOCUMENT ----
   
