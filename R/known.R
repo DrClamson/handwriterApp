@@ -20,7 +20,7 @@ knownBodyUI <- function(id){
   )
 }
 
-knownSidebarServer <- function(id, global) {
+knownServer <- function(id, global) {
   moduleServer(
     id,
     function(input, output, session) {

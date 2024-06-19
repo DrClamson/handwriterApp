@@ -40,16 +40,9 @@ sidebarLayout(tags$div(id="my-sidebar",
                                       # Questioned Document UI ----
                                       conditionalPanel(condition="input.prevreport == 'Questioned Document'",
                                                        div(id = "autonomous",
-                                                           tags$h1(class = "responsive-text", "QUESTIONED DOCUMENT"),
-                                                           helpText(id="qd_writerID_help", "Where are the writer IDs located in the file names?"),
-                                                           fluidRow(column(5, set_indices(id = "qd_writer_start_char", label = "Start location")),
-                                                                    column(5, set_indices(id = "qd_writer_end_char", label = "End location"))),
-                                                           helpText(id="qd_docID_help", "Where are the document numbers located in the file names?"),
-                                                           fluidRow(column(5, set_indices(id = "qd_doc_start_char", label = "Start location")),
-                                                                    column(5, set_indices(id = "qd_doc_end_char", label = "End location"))),
-                                                           helpText("Select the questioned document."),
-                                                           fileInput("qd_upload", "", accept = ".png", multiple=FALSE),
-                                                           br(),
+                                                           format_sidebar(title = "QUESTIONED DOCUMENT",
+                                                                          help_text = "Where are the writer IDs located in the file names?",
+                                                                          module = qdSidebarUI('qd1')),
                                                            actionButton("qd_next_button", "Next"),
                                                        ),
                                       ),
@@ -91,7 +84,7 @@ sidebarLayout(tags$div(id="my-sidebar",
                             
                             # Questioned Document Display ----
                             tabPanel("Questioned Document", 
-                                     withSpinner(uiOutput("qd_display"))
+                                     qdBodyUI('qd1')
                             ),
                             
                             # Comparison Report Display ----
