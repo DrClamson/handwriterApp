@@ -14,20 +14,34 @@ qdSidebarUI <- function(id) {
 qdBodyUI <- function(id){
   ns <- NS(id)
   tagList(
-    # display QD image, graphs plot, and clusters plot
-    bsCollapse(id = "qd_display",
-               bsCollapsePanel("Preview", 
-                               imageOutput(ns("qd_image"))
-               ),
-               bsCollapsePanel("Processed", 
-                               p(class = "text-muted", "The handwriting in the questioned document is split into 
-                                          component shapes called graphs."),
-                               plotOutput(ns("qd_nodes"))),
-               bsCollapsePanel("Writer profile", 
-                               plotOutput(ns("qd_profile"))),
-               bsCollapsePanel("Writership analysis", 
-                               p(class = "text-muted", "The posterior probability that each writer in the closed-set of writers wrote the questioned document."),
-                               tableOutput(ns("qd_analysis"))))
+    dashboardPage(
+      dashboardHeader(disable = TRUE),
+      dashboardSidebar(disable = TRUE),
+      dashboardBody(
+        fluidRow(
+          withSpinner(uiOutput(ns("qd_image_box"))),
+          uiOutput(ns("qd_nodes_box"))
+          ),
+        fluidRow(
+          uiOutput(ns("qd_profile_box")),
+          uiOutput(ns("qd_analysis_box"))
+        )
+      )
+    )
+    # # display QD image, graphs plot, and clusters plot
+    # bsCollapse(id = "qd_display",
+    #            bsCollapsePanel("Preview", 
+    #                            imageOutput(ns("qd_image"))
+    #            ),
+    #            bsCollapsePanel("Processed", 
+    #                            p(class = "text-muted", "The handwriting in the questioned document is split into 
+    #                                       component shapes called graphs."),
+    #                            plotOutput(ns("qd_nodes"))),
+    #            bsCollapsePanel("Writer profile", 
+    #                            plotOutput(ns("qd_profile"))),
+    #            bsCollapsePanel("Writership analysis", 
+    #                            p(class = "text-muted", "The posterior probability that each writer in the closed-set of writers wrote the questioned document."),
+    #                            tableOutput(ns("qd_analysis"))))
   )
 }
 
@@ -81,6 +95,46 @@ qdServer <- function(id, global) {
       output$qd_analysis <- renderTable({
         req(global$analysis)
         make_posteriors_df(global$analysis)
+      })
+      
+      # NOTE: this is UI that lives inside server so that box is hidden if
+      # known_docs doesn't exist
+      output$qd_image_box <- renderUI({
+        req(global$qd_image)
+        box(title = "Questioned Document",
+            collapsible = TRUE,
+            imageOutput(NS(id, "qd_image"))  # NS needed for UI
+        )
+      })
+      
+      # NOTE: this is UI that lives inside server so that box is hidden if
+      # doc doesn't exist
+      output$qd_nodes_box <- renderUI({
+        req(global$doc)
+        box(title = "Processed Questioned Document",
+            collapsible = TRUE,
+            plotOutput(NS(id, "qd_nodes"))  # NS needed for UI
+        )
+      })
+      
+      # NOTE: this is UI that lives inside server so that box is hidden if
+      # analysis doesn't exist
+      output$qd_profile_box <- renderUI({
+        req(global$analysis)
+        box(title = "Questioned Writer Profile",
+            collapsible = TRUE,
+            plotOutput(NS(id, "qd_profile"))  # NS needed for UI
+        )
+      })
+      
+      # NOTE: this is UI that lives inside server so that box is hidden if
+      # analysis doesn't exist
+      output$qd_analysis_box <- renderUI({
+        req(global$analysis)
+        box(title = "Posterior Probabilities",
+            collapsible = TRUE,
+            tableOutput(NS(id, "qd_analysis"))  # NS needed for UI
+        )
       })
     }
   )

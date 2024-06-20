@@ -14,9 +14,16 @@ knownSidebarUI <- function(id) {
 knownBodyUI <- function(id){
   ns <- NS(id)
   tagList(
-    bsCollapse(id = "known_display",
-               bsCollapsePanel(ns("Known writing samples"), tableOutput(ns("known_docs"))),
-               bsCollapsePanel(ns("Writer profiles"), plotOutput(ns("known_profiles"))))
+    dashboardPage(
+      dashboardHeader(disable = TRUE),
+      dashboardSidebar(disable = TRUE),
+      dashboardBody(
+        fluidRow(
+          withSpinner(uiOutput(ns("known_docs_box"))),
+          uiOutput(ns("known_profiles_box"))
+        )
+      )
+    )
   )
 }
 
@@ -55,6 +62,26 @@ knownServer <- function(id, global) {
       output$known_profiles <- renderPlot({
         req(global$model)
         handwriter::plot_credible_intervals(model = global$model, facet = TRUE)
+      })
+      
+      # NOTE: this is UI that lives inside server so that box is hidden if
+      # known_docs doesn't exist
+      output$known_docs_box <- renderUI({
+        req(global$known_docs)
+        box(title = "Known Writing Samples",
+            collapsible = TRUE,
+            tableOutput(NS(id, "known_docs"))  # NS needed for UI 
+        )
+      })
+      
+      # NOTE: this is UI that lives inside server so that box is hidden if
+      # known_docs doesn't exist
+      output$known_profiles_box <- renderUI({
+        req(global$known_docs)
+        box(title = "Writer Profiles of Known Writers",
+            collapsible = TRUE,
+            plotOutput(NS(id, "known_profiles"))  # NS needed for UI
+        )
       })
     }
   )
