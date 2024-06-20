@@ -14,15 +14,10 @@ knownSidebarUI <- function(id) {
 knownBodyUI <- function(id){
   ns <- NS(id)
   tagList(
-    dashboardPage(
-      dashboardHeader(disable = TRUE),
-      dashboardSidebar(disable = TRUE),
-      dashboardBody(
-        fluidRow(
-          withSpinner(uiOutput(ns("known_docs_box"))),
-          uiOutput(ns("known_profiles_box"))
-        )
-      )
+    h3("Supporting Materials"),
+    fluidRow(
+      column(width=6, withSpinner(uiOutput(ns("known_docs_window")))),
+      column(width=6, withSpinner(uiOutput(ns("known_profiles_window"))))
     )
   )
 }
@@ -64,23 +59,36 @@ knownServer <- function(id, global) {
         handwriter::plot_credible_intervals(model = global$model, facet = TRUE)
       })
       
-      # NOTE: this is UI that lives inside server so that box is hidden if
+      # NOTE: this is UI that lives inside server so that button is hidden if
       # known_docs doesn't exist
-      output$known_docs_box <- renderUI({
+      output$known_docs_window <- renderUI({
         req(global$known_docs)
-        box(title = "Known Writing Samples",
-            collapsible = TRUE,
-            tableOutput(NS(id, "known_docs"))  # NS needed for UI 
+        tagList(
+          # QD displayed in pop-up window
+          bsModal("known_docs_modal", 
+                  title = "Known Writing Samples", 
+                  trigger = NS(id, "known_docs_button"),  # NS needed for UI
+                  size = "large",
+                  tableOutput(NS(id, "known_docs"))),
+          tags$script(HTML('$(".modal").draggable({
+                      handle: ".modal-header"
+                      });')),
+          actionButton(NS(id, "known_docs_button"), "List Documents", style = 'width:100%')
         )
       })
       
-      # NOTE: this is UI that lives inside server so that box is hidden if
+      # NOTE: this is UI that lives inside server so that button is hidden if
       # known_docs doesn't exist
-      output$known_profiles_box <- renderUI({
+      output$known_profiles_window <- renderUI({
         req(global$known_docs)
-        box(title = "Writer Profiles of Known Writers",
-            collapsible = TRUE,
-            plotOutput(NS(id, "known_profiles"))  # NS needed for UI
+        tagList(
+          # QD displayed in pop-up window
+          bsModal("known_profiles_modal", 
+                  title = "Writer Profiles of Known Writers", 
+                  trigger = NS(id, "known_profiles_button"),  # NS needed for UI
+                  size = "large",
+                  plotOutput(NS(id, "known_profiles"))),  
+          actionButton(NS(id, "known_profiles_button"), "Writer Profiles", style = 'width:100%')
         )
       })
     }
