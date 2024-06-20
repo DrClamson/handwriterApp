@@ -22,9 +22,9 @@ reportServer <- function(id, global) {
         },
         content = function(file) {
           rmd_name <- switch(input$format,
-                             PDF = 'report_pdf.Rmd', 
-                             HTML = 'report_html.Rmd', 
-                             Word = 'report_word.Rmd')
+                             PDF = system.file(file.path("extdata", "report_templates"), "report_pdf.Rmd", package = "handwriterApp"), 
+                             HTML = system.file(file.path("extdata", "report_templates"), "report_html.Rmd", package = "handwriterApp"), 
+                             Word = system.file(file.path("extdata", "report_templates"), "report_word.Rmd", package = "handwriterApp"))
           src <- normalizePath(rmd_name)
           
           # Copy the report file to a temporary directory before processing it, in

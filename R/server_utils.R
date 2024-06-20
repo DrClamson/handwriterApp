@@ -70,6 +70,6 @@ setup_main_dir <- function(main_dir){
     create_dir(file.path(main_dir, "data", "questioned_graphs"))
     create_dir(file.path(main_dir, "data", "model_docs"))
     
-    # copy template to main directory > data
-    file.copy(file.path("data", "template.RDS"), file.path(main_dir, "data", "template.RDS"))
+    # handwriter requires template.rds to exist in main_dir > data
+    saveRDS(template, file.path(main_dir, "data", "template.rds"))
 }
