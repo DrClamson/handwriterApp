@@ -81,55 +81,59 @@ qdServer <- function(id, global) {
       # NOTE: this is UI that lives inside server so that button is hidden
       # if qd_image doesn't exist
       output$qd_image_window <- renderUI({
+        ns <- session$ns
         req(global$qd_image)
         tagList(
           # QD displayed in pop-up window
           bsModal("qd_image_modal", 
                   title = "Questioned Document", 
-                  trigger = NS(id, "qd_image_button"),  # NS needed for UI
+                  trigger = ns("qd_image_button"),  # NS needed for UI
                   size = "large",
-                  imageOutput(NS(id, "qd_image"))),  
-          actionButton(NS(id, "qd_image_button"), "View Document", style = 'width:100%')
+                  imageOutput(ns("qd_image"))),  
+          actionButton(ns("qd_image_button"), "View Document", style = 'width:100%')
         )
       })
       
       # NOTE: this is UI that lives inside server so that button is hidden if
       # doc doesn't exist
       output$qd_nodes_window <- renderUI({
+        ns <- session$ns
         req(global$doc)
         # Processed QD displayed in pop-up window
         tagList(
           # QD displayed in pop-up window
           bsModal("qd_nodes_modal", 
                   title = "Questioned Document Decomposed into Graphs", 
-                  trigger = NS(id, "qd_nodes_button"),  # NS needed for UI
+                  trigger = ns("qd_nodes_button"),  # NS needed for UI
                   size = "large",
-                  plotOutput(NS(id, "qd_nodes"))),  
-          actionButton(NS(id, "qd_nodes_button"), "View Document Graphs", style = 'width:100%')
+                  plotOutput(ns("qd_nodes"))),  
+          actionButton(ns("qd_nodes_button"), "View Document Graphs", style = 'width:100%')
         )
       })
       
       # NOTE: this is UI that lives inside server so that button is hidden if
       # analysis doesn't exist
       output$qd_profile_window <- renderUI({
+        ns <- session$ns
         req(global$analysis)
         # QD writer profile displayed in pop-up window
         tagList(
           # QD displayed in pop-up window
           bsModal("qd_profile_modal", 
                   title = "Writer Profile from Questioned Document", 
-                  trigger = NS(id, "qd_profile_button"),  # NS needed for UI
+                  trigger = ns("qd_profile_button"),  # NS needed for UI
                   size = "large",
-                  plotOutput(NS(id, "qd_profile"))),  
-          actionButton(NS(id, "qd_profile_button"), "View Writer Profile", style = 'width:100%')
+                  plotOutput(ns("qd_profile"))),  
+          actionButton(ns("qd_profile_button"), "View Writer Profile", style = 'width:100%')
         )
       })
       
       # NOTE: this is UI that lives inside server so that box is hidden if
       # analysis doesn't exist
       output$qd_analysis_box <- renderUI({
+        ns <- session$ns
         req(global$analysis)
-        tableOutput(NS(id, "qd_analysis"))  # NS needed for UI
+        tableOutput(ns("qd_analysis"))  # NS needed for UI
       })
     }
   )

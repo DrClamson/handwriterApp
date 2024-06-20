@@ -17,7 +17,7 @@ knownBodyUI <- function(id){
     h3("Supporting Materials"),
     fluidRow(
       column(width=6, withSpinner(uiOutput(ns("known_docs_window")))),
-      column(width=6, withSpinner(uiOutput(ns("known_profiles_window"))))
+      column(width=6, uiOutput(ns("known_profiles_window")))
     )
   )
 }
@@ -62,33 +62,32 @@ knownServer <- function(id, global) {
       # NOTE: this is UI that lives inside server so that button is hidden if
       # known_docs doesn't exist
       output$known_docs_window <- renderUI({
+        ns <- session$ns
         req(global$known_docs)
         tagList(
           # QD displayed in pop-up window
           bsModal("known_docs_modal", 
                   title = "Known Writing Samples", 
-                  trigger = NS(id, "known_docs_button"),  # NS needed for UI
+                  trigger = ns("known_docs_button"),  # NS needed for UI
                   size = "large",
-                  tableOutput(NS(id, "known_docs"))),
-          tags$script(HTML('$(".modal").draggable({
-                      handle: ".modal-header"
-                      });')),
-          actionButton(NS(id, "known_docs_button"), "List Documents", style = 'width:100%')
+                  tableOutput(ns("known_docs"))),
+          actionButton(ns("known_docs_button"), "List Documents", style = 'width:100%')
         )
       })
       
       # NOTE: this is UI that lives inside server so that button is hidden if
       # known_docs doesn't exist
       output$known_profiles_window <- renderUI({
+        ns <- session$ns
         req(global$known_docs)
         tagList(
           # QD displayed in pop-up window
           bsModal("known_profiles_modal", 
                   title = "Writer Profiles of Known Writers", 
-                  trigger = NS(id, "known_profiles_button"),  # NS needed for UI
+                  trigger = ns("known_profiles_button"),  # NS needed for UI
                   size = "large",
-                  plotOutput(NS(id, "known_profiles"))),  
-          actionButton(NS(id, "known_profiles_button"), "Writer Profiles", style = 'width:100%')
+                  plotOutput(ns("known_profiles"))),  
+          actionButton(ns("known_profiles_button"), "Writer Profiles", style = 'width:100%')
         )
       })
     }
