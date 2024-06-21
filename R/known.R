@@ -17,7 +17,7 @@ knownBodyUI <- function(id){
     shiny::h3("Supporting Materials"),
     shiny::fluidRow(
       shiny::column(width=6, shinycssloaders::withSpinner(uiOutput(ns("known_docs_window")))),
-      shiny::column(width=6, uiOutput(ns("known_profiles_window")))
+      shiny::column(width=6, shinycssloaders::withSpinner(uiOutput(ns("known_profiles_window"))))
     )
   )
 }

@@ -16,9 +16,9 @@ qdBodyUI <- function(id){
   tagList(
     shiny::h3("Supporting Materials"),
     shiny::fluidRow(
-      shiny::column(width = 4, uiOutput(ns("qd_image_window"))),
-      shiny::column(width = 4, uiOutput(ns("qd_nodes_window"))),
-      shiny::column(width = 4, uiOutput(ns("qd_profile_window")))
+      shiny::column(width = 4, shinycssloaders::withSpinner(uiOutput(ns("qd_image_window")))),
+      shiny::column(width = 4, shinycssloaders::withSpinner(uiOutput(ns("qd_nodes_window")))),
+      shiny::column(width = 4, shinycssloaders::withSpinner(uiOutput(ns("qd_profile_window"))))
     ),
     shiny::br(),
     shiny::h3("Evaluation Results"),
