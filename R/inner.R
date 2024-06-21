@@ -25,7 +25,8 @@ innerUI <- function(id) {
                                                                             an empty folder to start a new analysis. If you want
                                                                             to continue an analysis, select that folder.",
                                                                               module = maindirUI(ns('maindir1'))),
-                                                               actionButton(ns("setup_next_button"), "Next")
+                                                               fluidRow(column(width = 6, actionButton(ns("setup_back_button"), "Back")), 
+                                                                        column(width = 6, align = "right", actionButton(ns("setup_next_button"), "Next")))
                                                            ),
                                           ),
                                           
@@ -36,7 +37,8 @@ innerUI <- function(id) {
                                                                format_sidebar(title = "KNOWN WRITING",
                                                                               help_text = "Where are the writer IDs located in the file names?",
                                                                               module = knownSidebarUI(ns('known1'))),
-                                                               actionButton(ns("known_next_button"), "Next"),
+                                                               fluidRow(column(width = 6, actionButton(ns("known_back_button"), "Back")), 
+                                                                        column(width = 6, align = "right", actionButton(ns("known_next_button"), "Next")))
                                                            ),
                                           ),
                                           
@@ -47,7 +49,8 @@ innerUI <- function(id) {
                                                                format_sidebar(title = "QUESTIONED DOCUMENT",
                                                                               help_text = "Where are the writer IDs located in the file names?",
                                                                               module = qdSidebarUI(ns('qd1'))),
-                                                               actionButton(ns("qd_next_button"), "Next"),
+                                                               fluidRow(column(width = 6, actionButton(ns("qd_back_button"), "Back")), 
+                                                                        column(width = 6, align = "right", actionButton(ns("qd_next_button"), "Next")))
                                                            ),
                                           ),
                                           
@@ -55,6 +58,7 @@ innerUI <- function(id) {
                                           conditionalPanel(condition="input.prevreport == 'Report'",
                                                            ns = shiny::NS(id),
                                                            div(id = "autonomous",
+                                                               actionButton(ns("report_back_button"), "Back"),
                                                                format_sidebar(title = "REPORT",
                                                                               help_text = "Choose a document format and download the report.",
                                                                               module = reportSidebarUI(ns('report1')))
@@ -63,6 +67,7 @@ innerUI <- function(id) {
                                         ))),
                   mainPanel(
                     tabsetPanel(id=ns("prevreport"),
+                                type = "hidden",
                                 
                                 # Welcome Display ----
                                 shiny::tabPanel(id = ns("Welcome"),
@@ -108,34 +113,39 @@ innerServer <- function(id){
   moduleServer(
     id,
     function(input, output, session){
-      # # NEXT BUTTONS ----
-      # # disable next buttons at start
-      # shinyjs::disable("setup_next_button")
-      # shinyjs::disable("known_next_button")
-      # shinyjs::disable("qd_next_button")
-      # 
-      # # enable next buttons
-      # observe({
-      #   # main_dir needs to be defined
-      #   req(global$main_dir)
-      #   shinyjs::enable("setup_next_button")
-      # })
-      # observe({
-      #   # model needs to be loaded
-      #   req(global$model)
-      #   shinyjs::enable("known_next_button")
-      # })
-      # observe({
-      #   # analysis needs to be loaded
-      #   req(global$analysis)
-      #   shinyjs::enable("qd_next_button")
-      # })
-      
+      # NEXT BUTTONS ----
+      # disable next buttons at start
+      shinyjs::disable("setup_next_button")
+      shinyjs::disable("known_next_button")
+      shinyjs::disable("qd_next_button")
+
+      # enable next buttons
+      observe({
+        # main_dir needs to be defined
+        req(global$main_dir)
+        shinyjs::enable("setup_next_button")
+      })
+      observe({
+        # model needs to be loaded
+        req(global$model)
+        shinyjs::enable("known_next_button")
+      })
+      observe({
+        # analysis needs to be loaded
+        req(global$analysis)
+        shinyjs::enable("qd_next_button")
+      })
+
       # change selected tab in main panel
       observeEvent(input$begin_button, {updateTabsetPanel(session, "prevreport", selected = "Setup")})
       observeEvent(input$setup_next_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
       observeEvent(input$known_next_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
       observeEvent(input$qd_next_button, {updateTabsetPanel(session, "prevreport", selected = "Report")})
+      
+      observeEvent(input$setup_back_button, {updateTabsetPanel(session, "prevreport", selected = "Welcome")})
+      observeEvent(input$known_back_button, {updateTabsetPanel(session, "prevreport", selected = "Setup")})
+      observeEvent(input$qd_back_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
+      observeEvent(input$report_back_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
       
       # STORAGE ----
       global <- reactiveValues(
