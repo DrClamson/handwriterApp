@@ -30,7 +30,7 @@ reportServer <- function(id, global) {
           # Copy the report file to a temporary directory before processing it, in
           # case we don't have write permissions to the current working dir (which
           # can happen when deployed).
-          tempReport <- file.path(tempdir(), rmd_name)
+          tempReport <- file.path(tempdir(), basename(rmd_name))
           file.copy(src, tempReport, overwrite = TRUE)
           
           # Set up parameters to pass to Rmd document
