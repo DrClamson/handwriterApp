@@ -1,32 +1,32 @@
 knownSidebarUI <- function(id) {
-  ns <- NS(id)
-  tagList(
-    fluidRow(column(5, set_indices(id = ns("known_writer_start_char"), label = "Start location")),
-             column(5, set_indices(id = ns("known_writer_end_char"), label = "End location"))),
-    helpText("Where are the document numbers located in the file names?"),
-    fluidRow(column(5, set_indices(id = ns("known_doc_start_char"), label = "Start location")),
-             column(5, set_indices(id = ns("known_doc_end_char"), label = "End location"))),
-    helpText("Select three known writing samples from each person of interest."),
-    fileInput(ns("known_upload"), "", accept = ".png", multiple=TRUE)
+  ns <- shiny::NS(id)
+  shiny::tagList(
+    shiny::fluidRow(shiny::column(5, set_indices(id = ns("known_writer_start_char"), label = "Start location")),
+             shiny::column(5, set_indices(id = ns("known_writer_end_char"), label = "End location"))),
+    shiny::helpText("Where are the document numbers located in the file names?"),
+    shiny::fluidRow(shiny::column(5, set_indices(id = ns("known_doc_start_char"), label = "Start location")),
+             shiny::column(5, set_indices(id = ns("known_doc_end_char"), label = "End location"))),
+    shiny::helpText("Select three known writing samples from each person of interest."),
+    shiny::fileInput(ns("known_upload"), "", accept = ".png", multiple=TRUE)
   )
 }
 
 knownBodyUI <- function(id){
-  ns <- NS(id)
-  tagList(
-    h3("Supporting Materials"),
-    fluidRow(
-      column(width=6, withSpinner(uiOutput(ns("known_docs_window")))),
-      column(width=6, uiOutput(ns("known_profiles_window")))
+  ns <- shiny::NS(id)
+  shiny::tagList(
+    shiny::h3("Supporting Materials"),
+    shiny::fluidRow(
+      shiny::column(width=6, shinycssloaders::withSpinner(uiOutput(ns("known_docs_window")))),
+      shiny::column(width=6, uiOutput(ns("known_profiles_window")))
     )
   )
 }
 
 knownServer <- function(id, global) {
-  moduleServer(
+  shiny::moduleServer(
     id,
     function(input, output, session) {
-      observeEvent(input$known_upload, {
+      shiny::observeEvent(input$known_upload, {
         known_paths <- input$known_upload$datapath
         known_names <- input$known_upload$name
         
@@ -49,40 +49,38 @@ knownServer <- function(id, global) {
                                                               input$known_doc_end_char))
       })
       
-      output$known_docs <- renderTable({
+      output$known_docs <- shiny::renderTable({
         req(global$known_docs)
         global$known_docs
       })
       
-      output$known_profiles <- renderPlot({
+      output$known_profiles <- shiny::renderPlot({
         req(global$model)
         handwriter::plot_credible_intervals(model = global$model, facet = TRUE)
       })
       
       # NOTE: this is UI that lives inside server so that button is hidden if
       # known_docs doesn't exist
-      output$known_docs_window <- renderUI({
+      output$known_docs_window <- shiny::renderUI({
         ns <- session$ns
         req(global$known_docs)
         tagList(
-          # QD displayed in pop-up window
-          bsModal("known_docs_modal", 
+          actionButton(ns("known_docs_button"), "List Documents", style = 'width:100%'),
+          shinyBS::bsModal("known_docs_modal", 
                   title = "Known Writing Samples", 
                   trigger = ns("known_docs_button"),  # NS needed for UI
                   size = "large",
-                  tableOutput(ns("known_docs"))),
-          actionButton(ns("known_docs_button"), "List Documents", style = 'width:100%')
+                  tableOutput(ns("known_docs")))
         )
       })
       
       # NOTE: this is UI that lives inside server so that button is hidden if
       # known_docs doesn't exist
-      output$known_profiles_window <- renderUI({
+      output$known_profiles_window <- shiny::renderUI({
         ns <- session$ns
         req(global$known_docs)
         tagList(
-          # QD displayed in pop-up window
-          bsModal("known_profiles_modal", 
+          shinyBS::bsModal("known_profiles_modal", 
                   title = "Writer Profiles of Known Writers", 
                   trigger = ns("known_profiles_button"),  # NS needed for UI
                   size = "large",

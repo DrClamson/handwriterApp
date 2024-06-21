@@ -3,12 +3,12 @@ set_indices <- function(id, label){
 }
 
 format_sidebar <- function(title, help_text, module = NULL){
-  output <- tagList(
-    tags$h1(class = "responsive-text", title),
-    br(),
-    helpText(help_text),
+  output <- shiny::tagList(
+    shiny::tags$h1(class = "responsive-text", title),
+    shiny::br(),
+    shiny::helpText(help_text),
     module,
-    br(),
+    shiny::br(),
   )
   return(output)
 }

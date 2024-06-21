@@ -1,9 +1,9 @@
 reportSidebarUI <- function(id) {
-  ns <- NS(id)
+  ns <- shiny::NS(id)
   tagList(
     radioButtons(ns('format'), 'Document format', c('PDF', 'Word', 'HTML'),
                  inline = TRUE),
-    fluidRow(column(12, downloadButton(ns("report"), "Generate report"), align="center"))
+    fluidRow(shiny::column(12, downloadButton(ns("report"), "Generate report"), align="center"))
   )
 }
 

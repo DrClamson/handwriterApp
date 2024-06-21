@@ -1,28 +1,28 @@
 qdSidebarUI <- function(id) {
-  ns <- NS(id)
+  ns <- shiny::NS(id)
   tagList(
-    fluidRow(column(5, set_indices(id = ns("qd_writer_start_char"), label = "Start location")),
-             column(5, set_indices(id = ns("qd_writer_end_char"), label = "End location"))),
+    fluidRow(shiny::column(5, set_indices(id = ns("qd_writer_start_char"), label = "Start location")),
+             shiny::column(5, set_indices(id = ns("qd_writer_end_char"), label = "End location"))),
     helpText(id="qd_docID_help", "Where are the document numbers located in the file names?"),
-    fluidRow(column(5, set_indices(id = ns("qd_doc_start_char"), label = "Start location")),
-             column(5, set_indices(id = ns("qd_doc_end_char"), label = "End location"))),
+    fluidRow(shiny::column(5, set_indices(id = ns("qd_doc_start_char"), label = "Start location")),
+             shiny::column(5, set_indices(id = ns("qd_doc_end_char"), label = "End location"))),
     helpText("Select the questioned document."),
     fileInput(ns("qd_upload"), "", accept = ".png", multiple=FALSE)
   )
 }
 
 qdBodyUI <- function(id){
-  ns <- NS(id)
+  ns <- shiny::NS(id)
   tagList(
-    h3("Supporting Materials"),
-    fluidRow(
-      column(width = 4, uiOutput(ns("qd_image_window"))),
-      column(width = 4, uiOutput(ns("qd_nodes_window"))),
-      column(width = 4, uiOutput(ns("qd_profile_window")))
+    shiny::h3("Supporting Materials"),
+    shiny::fluidRow(
+      shiny::column(width = 4, uiOutput(ns("qd_image_window"))),
+      shiny::column(width = 4, uiOutput(ns("qd_nodes_window"))),
+      shiny::column(width = 4, uiOutput(ns("qd_profile_window")))
     ),
-    br(),
-    h3("Evaluation Results"),
-    tableOutput(ns("qd_analysis"))
+    shiny::br(),
+    shiny::h3("Evaluation Results"),
+    shiny::tableOutput(ns("qd_analysis"))
   )
 }
 
@@ -42,7 +42,7 @@ qdServer <- function(id, global) {
         copy_qd_to_project(main_dir = global$main_dir, qd_path = global$qd_path, qd_name = global$qd_name)
         
         # analyze
-        global$analysis <- analyze_questioned_documents(main_dir = global$main_dir,
+        global$analysis <- handwriter::analyze_questioned_documents(main_dir = global$main_dir,
                                                         questioned_docs = file.path(global$main_dir, "data", "questioned_docs"),
                                                         model = global$model,
                                                         num_cores = 1,
@@ -56,7 +56,7 @@ qdServer <- function(id, global) {
       output$qd_image <- renderImage({
         req(global$qd_image)
         tmp <- global$qd_image %>%
-          image_write(tempfile(fileext='png'), format = 'png')
+          magick::image_write(tempfile(fileext='png'), format = 'png')
         
         # return a list
         list(src = tmp, contentType = "image/png")
@@ -85,7 +85,7 @@ qdServer <- function(id, global) {
         req(global$qd_image)
         tagList(
           # QD displayed in pop-up window
-          bsModal("qd_image_modal", 
+          shinyBS::bsModal("qd_image_modal", 
                   title = "Questioned Document", 
                   trigger = ns("qd_image_button"),  # NS needed for UI
                   size = "large",
@@ -102,7 +102,7 @@ qdServer <- function(id, global) {
         # Processed QD displayed in pop-up window
         tagList(
           # QD displayed in pop-up window
-          bsModal("qd_nodes_modal", 
+          shinyBS::bsModal("qd_nodes_modal", 
                   title = "Questioned Document Decomposed into Graphs", 
                   trigger = ns("qd_nodes_button"),  # NS needed for UI
                   size = "large",
@@ -119,7 +119,7 @@ qdServer <- function(id, global) {
         # QD writer profile displayed in pop-up window
         tagList(
           # QD displayed in pop-up window
-          bsModal("qd_profile_modal", 
+          shinyBS::bsModal("qd_profile_modal", 
                   title = "Writer Profile from Questioned Document", 
                   trigger = ns("qd_profile_button"),  # NS needed for UI
                   size = "large",

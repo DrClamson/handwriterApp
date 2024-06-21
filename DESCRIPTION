@@ -12,3 +12,14 @@ RoxygenNote: 7.3.1
 Depends: 
     R (>= 2.10)
 LazyData: true
+Imports: 
+    dplyr,
+    handwriter,
+    magick,
+    magrittr,
+    rmarkdown,
+    shiny,
+    shinyBS,
+    shinycssloaders,
+    shinyFiles,
+    shinyjs

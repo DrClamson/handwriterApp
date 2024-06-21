@@ -1,7 +1,7 @@
 maindirUI <- function(id) {
-  ns <- NS(id)
-  tagList(
-    shinyDirButton(ns("main_dir"), "Main folder", "Select a folder"),
+  ns <- shiny::NS(id)
+  shiny::tagList(
+    shinyFiles::shinyDirButton(ns("main_dir"), "Main folder", "Select a folder"),
     verbatimTextOutput(ns("dir"), placeholder = TRUE)
   )
 }
@@ -12,7 +12,7 @@ maindirServer <- function(id, global) {
     id,
     function(input, output, session) {
       
-      shinyDirChoose(
+      shinyFiles::shinyDirChoose(
         input,
         'main_dir',
         roots = c(home = '~'),
