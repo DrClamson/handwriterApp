@@ -58,10 +58,10 @@ innerUI <- function(id) {
                                           conditionalPanel(condition="input.prevreport == 'Report'",
                                                            ns = shiny::NS(id),
                                                            div(id = "autonomous",
-                                                               actionButton(ns("report_back_button"), "Back"),
                                                                format_sidebar(title = "REPORT",
-                                                                              help_text = "Choose a document format and download the report.",
-                                                                              module = reportSidebarUI(ns('report1')))
+                                                                              help_text = "Download the report."),
+                                                               fluidRow(column(width = 3, actionButton(ns("report_back_button"), "Back")), 
+                                                                        column(width = 9, align = "right", reportSidebarUI(ns('report1'))))
                                                            ),
                                           ),
                                         ))),
@@ -71,36 +71,36 @@ innerUI <- function(id) {
                                 
                                 # Welcome Display ----
                                 shiny::tabPanel(id = ns("Welcome"),
-                                         title = "Welcome",
-                                         h3("WELCOME TO HANDWRITER!"),
-                                         p("Unlock the power of handwriting analysis with handwriter. Made to aid forensic examiners in their work,
+                                                title = "Welcome",
+                                                h3("WELCOME TO HANDWRITER!"),
+                                                p("Unlock the power of handwriting analysis with handwriter. Made to aid forensic examiners in their work,
                    this tool analyzes a handwritten document against a closed set of potential writers to determine the probability
                    that each writer wrote the document. Whether you are a forensic document examiner, legal professional, academic,
                    or simply curious about how statistics are applied to handwriting, handwriter provides a cutting-edge way to 
                    evaluate handwriting samples."),
-                                         shiny::br(),
+                                                shiny::br(),
                                 ),
                                 
                                 # Setup Display ----
                                 shiny::tabPanel(id = ns("Setup"),
-                                         title = "Setup"
+                                                title = "Setup"
                                 ),
                                 
                                 # Known Writing Display ----
                                 shiny::tabPanel(id = ns("Known Writing"),
-                                         title = "Known Writing",
-                                         knownBodyUI(ns('known1'))
+                                                title = "Known Writing",
+                                                knownBodyUI(ns('known1'))
                                 ),
                                 
                                 # Questioned Document Display ----
                                 shiny::tabPanel(id = ns("Questioned Document"), 
-                                         title = "Questioned Document",
-                                         qdBodyUI(ns('qd1'))
+                                                title = "Questioned Document",
+                                                qdBodyUI(ns('qd1'))
                                 ),
                                 
                                 # Comparison Report Display ----
                                 shiny::tabPanel(id = ns("Report"),
-                                         title = "Report"
+                                                title = "Report",
                                 )  
                     )
                   )
@@ -118,7 +118,7 @@ innerServer <- function(id){
       shinyjs::disable("setup_next_button")
       shinyjs::disable("known_next_button")
       shinyjs::disable("qd_next_button")
-
+      
       # enable next buttons
       observe({
         # main_dir needs to be defined
@@ -135,7 +135,7 @@ innerServer <- function(id){
         req(global$analysis)
         shinyjs::enable("qd_next_button")
       })
-
+      
       # change selected tab in main panel
       observeEvent(input$begin_button, {updateTabsetPanel(session, "prevreport", selected = "Setup")})
       observeEvent(input$setup_next_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})

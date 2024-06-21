@@ -1,9 +1,7 @@
 reportSidebarUI <- function(id) {
   ns <- shiny::NS(id)
-  tagList(
-    radioButtons(ns('format'), 'Document format', c('PDF', 'Word', 'HTML'),
-                 inline = TRUE),
-    fluidRow(shiny::column(12, downloadButton(ns("report"), "Generate report"), align="center"))
+  shiny::tagList(
+    shiny::fluidRow(shiny::column(12, shiny::downloadButton(ns("report"), "Generate report"), align="center"))
   )
 }
 
@@ -11,20 +9,13 @@ reportServer <- function(id, global) {
   moduleServer(
     id,
     function(input, output, session) {
+      
       output$report <- downloadHandler(
         filename = function() {
-          paste('report', 
-                sep = '.', 
-                switch(input$format, 
-                       PDF = 'pdf', 
-                       HTML = 'html', 
-                       Word = 'docx'))
+          paste0('report_', global$doc$docname, '.pdf')
         },
         content = function(file) {
-          rmd_name <- switch(input$format,
-                             PDF = system.file(file.path("extdata", "report_templates"), "report_pdf.Rmd", package = "handwriterApp"), 
-                             HTML = system.file(file.path("extdata", "report_templates"), "report_html.Rmd", package = "handwriterApp"), 
-                             Word = system.file(file.path("extdata", "report_templates"), "report_word.Rmd", package = "handwriterApp"))
+          rmd_name <- system.file(file.path("extdata", "report_templates"), "report_pdf.Rmd", package = "handwriterApp")
           src <- normalizePath(rmd_name)
           
           # Copy the report file to a temporary directory before processing it, in
