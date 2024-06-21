@@ -14,11 +14,7 @@ knownSidebarUI <- function(id) {
 knownBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::h3("Supporting Materials"),
-    shiny::fluidRow(
-      shiny::column(width=6, shinycssloaders::withSpinner(uiOutput(ns("known_docs_window")))),
-      shiny::column(width=6, shinycssloaders::withSpinner(uiOutput(ns("known_profiles_window"))))
-    )
+    shinycssloaders::withSpinner(uiOutput(ns("known_tabs")))
   )
 }
 
@@ -59,33 +55,20 @@ knownServer <- function(id, global) {
         handwriter::plot_credible_intervals(model = global$model, facet = TRUE)
       })
       
-      # NOTE: this is UI that lives inside server so that button is hidden if
-      # known_docs doesn't exist
-      output$known_docs_window <- shiny::renderUI({
+      # NOTE: this is UI that lives inside server so that tabs are hidden if known_docs
+      # doesn't exist
+      output$known_tabs <- shiny::renderUI({
         ns <- session$ns
         req(global$known_docs)
         tagList(
-          actionButton(ns("known_docs_button"), "List Documents", style = 'width:100%'),
-          shinyBS::bsModal("known_docs_modal", 
-                  title = "Known Writing Samples", 
-                  trigger = ns("known_docs_button"),  # NS needed for UI
-                  size = "large",
-                  tableOutput(ns("known_docs")))
-        )
-      })
-      
-      # NOTE: this is UI that lives inside server so that button is hidden if
-      # known_docs doesn't exist
-      output$known_profiles_window <- shiny::renderUI({
-        ns <- session$ns
-        req(global$known_docs)
-        tagList(
-          shinyBS::bsModal("known_profiles_modal", 
-                  title = "Writer Profiles of Known Writers", 
-                  trigger = ns("known_profiles_button"),  # NS needed for UI
-                  size = "large",
-                  plotOutput(ns("known_profiles"))),  
-          actionButton(ns("known_profiles_button"), "Writer Profiles", style = 'width:100%')
+          tabsetPanel(
+            tabPanel("Known Writing Samples",
+                     tableOutput(ns("known_docs"))
+            ),
+            tabPanel("Known Writer Profiles",
+                     plotOutput(ns("known_profiles"))
+            )
+          )
         )
       })
     }

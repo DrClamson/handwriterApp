@@ -14,15 +14,8 @@ qdSidebarUI <- function(id) {
 qdBodyUI <- function(id){
   ns <- shiny::NS(id)
   tagList(
-    shiny::h3("Supporting Materials"),
-    shiny::fluidRow(
-      shiny::column(width = 4, shinycssloaders::withSpinner(uiOutput(ns("qd_image_window")))),
-      shiny::column(width = 4, shinycssloaders::withSpinner(uiOutput(ns("qd_nodes_window")))),
-      shiny::column(width = 4, shinycssloaders::withSpinner(uiOutput(ns("qd_profile_window"))))
-    ),
-    shiny::br(),
-    shiny::h3("Evaluation Results"),
-    shiny::tableOutput(ns("qd_analysis"))
+    shinycssloaders::withSpinner(uiOutput(ns("qd_results"))),
+    shinycssloaders::withSpinner(uiOutput(ns("qd_tabs")))
   )
 }
 
@@ -78,62 +71,33 @@ qdServer <- function(id, global) {
         make_posteriors_df(global$analysis)
       })
       
-      # NOTE: this is UI that lives inside server so that button is hidden
+      # NOTE: this is UI that lives inside server so that heading is hidden
+      # if analysis doesn't exist
+      output$qd_results <- renderUI({
+        ns <- session$ns
+        req(global$analysis)
+        tagList(
+          shiny::h3("Evaluation Results"),
+          shiny::tableOutput(ns("qd_analysis")),
+        )
+      })
+      
+      # NOTE: this is UI that lives inside server so that tabs are hidden
       # if qd_image doesn't exist
-      output$qd_image_window <- renderUI({
+      output$qd_tabs <- renderUI({
         ns <- session$ns
         req(global$qd_image)
         tagList(
-          # QD displayed in pop-up window
-          shinyBS::bsModal("qd_image_modal", 
-                  title = "Questioned Document", 
-                  trigger = ns("qd_image_button"),  # NS needed for UI
-                  size = "large",
-                  imageOutput(ns("qd_image"))),  
-          actionButton(ns("qd_image_button"), "View Document", style = 'width:100%')
+          shiny::h3("Supporting Materials"),
+          tabsetPanel(
+            tabPanel("Questioned Document",
+                     imageOutput(ns("qd_image"))),
+            tabPanel("Processed Questioned Document",
+                     plotOutput(ns("qd_nodes"))),
+            tabPanel("Questioned Document Writer Profile",
+                     plotOutput(ns("qd_profile")))
+          )
         )
-      })
-      
-      # NOTE: this is UI that lives inside server so that button is hidden if
-      # doc doesn't exist
-      output$qd_nodes_window <- renderUI({
-        ns <- session$ns
-        req(global$doc)
-        # Processed QD displayed in pop-up window
-        tagList(
-          # QD displayed in pop-up window
-          shinyBS::bsModal("qd_nodes_modal", 
-                  title = "Questioned Document Decomposed into Graphs", 
-                  trigger = ns("qd_nodes_button"),  # NS needed for UI
-                  size = "large",
-                  plotOutput(ns("qd_nodes"))),  
-          actionButton(ns("qd_nodes_button"), "View Document Graphs", style = 'width:100%')
-        )
-      })
-      
-      # NOTE: this is UI that lives inside server so that button is hidden if
-      # analysis doesn't exist
-      output$qd_profile_window <- renderUI({
-        ns <- session$ns
-        req(global$analysis)
-        # QD writer profile displayed in pop-up window
-        tagList(
-          # QD displayed in pop-up window
-          shinyBS::bsModal("qd_profile_modal", 
-                  title = "Writer Profile from Questioned Document", 
-                  trigger = ns("qd_profile_button"),  # NS needed for UI
-                  size = "large",
-                  plotOutput(ns("qd_profile"))),  
-          actionButton(ns("qd_profile_button"), "View Writer Profile", style = 'width:100%')
-        )
-      })
-      
-      # NOTE: this is UI that lives inside server so that box is hidden if
-      # analysis doesn't exist
-      output$qd_analysis_box <- renderUI({
-        ns <- session$ns
-        req(global$analysis)
-        tableOutput(ns("qd_analysis"))  # NS needed for UI
       })
     }
   )
