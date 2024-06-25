@@ -19,7 +19,6 @@ Imports:
     magrittr,
     rmarkdown,
     shiny,
-    shinyBS,
     shinycssloaders,
     shinyFiles,
     shinyjs
