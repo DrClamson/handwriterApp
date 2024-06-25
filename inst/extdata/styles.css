@@ -187,6 +187,12 @@ html, body {
     top: 10%;
     left: 10%;
     transform: translate(-10%, -10%);
+    overflow-y: initial
+}
+
+.modal-body{
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
 }
 
 .responsive-text {
