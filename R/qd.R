@@ -14,8 +14,9 @@ qdSidebarUI <- function(id) {
 qdBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
+    shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_results"))),
     shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_select"))),
-    shinycssloaders::withSpinner(shiny::uiOutput(ns("selected_qd_UI"))),
+    shinycssloaders::withSpinner(shiny::uiOutput(ns("selected_qd_UI")))
     # shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_tabs")))
   )
 }
@@ -46,6 +47,7 @@ qdServer <- function(id, global) {
         
       })
       
+      # Select QD from drop-down ----
       # NOTE: this is UI that lives inside server so that the heading is hidden
       # if analysis doesn't exist
       output$qd_select <- renderUI({
@@ -53,10 +55,10 @@ qdServer <- function(id, global) {
         req(global$qd_paths)
         shiny::tagList(
           shiny::selectInput(ns("qd_select"), label = "Questioned Document", choices = global$qd_names),
-          verbatimTextOutput(ns("selected_qd"))
         )
       })
       
+      # Display selected QD filepath ----
       # display filepath of currently selected qd
       output$selected_qd <- renderPrint({input$qd_select})
       output$selected_qd_UI <- renderUI({
@@ -64,6 +66,22 @@ qdServer <- function(id, global) {
         req(global$qd_paths)
         shiny::tagList(
           verbatimTextOutput(ns("selected_qd"))
+        )
+      })
+      
+      # Display analysis ----
+      # NOTE: this is UI that lives inside server so that the heading is hidden
+      # if analysis doesn't exist
+      output$qd_analysis <- renderTable({
+        req(global$analysis)
+        make_posteriors_df(global$analysis)
+      })
+      output$qd_results <- renderUI({
+        ns <- session$ns
+        req(global$analysis)
+        shiny::tagList(
+          shiny::h3("Evaluation Results"),
+          shiny::tableOutput(ns("qd_analysis"))
         )
       })
       
@@ -91,25 +109,9 @@ qdServer <- function(id, global) {
       #   handwriter::plot_cluster_fill_counts(global$analysis, facet=FALSE)
       # })
       
-      # # display posterior probabilities of writership
-      # output$qd_analysis <- renderTable({
-      #   req(global$analysis)
-      #   make_posteriors_df(global$analysis)
-      # })
-        
-        
-      # NOTE: this is UI that lives inside server so that the heading is hidden
-      # if analysis doesn't exist
-      # output$qd_results <- renderUI({
-      #   ns <- session$ns
-      #   req(global$analysis)
-      #   shiny::tagList(
-      #     shiny::h3("Evaluation Results"),
-      #     shiny::selectInput(ns("qd_select"), label = "Questioned Document", choices = NULL),
-      #     shiny::tableOutput(ns("qd_analysis"))
-      #   )
-      # })
-      
+      # display posterior probabilities of writership
+
+
       # NOTE: this is UI that lives inside server so that tabs are hidden
       # if qd_image doesn't exist
       # output$qd_tabs <- renderUI({

@@ -194,8 +194,18 @@ load_qd <- function(qd_path){
 #' @noRd
 make_posteriors_df <- function(analysis){
   df <- analysis$posterior_probabilities
-  colnames(df) <- c("Known Writer", "Posterior Probability of Writership")
-  df <- df %>% dplyr::mutate(`Posterior Probability of Writership` = paste0(100*`Posterior Probability of Writership`, "%"))
+  
+  # Format posterior probabilities as percentage
+  qd_columns <- colnames(df)[-1]
+  df <- df %>% tidyr::pivot_longer(cols = tidyr::all_of(qd_columns), 
+                             names_to = "qd", 
+                             values_to = "post_probs")
+  df <- df %>% dplyr::mutate(post_probs = paste0(100*post_probs, "%"))
+  df <- df %>% tidyr::pivot_wider(names_from = "qd", values_from = "post_probs")
+  
+  # Change "known_writer" to "Known Writer"
+  colnames(df)[1] <- "Known Writer"
+  
   return(df)
 }
 
