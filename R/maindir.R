@@ -49,8 +49,6 @@ maindirServer <- function(id, global) {
                        global$model <- load_model(global$main_dir)
                        global$qd_paths <- list_qd_paths(global$main_dir)
                        global$qd_names <- list_qd_names(global$qd_paths)
-                       # global$qd_image <- load_qd(global$qd_paths[1])
-                       # global$doc <- load_processed_qd(global$main_dir)
                        global$analysis <- load_analysis(global$main_dir)
                      }
                    })

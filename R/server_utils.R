@@ -104,11 +104,13 @@ list_qd_paths <- function(main_dir){
 #' 
 #' @noRd
 list_qd_names <- function(qd_paths){
-  # get names list where names are the filepaths and values are the filenames
-  qd_names <- sapply(qd_paths, basename)
-  # swap names and values so the names are the filenames and the values are the filepaths
-  qd_names <- setNames(names(qd_names), qd_names)
-  return(qd_names)
+  if (length(qd_paths) > 0 ) {
+    # get names list where names are the filepaths and values are the filenames
+    qd_names <- sapply(qd_paths, basename)
+    # swap names and values so the names are the filenames and the values are the filepaths
+    qd_names <- setNames(names(qd_names), qd_names)
+    return(qd_names)
+  }
 }
 
 #' Load Analysis
@@ -158,7 +160,7 @@ load_model <- function(main_dir) {
 #'
 #' @noRd
 load_processed_qd <- function(main_dir, qd_name){
-  graphs <- list.files(file.path(main_dir, "data", "questioned_graphs"), pattern = ".rds", full.names = TRUE)[1]
+  graphs <- list.files(file.path(main_dir, "data", "questioned_graphs"), pattern = ".rds", full.names = TRUE)
   graphs <- graphs[qd_name %in% graphs]
   return(readRDS(graphs))
 }

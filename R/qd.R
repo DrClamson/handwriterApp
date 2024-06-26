@@ -15,9 +15,8 @@ qdBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
     shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_results"))),
-    shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_select"))),
-    shinycssloaders::withSpinner(shiny::uiOutput(ns("selected_qd_UI")))
-    # shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_tabs")))
+    shiny::uiOutput(ns("qd_select")),
+    shiny::uiOutput(ns("qd_tabs"))
   )
 }
 
@@ -47,28 +46,6 @@ qdServer <- function(id, global) {
         
       })
       
-      # Select QD from drop-down ----
-      # NOTE: this is UI that lives inside server so that the heading is hidden
-      # if analysis doesn't exist
-      output$qd_select <- renderUI({
-        ns <- session$ns
-        req(global$qd_paths)
-        shiny::tagList(
-          shiny::selectInput(ns("qd_select"), label = "Questioned Document", choices = global$qd_names),
-        )
-      })
-      
-      # Display selected QD filepath ----
-      # display filepath of currently selected qd
-      output$selected_qd <- renderPrint({input$qd_select})
-      output$selected_qd_UI <- renderUI({
-        ns <- session$ns
-        req(global$qd_paths)
-        shiny::tagList(
-          verbatimTextOutput(ns("selected_qd"))
-        )
-      })
-      
       # Display analysis ----
       # NOTE: this is UI that lives inside server so that the heading is hidden
       # if analysis doesn't exist
@@ -85,50 +62,63 @@ qdServer <- function(id, global) {
         )
       })
       
-      # # display qd
-      # output$qd_image <- renderImage({
-      #   req(global$qd_image)
-      #   
-      #   tmp <- global$qd_image %>%
-      #     magick::image_write(tempfile(fileext='png'), format = 'png')
-      #   
-      #   # return a list
-      #   list(src = tmp, contentType = "image/png")
-      # }, deleteFile = FALSE
-      # )
+      # Select QD from drop-down ----
+      # NOTE: this is UI that lives inside server so that the heading is hidden
+      # if analysis doesn't exist
+      output$qd_select <- renderUI({
+        ns <- session$ns
+        req(global$qd_paths)
+        shiny::tagList(
+          shiny::h3("Supporting Materials"),
+          shiny::selectInput(ns("qd_select"), label = "Choose Questioned Document", choices = global$qd_names),
+          shiny::br()
+        )
+      })
       
-      # # display processed qd
-      # output$qd_nodes <- renderPlot({
-      #   req(global$doc)
-      #   handwriter::plotNodes(global$doc, nodeSize = 2)
-      # })
+      observeEvent(input$qd_select, {
+        global$qd_image <- load_qd(input$qd_select)
+      })
       
-      # # display writer profile for qd
-      # output$qd_profile <- renderPlot({
-      #   req(global$analysis)
-      #   handwriter::plot_cluster_fill_counts(global$analysis, facet=FALSE)
-      # })
-      
-      # display posterior probabilities of writership
+      # display qd ----
+      output$qd_image <- renderImage({
+        req(global$qd_image)
 
+        tmp <- global$qd_image %>%
+          magick::image_write(tempfile(fileext='png'), format = 'png')
+
+        # return a list
+        list(src = tmp, contentType = "image/png")
+      }, deleteFile = FALSE
+      )
+      
+      # display processed qd
+      output$qd_nodes <- renderPlot({
+        req(global$doc)
+        handwriter::plotNodes(global$doc, nodeSize = 2)
+      })
+
+      # display writer profile for qd
+      output$qd_profile <- renderPlot({
+        req(global$analysis)
+        handwriter::plot_cluster_fill_counts(global$analysis, facet=FALSE)
+      })
 
       # NOTE: this is UI that lives inside server so that tabs are hidden
       # if qd_image doesn't exist
-      # output$qd_tabs <- renderUI({
-      #   ns <- session$ns
-      #   req(global$qd_image)
-      #   shiny::tagList(
-      #     shiny::h3("Supporting Materials"),
-      #     tabsetPanel(
-      #       tabPanel("Questioned Document",
-      #                imageOutput(ns("qd_image"))),
-      #       tabPanel("Processed Questioned Document",
-      #                plotOutput(ns("qd_nodes"))),
-      #       tabPanel("Questioned Document Writer Profile",
-      #                plotOutput(ns("qd_profile")))
-      #     )
-      #   )
-      # })
+      output$qd_tabs <- renderUI({
+        ns <- session$ns
+        req(global$qd_image)
+        shiny::tagList(
+          tabsetPanel(
+            tabPanel("Questioned Document",
+                     imageOutput(ns("qd_image"))),
+            tabPanel("Processed Questioned Document",
+                     plotOutput(ns("qd_nodes"))),
+            tabPanel("Questioned Document Writer Profile",
+                     plotOutput(ns("qd_profile")))
+          )
+        )
+      })
     }
   )
 }
