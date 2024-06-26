@@ -104,7 +104,11 @@ list_qd_paths <- function(main_dir){
 #' 
 #' @noRd
 list_qd_names <- function(qd_paths){
-  qd_names <- sapply(qd_paths, basename, USE.NAMES = FALSE)
+  # get names list where names are the filepaths and values are the filenames
+  qd_names <- sapply(qd_paths, basename)
+  # swap names and values so the names are the filenames and the values are the filepaths
+  qd_names <- setNames(names(qd_names), qd_names)
+  return(qd_names)
 }
 
 #' Load Analysis

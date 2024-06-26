@@ -14,8 +14,8 @@ qdSidebarUI <- function(id) {
 qdBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
-    shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_results"))),
-    shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_tabs")))
+    shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_select"))),
+    # shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_tabs")))
   )
 }
 
@@ -45,71 +45,76 @@ qdServer <- function(id, global) {
         
       })
       
-      # display qd
-      output$qd_image <- renderImage({
-        req(global$qd_image)
-        
-        tmp <- global$qd_image %>%
-          magick::image_write(tempfile(fileext='png'), format = 'png')
-        
-        # return a list
-        list(src = tmp, contentType = "image/png")
-      }, deleteFile = FALSE
-      )
+      # # display qd
+      # output$qd_image <- renderImage({
+      #   req(global$qd_image)
+      #   
+      #   tmp <- global$qd_image %>%
+      #     magick::image_write(tempfile(fileext='png'), format = 'png')
+      #   
+      #   # return a list
+      #   list(src = tmp, contentType = "image/png")
+      # }, deleteFile = FALSE
+      # )
       
-      # display processed qd
-      output$qd_nodes <- renderPlot({
-        req(global$doc)
-        handwriter::plotNodes(global$doc, nodeSize = 2)
-      })
+      # # display processed qd
+      # output$qd_nodes <- renderPlot({
+      #   req(global$doc)
+      #   handwriter::plotNodes(global$doc, nodeSize = 2)
+      # })
       
-      # display writer profile for qd
-      output$qd_profile <- renderPlot({
-        req(global$analysis)
-        handwriter::plot_cluster_fill_counts(global$analysis, facet=FALSE)
-      })
+      # # display writer profile for qd
+      # output$qd_profile <- renderPlot({
+      #   req(global$analysis)
+      #   handwriter::plot_cluster_fill_counts(global$analysis, facet=FALSE)
+      # })
       
-      # display posterior probabilities of writership
-      output$qd_analysis <- renderTable({
-        req(global$analysis)
-        make_posteriors_df(global$analysis)
-      })
+      # # display posterior probabilities of writership
+      # output$qd_analysis <- renderTable({
+      #   req(global$analysis)
+      #   make_posteriors_df(global$analysis)
+      # })
       
-      # update selectInput with qd names
-      observe({
+      
+      # NOTE: this is UI that lives inside server so that the heading is hidden
+      # if analysis doesn't exist
+      output$qd_select <- renderUI({
+        ns <- session$ns
         req(global$qd_paths)
-        shiny::updateSelectInput(session, "qd_select", choices = global$qd_paths)
+        shiny::tagList(
+          shiny::selectInput(ns("qd_select"), label = "Questioned Document", choices = global$qd_names),
+        )
       })
       
       # NOTE: this is UI that lives inside server so that the heading is hidden
       # if analysis doesn't exist
-      output$qd_results <- renderUI({
-        ns <- session$ns
-        req(global$analysis)
-        shiny::tagList(
-          shiny::h3("Evaluation Results"),
-          shiny::selectInput(ns("qd_select"), label = "Questioned Document", choices = NULL),
-          shiny::tableOutput(ns("qd_analysis"))
-        )
-      })
+      # output$qd_results <- renderUI({
+      #   ns <- session$ns
+      #   req(global$analysis)
+      #   shiny::tagList(
+      #     shiny::h3("Evaluation Results"),
+      #     shiny::selectInput(ns("qd_select"), label = "Questioned Document", choices = NULL),
+      #     shiny::tableOutput(ns("qd_analysis"))
+      #   )
+      # })
       
       # NOTE: this is UI that lives inside server so that tabs are hidden
       # if qd_image doesn't exist
-      output$qd_tabs <- renderUI({
-        ns <- session$ns
-        req(global$qd_image)
-        shiny::tagList(
-          shiny::h3("Supporting Materials"),
-          tabsetPanel(
-            tabPanel("Questioned Document",
-                     imageOutput(ns("qd_image"))),
-            tabPanel("Processed Questioned Document",
-                     plotOutput(ns("qd_nodes"))),
-            tabPanel("Questioned Document Writer Profile",
-                     plotOutput(ns("qd_profile")))
-          )
-        )
-      })
+      # output$qd_tabs <- renderUI({
+      #   ns <- session$ns
+      #   req(global$qd_image)
+      #   shiny::tagList(
+      #     shiny::h3("Supporting Materials"),
+      #     tabsetPanel(
+      #       tabPanel("Questioned Document",
+      #                imageOutput(ns("qd_image"))),
+      #       tabPanel("Processed Questioned Document",
+      #                plotOutput(ns("qd_nodes"))),
+      #       tabPanel("Questioned Document Writer Profile",
+      #                plotOutput(ns("qd_profile")))
+      #     )
+      #   )
+      # })
     }
   )
 }
