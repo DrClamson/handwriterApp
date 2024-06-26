@@ -35,7 +35,7 @@ copy_known_files_to_project <- function(main_dir, known_paths, known_names){
 #' @noRd
 copy_qd_to_project <- function(main_dir, qd_paths, qd_names){
   lapply(1:length(qd_paths), function(i) {
-    file.copy(qd_paths[i], file.path(main_dir, "data", "model_docs", qd_names[i]))}
+    file.copy(qd_paths[i], file.path(main_dir, "data", "questioned_docs", qd_names[i]))}
   )
 }
 

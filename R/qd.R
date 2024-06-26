@@ -15,6 +15,7 @@ qdBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
     shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_select"))),
+    shinycssloaders::withSpinner(shiny::uiOutput(ns("selected_qd_UI"))),
     # shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_tabs")))
   )
 }
@@ -43,6 +44,27 @@ qdServer <- function(id, global) {
                                                                     writer_indices = c(input$qd_writer_start_char, input$qd_writer_end_char),
                                                                     doc_indices = c(input$qd_doc_start_char, input$qd_doc_end_char))
         
+      })
+      
+      # NOTE: this is UI that lives inside server so that the heading is hidden
+      # if analysis doesn't exist
+      output$qd_select <- renderUI({
+        ns <- session$ns
+        req(global$qd_paths)
+        shiny::tagList(
+          shiny::selectInput(ns("qd_select"), label = "Questioned Document", choices = global$qd_names),
+          verbatimTextOutput(ns("selected_qd"))
+        )
+      })
+      
+      # display filepath of currently selected qd
+      output$selected_qd <- renderPrint({input$qd_select})
+      output$selected_qd_UI <- renderUI({
+        ns <- session$ns
+        req(global$qd_paths)
+        shiny::tagList(
+          verbatimTextOutput(ns("selected_qd"))
+        )
       })
       
       # # display qd
@@ -74,18 +96,8 @@ qdServer <- function(id, global) {
       #   req(global$analysis)
       #   make_posteriors_df(global$analysis)
       # })
-      
-      
-      # NOTE: this is UI that lives inside server so that the heading is hidden
-      # if analysis doesn't exist
-      output$qd_select <- renderUI({
-        ns <- session$ns
-        req(global$qd_paths)
-        shiny::tagList(
-          shiny::selectInput(ns("qd_select"), label = "Questioned Document", choices = global$qd_names),
-        )
-      })
-      
+        
+        
       # NOTE: this is UI that lives inside server so that the heading is hidden
       # if analysis doesn't exist
       # output$qd_results <- renderUI({
