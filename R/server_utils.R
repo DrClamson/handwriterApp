@@ -154,15 +154,17 @@ load_model <- function(main_dir) {
 #' main_dir > data > questioned_graphs.
 #'
 #' @param main_dir A filepath to the project folder
-#' @param qd_name Filename of the questioned document
+#' @param qd_path Filenpath of the questioned document
 #'
 #' @return Processed document as a list
 #'
 #' @noRd
-load_processed_qd <- function(main_dir, qd_name){
+load_processed_qd <- function(main_dir, qd_path){
   graphs <- list.files(file.path(main_dir, "data", "questioned_graphs"), pattern = ".rds", full.names = TRUE)
-  graphs <- graphs[qd_name %in% graphs]
-  return(readRDS(graphs))
+  qd_name <- stringr::str_replace(basename(qd_path), '.png', "")
+  graphs <- graphs[grepl(qd_name, graphs)]
+  graphs <- readRDS(graphs)
+  return(graphs)
 }
 
 #' Load Questioned Document

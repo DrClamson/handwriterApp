@@ -70,13 +70,14 @@ qdServer <- function(id, global) {
         req(global$qd_paths)
         shiny::tagList(
           shiny::h3("Supporting Materials"),
-          shiny::selectInput(ns("qd_select"), label = "Choose Questioned Document", choices = global$qd_names),
+          shiny::selectInput(ns("qd_select"), label = "Choose a Questioned Document", choices = global$qd_names),
           shiny::br()
         )
       })
       
       observeEvent(input$qd_select, {
         global$qd_image <- load_qd(input$qd_select)
+        global$doc <- load_processed_qd(main_dir = global$main_dir, qd_path = input$qd_select)
       })
       
       # display qd ----
@@ -110,11 +111,11 @@ qdServer <- function(id, global) {
         req(global$qd_image)
         shiny::tagList(
           tabsetPanel(
-            tabPanel("Questioned Document",
+            tabPanel("Document",
                      imageOutput(ns("qd_image"))),
-            tabPanel("Processed Questioned Document",
+            tabPanel("Processed Document",
                      plotOutput(ns("qd_nodes"))),
-            tabPanel("Questioned Document Writer Profile",
+            tabPanel("Writer Profile",
                      plotOutput(ns("qd_profile")))
           )
         )
