@@ -12,7 +12,7 @@ reportServer <- function(id, global) {
       
       output$report <- downloadHandler(
         filename = function() {
-          paste0('report_', global$doc$docname, '.pdf')
+          paste0('report_', global$qd_processed$docname, '.pdf')
         },
         content = function(file) {
           rmd_name <- system.file(file.path("extdata", "report_templates"), "report_pdf.Rmd", package = "handwriterApp")
@@ -30,7 +30,7 @@ reportServer <- function(id, global) {
             analysis = global$analysis,
             known_docs = global$known_docs,
             model = global$model,
-            qd_doc = global$doc
+            qd_doc = global$qd_processed
           )
           
           # Knit the document, passing in the `params` list, and eval it in a

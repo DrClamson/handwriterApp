@@ -58,7 +58,8 @@ qdServer <- function(id, global) {
         req(global$analysis)
         shiny::tagList(
           shiny::h3("Evaluation Results"),
-          shiny::tableOutput(ns("qd_analysis"))
+          shiny::tableOutput(ns("qd_analysis")),
+          shiny::br()
         )
       })
       
@@ -71,13 +72,13 @@ qdServer <- function(id, global) {
         shiny::tagList(
           shiny::h3("Supporting Materials"),
           shiny::selectInput(ns("qd_select"), label = "Choose a Questioned Document", choices = global$qd_names),
-          shiny::br()
         )
       })
       
       observeEvent(input$qd_select, {
         global$qd_image <- load_qd(input$qd_select)
-        global$doc <- load_processed_qd(main_dir = global$main_dir, qd_path = input$qd_select)
+        global$qd_name <- get_qd_name(input$qd_select)
+        global$qd_processed <- load_processed_qd(main_dir = global$main_dir, qd_name = global$qd_name)
       })
       
       # display qd ----
@@ -94,14 +95,16 @@ qdServer <- function(id, global) {
       
       # display processed qd
       output$qd_nodes <- renderPlot({
-        req(global$doc)
-        handwriter::plotNodes(global$doc, nodeSize = 2)
+        req(global$qd_processed)
+        handwriter::plotNodes(global$qd_processed, nodeSize = 2)
       })
 
       # display writer profile for qd
       output$qd_profile <- renderPlot({
         req(global$analysis)
-        handwriter::plot_cluster_fill_counts(global$analysis, facet=FALSE)
+        counts <- global$analysis
+        counts$cluster_fill_counts <- counts$cluster_fill_counts %>% dplyr::filter(docname == global$qd_name)
+        handwriter::plot_cluster_fill_counts(counts, facet=FALSE)
       })
 
       # NOTE: this is UI that lives inside server so that tabs are hidden
