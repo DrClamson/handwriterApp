@@ -14,7 +14,7 @@ knownSidebarUI <- function(id) {
 knownBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
-    shinycssloaders::withSpinner(uiOutput(ns("known_tabs")))
+    shinycssloaders::withSpinner(shiny::uiOutput(ns("known_tabs")))
   )
 }
 

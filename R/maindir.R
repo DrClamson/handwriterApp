@@ -2,7 +2,7 @@ maindirUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shinyFiles::shinyDirButton(ns("main_dir"), "Main folder", "Select a folder"),
-    verbatimTextOutput(ns("dir"), placeholder = TRUE)
+    shiny::verbatimTextOutput(ns("dir"), placeholder = TRUE)
   )
 }
 
@@ -47,9 +47,10 @@ maindirServer <- function(id, global) {
                        # load files if they exist to continue previously started analysis
                        global$known_docs <- list_model_docs(global$main_dir, output_dataframe = TRUE)
                        global$model <- load_model(global$main_dir)
-                       global$qd_path <- list_qd(global$main_dir)
-                       global$qd_image <- load_qd(global$qd_path)
-                       global$doc <- load_processed_qd(global$main_dir)
+                       global$qd_paths <- list_qd_paths(global$main_dir)
+                       global$qd_names <- list_qd_names(global$qd_paths)
+                       # global$qd_image <- load_qd(global$qd_paths[1])
+                       # global$doc <- load_processed_qd(global$main_dir)
                        global$analysis <- load_analysis(global$main_dir)
                      }
                    })

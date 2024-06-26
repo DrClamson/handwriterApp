@@ -10,7 +10,7 @@
 #'
 #' @noRd
 set_indices <- function(id, label){
-  numericInput(id, label=label, value=1, min=1, max=100)
+  shiny::numericInput(id, label=label, value=1, min=1, max=100)
 }
 
 #' Format Sidebar

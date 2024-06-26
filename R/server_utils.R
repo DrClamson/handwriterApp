@@ -27,14 +27,16 @@ copy_known_files_to_project <- function(main_dir, known_paths, known_names){
 #' used in the analysis are stored in the project folder. 
 #'
 #' @param main_dir A filepath to the project folder
-#' @param qd_path The filepath of the questioned document
-#' @param qd_name The filename of the questioned document
+#' @param qd_paths The filepaths of the questioned documents
+#' @param qd_names The filenames of the questioned documents
 #'
 #' @return NULL
 #'
 #' @noRd
-copy_qd_to_project <- function(main_dir, qd_path, qd_name){
-  file.copy(qd_path, file.path(main_dir, "data", "questioned_docs", qd_name))
+copy_qd_to_project <- function(main_dir, qd_paths, qd_names){
+  lapply(1:length(qd_paths), function(i) {
+    file.copy(qd_paths[i], file.path(main_dir, "data", "model_docs", qd_names[i]))}
+  )
 }
 
 #' Create a Directory
@@ -77,7 +79,7 @@ list_model_docs <- function(main_dir, output_dataframe = TRUE){
   }
 }
 
-#' Get the Filepath of the Questioned Document
+#' Get the Filepath of the Questioned Documents
 #' 
 #' This helper function returns the full filepath of the questioned 
 #' document in main_dir > data > questioned_docs.
@@ -87,10 +89,22 @@ list_model_docs <- function(main_dir, output_dataframe = TRUE){
 #' @return Filename
 #' 
 #' @noRd
-list_qd <- function(main_dir){
-  if (length(list.files(file.path(main_dir, "data", "questioned_docs"), pattern = ".png")) == 1){
-    return(list.files(file.path(main_dir, "data", "questioned_docs"), pattern = ".png", full.names = TRUE)[1])
-  }
+list_qd_paths <- function(main_dir){
+  return(list.files(file.path(main_dir, "data", "questioned_docs"), pattern = ".png", full.names = TRUE))
+}
+
+#' Get the Filenames of the Questioned Documents
+#' 
+#' This helper function returns the full filepath of the questioned 
+#' document in main_dir > data > questioned_docs.
+#'
+#' @param main_dir A filepath to the project folder
+#'
+#' @return Filename
+#' 
+#' @noRd
+list_qd_names <- function(qd_paths){
+  qd_names <- sapply(qd_paths, basename, USE.NAMES = FALSE)
 }
 
 #' Load Analysis
@@ -134,15 +148,15 @@ load_model <- function(main_dir) {
 #' main_dir > data > questioned_graphs.
 #'
 #' @param main_dir A filepath to the project folder
+#' @param qd_name Filename of the questioned document
 #'
 #' @return Processed document as a list
 #'
 #' @noRd
-load_processed_qd <- function(main_dir){
-  if (length(list.files(file.path(main_dir, "data", "questioned_graphs"), pattern = ".rds")) == 1){
-    graphs <- list.files(file.path(main_dir, "data", "questioned_graphs"), pattern = ".rds", full.names = TRUE)[1]
-    return(readRDS(graphs))
-  }
+load_processed_qd <- function(main_dir, qd_name){
+  graphs <- list.files(file.path(main_dir, "data", "questioned_graphs"), pattern = ".rds", full.names = TRUE)[1]
+  graphs <- graphs[qd_name %in% graphs]
+  return(readRDS(graphs))
 }
 
 #' Load Questioned Document
