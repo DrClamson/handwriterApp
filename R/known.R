@@ -14,7 +14,7 @@ knownSidebarUI <- function(id) {
 knownBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
-    shinycssloaders::withSpinner(shiny::uiOutput(ns("known_tabs")))
+    currentImageUI(ns("known"))
   )
 }
 
@@ -35,6 +35,7 @@ knownServer <- function(id, global) {
         
         # list known filepaths
         global$known_paths <- list_docs(global$main_dir, type = "model", filepaths = TRUE)
+        global$known_names <- list_names_in_named_vector(global$known_paths)
         
         # fit model
         global$model <- handwriter::fit_model(main_dir = global$main_dir,
@@ -48,32 +49,7 @@ knownServer <- function(id, global) {
                                                               input$known_doc_end_char))
       })
       
-      output$known_docs <- shiny::renderTable({
-        req(global$known_paths)
-        data.frame(file = global$known_paths)
-      })
-      
-      output$known_profiles <- shiny::renderPlot({
-        req(global$model)
-        handwriter::plot_credible_intervals(model = global$model, facet = TRUE)
-      })
-      
-      # NOTE: this is UI that lives inside server so that tabs are hidden if known_docs
-      # doesn't exist
-      output$known_tabs <- shiny::renderUI({
-        ns <- session$ns
-        req(global$known_docs)
-        tagList(
-          tabsetPanel(
-            tabPanel("Known Writing Samples",
-                     tableOutput(ns("known_docs"))
-            ),
-            tabPanel("Known Writer Profiles",
-                     plotOutput(ns("known_profiles"))
-            )
-          )
-        )
-      })
+      currentImageServer("known", global, "model")
     }
   )
 }

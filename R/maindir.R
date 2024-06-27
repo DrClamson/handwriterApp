@@ -6,7 +6,6 @@ maindirUI <- function(id) {
   )
 }
 
-
 maindirServer <- function(id, global) {
   moduleServer(
     id,
