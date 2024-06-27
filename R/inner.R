@@ -89,13 +89,13 @@ innerUI <- function(id) {
                                 # Known Writing Display ----
                                 shiny::tabPanel(id = ns("Known Writing"),
                                                 title = "Known Writing",
-                                                knownBodyUI(ns('known1'))
+                                                shinycssloaders::withSpinner(knownBodyUI(ns('known1')))
                                 ),
                                 
                                 # Questioned Document Display ----
                                 shiny::tabPanel(id = ns("Questioned Document"), 
                                                 title = "Questioned Document",
-                                                qdBodyUI(ns('qd1'))
+                                                shinycssloaders::withSpinner(qdBodyUI(ns('qd1')))
                                 ),
                                 
                                 # Comparison Report Display ----

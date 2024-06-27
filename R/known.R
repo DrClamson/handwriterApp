@@ -2,10 +2,10 @@ knownSidebarUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::fluidRow(shiny::column(5, set_indices(id = ns("known_writer_start_char"), label = "Start location")),
-             shiny::column(5, set_indices(id = ns("known_writer_end_char"), label = "End location"))),
+                    shiny::column(5, set_indices(id = ns("known_writer_end_char"), label = "End location"))),
     shiny::helpText("Where are the document numbers located in the file names?"),
     shiny::fluidRow(shiny::column(5, set_indices(id = ns("known_doc_start_char"), label = "Start location")),
-             shiny::column(5, set_indices(id = ns("known_doc_end_char"), label = "End location"))),
+                    shiny::column(5, set_indices(id = ns("known_doc_end_char"), label = "End location"))),
     shiny::helpText("Select three known writing samples from each person of interest."),
     shiny::fileInput(ns("known_upload"), "", accept = ".png", multiple=TRUE)
   )
