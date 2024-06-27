@@ -1,41 +1,20 @@
-#' Copy Known Writing Samples to Project Directory
-#' 
-#' When the user selects known writing samples the files are 
-#' copied to main_dir > data > model_docs so that all documents
-#' used in the analysis are stored in the project folder. The folder
-#' name model_docs is used because the handwriter package will use the
-#' known writing samples in this folder to fit a Bayesian hierarchical
-#' model.
+#' Copy Documents to Project Directory
+#'
+#' When the user selects documents the files are copied to main_dir > data >
+#' model_docs or main_dir > data > questioned_docs so that all documents used in
+#' the analysis are stored in the project folder.
 #'
 #' @param main_dir A filepath to the project folder
-#' @param known_paths The filepaths of the writing samples 
-#' @param known_names The filenames of the writing samples
+#' @param paths The filepaths of the writing samples
+#' @param names The filenames of the writing samples
+#' @param type Either "model" or "questioned"
 #'
 #' @return NULL
 #'
 #' @noRd
-copy_known_files_to_project <- function(main_dir, known_paths, known_names){
-  lapply(1:length(known_paths), function(i) {
-    file.copy(known_paths[i], file.path(main_dir, "data", "model_docs", known_names[i]))}
-  )
-}
-
-#' Copy Questioned Document to Project Directory
-#' 
-#' When the user selects a questioned document, the file is 
-#' copied to main_dir > data > questioned_docs so that all documents
-#' used in the analysis are stored in the project folder. 
-#'
-#' @param main_dir A filepath to the project folder
-#' @param qd_paths The filepaths of the questioned documents
-#' @param qd_names The filenames of the questioned documents
-#'
-#' @return NULL
-#'
-#' @noRd
-copy_qd_to_project <- function(main_dir, qd_paths, qd_names){
-  lapply(1:length(qd_paths), function(i) {
-    file.copy(qd_paths[i], file.path(main_dir, "data", "questioned_docs", qd_names[i]))}
+copy_docs_to_project <- function(main_dir, paths, names, type = "model"){
+  lapply(1:length(paths), function(i) {
+    file.copy(paths[i], file.path(main_dir, "data", paste0(type, "_docs"), names[i]))}
   )
 }
 
@@ -54,43 +33,21 @@ create_dir <- function(folder){
   }
 }
 
-#' List Handwriting Samples in the model_docs Folder
-#' 
-#' This helper function lists the known handwriting samples
-#' in main_dir > data > model_docs and returns the filenames
-#' either in a dataframe or a list.
+#' List Handwriting Samples in Folder
+#'
+#' This helper function lists the documents in main_dir > data > model_docs or
+#' main_dir > data > questioned_docs and returns the filenames in a vector.
 #'
 #' @param main_dir A filepath to the project folder
-#' @param output_dataframe TRUE or FALSE. If TRUE, the filenames
-#' are retuned in a dataframe. If FALSE, the filenames are returned
-#' in a list.
+#' @param type Either "model" or "questioned"
+#' @param filepaths TRUE to return the full filepaths or FALSE to return the filenames only
 #'
-#' @return Filenames in a dataframe or list
+#' @return List
 #'
 #' @noRd
-list_model_docs <- function(main_dir, output_dataframe = TRUE){
-  if (dir.exists(file.path(main_dir, "data", "model_docs"))){
-    docs <- list.files(file.path(main_dir, "data", "model_docs"), pattern = ".png")
-    if (output_dataframe){
-      return(data.frame('files' = docs))
-    } else {
-      return(docs)
-    }
-  }
-}
-
-#' Get the Filepath of the Questioned Documents
-#' 
-#' This helper function returns the full filepath of the questioned 
-#' document in main_dir > data > questioned_docs.
-#'
-#' @param main_dir A filepath to the project folder
-#'
-#' @return Filename
-#' 
-#' @noRd
-list_qd_paths <- function(main_dir){
-  return(list.files(file.path(main_dir, "data", "questioned_docs"), pattern = ".png", full.names = TRUE))
+list_docs <- function(main_dir, type = "model", filepaths = TRUE){
+  docs <- list.files(file.path(main_dir, "data", paste0(type, "_docs")), pattern = ".png", full.names = filepaths)
+  return(docs)
 }
 
 #' Get the Filenames of the Questioned Documents
@@ -103,13 +60,13 @@ list_qd_paths <- function(main_dir){
 #' @return Filename
 #' 
 #' @noRd
-list_qd_names <- function(qd_paths){
-  if (length(qd_paths) > 0 ) {
+list_names_in_named_vector <- function(paths){
+  if (length(paths) > 0 ) {
     # get names list where names are the filepaths and values are the filenames
-    qd_names <- sapply(qd_paths, basename)
+    names <- sapply(paths, basename)
     # swap names and values so the names are the filenames and the values are the filepaths
-    qd_names <- setNames(names(qd_names), qd_names)
-    return(qd_names)
+    names <- setNames(names(names), names)
+    return(names)
   }
 }
 
@@ -147,38 +104,39 @@ load_model <- function(main_dir) {
   }
 }
 
-#' Load Processed Questioned Document
+#' Load Processed Document
 #' 
-#' This helper function loads the questioned document
-#' processed with handwriter::processDocument and saved in
-#' main_dir > data > questioned_graphs.
+#' This helper function loads the document
+#' processed with handwriter::processDocument 
 #'
 #' @param main_dir A filepath to the project folder
-#' @param qd_path Filename of the questioned document
+#' @param name Filename of the document
+#' @param type Either "model" or "questioned
 #'
 #' @return Processed document as a list
 #'
 #' @noRd
-load_processed_qd <- function(main_dir, qd_name){
-  graphs <- list.files(file.path(main_dir, "data", "questioned_graphs"), pattern = ".rds", full.names = TRUE)
-  graphs <- graphs[grepl(qd_name, graphs)]
+load_processed_doc <- function(main_dir, name, type){
+  # drop file extension from name
+  name <- stringr::str_replace(name, ".png", "")
+  graphs <- list.files(file.path(main_dir, "data", paste0(type, "_graphs")), pattern = ".rds", full.names = TRUE)
+  graphs <- graphs[grepl(name, graphs)]
   graphs <- readRDS(graphs)
   return(graphs)
 }
 
-#' Load Questioned Document
-#' 
-#' This helper function loads the questioned document
-#' as an image with the magick package.
+#' Load Document
 #'
-#' @param qd_path The filepath for the questioned document
+#' This helper function loads a document as an image with the magick package.
+#'
+#' @param path The filepath for the document
 #'
 #' @return An image
 #'
 #' @noRd
-load_qd <- function(qd_path){
-  if (!is.null(qd_path) && file.exists(qd_path)){
-    return(magick::image_read(qd_path))
+load_image <- function(path){
+  if (!is.null(path) && file.exists(path)){
+    return(magick::image_read(path))
   }
 }
 
@@ -220,7 +178,7 @@ make_posteriors_df <- function(analysis){
 #' as template.rds. These directories and the template.rds file are required by the 
 #' handwriter package to analyze a questioned document.
 #'
-#' @param analysis analysis created with handwriter::analyze_questioned_document
+#' @param main_dir A filepath to the project folder
 #'
 #' @return Processed document as a list
 #'
@@ -234,8 +192,4 @@ setup_main_dir <- function(main_dir){
     
     # handwriter requires template.rds to exist in main_dir > data
     saveRDS(template, file.path(main_dir, "data", "template.rds"))
-}
-
-get_qd_name <- function(qd_path){
-  return(stringr::str_replace(basename(qd_path), ".png", ""))
 }

@@ -30,11 +30,15 @@ qdServer <- function(id, global) {
         
         # copy qd to main directory
         create_dir(file.path(global$main_dir, "data", "questioned_docs"))
-        copy_qd_to_project(main_dir = global$main_dir, qd_paths = global$qd_paths, qd_names = global$qd_names)
+        copy_docs_to_project(main_dir = global$main_dir, paths = global$qd_paths, names = global$qd_names, type = "questioned")
         
         # get filepaths and names from main_dir > data > questioned_docs folder
-        global$qd_paths <- list_qd_paths(global$main_dir)
-        global$qd_names <- list_qd_names(global$qd_paths)
+        global$qd_paths <- list_docs(global$main_dir, type = "questioned", filepaths = TRUE)
+        # get a named vector where the names are the filenames and the values
+        # are the full filepaths to use with the selectInput so the user sees only
+        # sees the filenames in the drop-down menu but behind the scenes the app
+        # gets the filepaths
+        global$qd_names <- list_names_in_named_vector(global$qd_paths)
         
         # analyze
         global$analysis <- handwriter::analyze_questioned_documents(main_dir = global$main_dir,
@@ -76,9 +80,13 @@ qdServer <- function(id, global) {
       })
       
       observeEvent(input$qd_select, {
-        global$qd_image <- load_qd(input$qd_select)
-        global$qd_name <- get_qd_name(input$qd_select)
-        global$qd_processed <- load_processed_qd(main_dir = global$main_dir, qd_name = global$qd_name)
+        global$qd_image <- load_image(input$qd_select)
+        global$qd_name <- basename(input$qd_select)
+        global$qd_processed <- load_processed_doc(main_dir = global$main_dir, name = global$qd_name, type = "questioned")
+      })
+      
+      output$qd_test <- renderPrint({
+        global$qd_test
       })
       
       # display qd ----
@@ -101,9 +109,10 @@ qdServer <- function(id, global) {
 
       # display writer profile for qd
       output$qd_profile <- renderPlot({
-        req(global$analysis)
+        shiny::req(global$analysis)
+        shiny::req(global$qd_name)
         counts <- global$analysis
-        counts$cluster_fill_counts <- counts$cluster_fill_counts %>% dplyr::filter(docname == global$qd_name)
+        counts$cluster_fill_counts <- counts$cluster_fill_counts %>% dplyr::filter(docname == stringr::str_replace(global$qd_name, ".png", ""))
         handwriter::plot_cluster_fill_counts(counts, facet=FALSE)
       })
 
@@ -115,11 +124,15 @@ qdServer <- function(id, global) {
         shiny::tagList(
           tabsetPanel(
             tabPanel("Document",
-                     imageOutput(ns("qd_image"))),
+                     # verbatimTextOutput(ns("qd_test")),
+                     imageOutput(ns("qd_image"))
+                     ),
             tabPanel("Processed Document",
-                     plotOutput(ns("qd_nodes"))),
+                     plotOutput(ns("qd_nodes"))
+                     ),
             tabPanel("Writer Profile",
-                     plotOutput(ns("qd_profile")))
+                     plotOutput(ns("qd_profile"))
+                     )
           )
         )
       })

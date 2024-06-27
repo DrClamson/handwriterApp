@@ -45,10 +45,11 @@ maindirServer <- function(id, global) {
                        setup_main_dir(global$main_dir)
                      } else {
                        # load files if they exist to continue previously started analysis
-                       global$known_docs <- list_model_docs(global$main_dir, output_dataframe = TRUE)
+                       global$known_paths <- list_docs(global$main_dir, type = "model", filepaths = TRUE)
+                       global$known_names <- list_docs(global$main_dir, type = "model", filepaths = FALSE)
                        global$model <- load_model(global$main_dir)
-                       global$qd_paths <- list_qd_paths(global$main_dir)
-                       global$qd_names <- list_qd_names(global$qd_paths)
+                       global$qd_paths <- list_docs(global$main_dir, type = "questioned", filepaths = TRUE)
+                       global$qd_names <- list_names_in_named_vector(global$qd_paths)
                        global$analysis <- load_analysis(global$main_dir)
                      }
                    })

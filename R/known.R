@@ -28,10 +28,13 @@ knownServer <- function(id, global) {
         
         # copy known docs to temp directory > data > model_docs
         create_dir(file.path(global$main_dir, "data", "model_docs"))
-        copy_known_files_to_project(global$main_dir, known_paths, known_names)
+        copy_docs_to_project(main_dir = global$main_dir, 
+                             paths = known_paths, 
+                             names = known_names,
+                             type = "model")
         
-        # list known docs
-        global$known_docs <- list_model_docs(global$main_dir, output_dataframe = TRUE)
+        # list known filepaths
+        global$known_paths <- list_docs(global$main_dir, type = "model", filepaths = TRUE)
         
         # fit model
         global$model <- handwriter::fit_model(main_dir = global$main_dir,
@@ -46,8 +49,8 @@ knownServer <- function(id, global) {
       })
       
       output$known_docs <- shiny::renderTable({
-        req(global$known_docs)
-        global$known_docs
+        req(global$known_paths)
+        data.frame(file = global$known_paths)
       })
       
       output$known_profiles <- shiny::renderPlot({
