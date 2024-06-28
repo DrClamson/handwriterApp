@@ -1,6 +1,6 @@
 currentImageUI <- function(id) {
-  ns <- NS(id)
-  tagList(
+  ns <- shiny::NS(id)
+  shiny::tagList(
     shiny::uiOutput(ns("current_select")),
     shiny::uiOutput(ns("current_tabs"))
   )

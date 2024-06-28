@@ -12,10 +12,12 @@ reportServer <- function(id, global) {
       
       output$report <- downloadHandler(
         filename = function() {
-          paste0('report_', global$qd_processed$docname, '.pdf')
+          'report.pdf'
         },
         content = function(file) {
-          rmd_name <- system.file(file.path("extdata", "report_templates"), "report_pdf.Rmd", package = "handwriterApp")
+          rmd_name <- system.file(file.path("extdata", "report_templates"), 
+                                  "report_pdf.Rmd", 
+                                  package = "handwriterApp")
           src <- normalizePath(rmd_name)
           
           # Copy the report file to a temporary directory before processing it, in
@@ -28,9 +30,7 @@ reportServer <- function(id, global) {
           params <- list(
             main_dir = global$main_dir,
             analysis = global$analysis,
-            known_docs = global$known_docs,
-            model = global$model,
-            qd_doc = global$qd_processed
+            model = global$model
           )
           
           # Knit the document, passing in the `params` list, and eval it in a
