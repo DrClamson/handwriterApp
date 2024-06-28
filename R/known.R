@@ -2,10 +2,10 @@ knownSidebarUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::fluidRow(shiny::column(5, set_indices(id = ns("known_writer_start_char"), label = "Start location")),
-             shiny::column(5, set_indices(id = ns("known_writer_end_char"), label = "End location"))),
+                    shiny::column(5, set_indices(id = ns("known_writer_end_char"), label = "End location"))),
     shiny::helpText("Where are the document numbers located in the file names?"),
     shiny::fluidRow(shiny::column(5, set_indices(id = ns("known_doc_start_char"), label = "Start location")),
-             shiny::column(5, set_indices(id = ns("known_doc_end_char"), label = "End location"))),
+                    shiny::column(5, set_indices(id = ns("known_doc_end_char"), label = "End location"))),
     shiny::helpText("Select three known writing samples from each person of interest."),
     shiny::fileInput(ns("known_upload"), "", accept = ".png", multiple=TRUE)
   )
@@ -14,7 +14,7 @@ knownSidebarUI <- function(id) {
 knownBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
-    shinycssloaders::withSpinner(uiOutput(ns("known_tabs")))
+    currentImageUI(ns("known"))
   )
 }
 
@@ -28,10 +28,14 @@ knownServer <- function(id, global) {
         
         # copy known docs to temp directory > data > model_docs
         create_dir(file.path(global$main_dir, "data", "model_docs"))
-        copy_known_files_to_project(global$main_dir, known_paths, known_names)
+        copy_docs_to_project(main_dir = global$main_dir, 
+                             paths = known_paths, 
+                             names = known_names,
+                             type = "model")
         
-        # list known docs
-        global$known_docs <- list_model_docs(global$main_dir, output_dataframe = TRUE)
+        # list known filepaths
+        global$known_paths <- list_docs(global$main_dir, type = "model", filepaths = TRUE)
+        global$known_names <- list_names_in_named_vector(global$known_paths)
         
         # fit model
         global$model <- handwriter::fit_model(main_dir = global$main_dir,
@@ -45,32 +49,7 @@ knownServer <- function(id, global) {
                                                               input$known_doc_end_char))
       })
       
-      output$known_docs <- shiny::renderTable({
-        req(global$known_docs)
-        global$known_docs
-      })
-      
-      output$known_profiles <- shiny::renderPlot({
-        req(global$model)
-        handwriter::plot_credible_intervals(model = global$model, facet = TRUE)
-      })
-      
-      # NOTE: this is UI that lives inside server so that tabs are hidden if known_docs
-      # doesn't exist
-      output$known_tabs <- shiny::renderUI({
-        ns <- session$ns
-        req(global$known_docs)
-        tagList(
-          tabsetPanel(
-            tabPanel("Known Writing Samples",
-                     tableOutput(ns("known_docs"))
-            ),
-            tabPanel("Known Writer Profiles",
-                     plotOutput(ns("known_profiles"))
-            )
-          )
-        )
-      })
+      currentImageServer("known", global, "model")
     }
   )
 }

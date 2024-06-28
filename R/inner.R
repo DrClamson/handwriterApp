@@ -1,79 +1,79 @@
 innerUI <- function(id) {
   ns <- shiny::NS(id)
-  tagList(
-    sidebarLayout(tags$div(id=ns("my-sidebar"),
-                           sidebarPanel(width=3,
-                                        fluidPage(
+  shiny::tagList(
+    shiny::sidebarLayout(shiny::tags$div(id=ns("my-sidebar"),
+                           shiny::sidebarPanel(width=3,
+                                        shiny::fluidPage(
                                           
                                           # Welcome UI ----
-                                          conditionalPanel(condition="input.prevreport == 'Welcome'",
+                                          shiny::conditionalPanel(condition="input.prevreport == 'Welcome'",
                                                            ns = shiny::NS(id),
-                                                           div(id = "autonomous",
+                                                           shiny::div(id = "autonomous",
                                                                format_sidebar(title = "GET STARTED",
                                                                               help_text = "Press the following button to start using the app to compare a questioned document to known writing samples."),
-                                                               actionButton(ns("begin_button"), "Begin")
+                                                               shiny::actionButton(ns("begin_button"), "Begin")
                                                            ),
                                           ),
                                           
                                           # Setup UI ----
-                                          conditionalPanel(condition="input.prevreport == 'Setup'",
+                                          shiny::conditionalPanel(condition="input.prevreport == 'Setup'",
                                                            ns = shiny::NS(id),
-                                                           div(id = "autonomous",
+                                                           shiny::div(id = "autonomous",
                                                                format_sidebar(title = "SETUP", 
                                                                               help_text = "The app saves files to the main 
                                                                             folder as you analyze a questioned document. Choose 
                                                                             an empty folder to start a new analysis. If you want
                                                                             to continue an analysis, select that folder.",
                                                                               module = maindirUI(ns('maindir1'))),
-                                                               fluidRow(column(width = 6, actionButton(ns("setup_back_button"), "Back")), 
-                                                                        column(width = 6, align = "right", actionButton(ns("setup_next_button"), "Next")))
+                                                               shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("setup_back_button"), "Back")), 
+                                                                        shiny::column(width = 6, align = "right", shiny::actionButton(ns("setup_next_button"), "Next")))
                                                            ),
                                           ),
                                           
                                           # Known Writing UI ----
-                                          conditionalPanel(condition="input.prevreport == 'Known Writing'",
+                                          shiny::conditionalPanel(condition="input.prevreport == 'Known Writing'",
                                                            ns = shiny::NS(id),
-                                                           div(id = "autonomous",
+                                                           shiny::div(id = "autonomous",
                                                                format_sidebar(title = "KNOWN WRITING",
                                                                               help_text = "Where are the writer IDs located in the file names?",
                                                                               module = knownSidebarUI(ns('known1'))),
-                                                               fluidRow(column(width = 6, actionButton(ns("known_back_button"), "Back")), 
-                                                                        column(width = 6, align = "right", actionButton(ns("known_next_button"), "Next")))
+                                                               shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("known_back_button"), "Back")), 
+                                                                        shiny::column(width = 6, align = "right", shiny::actionButton(ns("known_next_button"), "Next")))
                                                            ),
                                           ),
                                           
                                           # Questioned Document UI ----
-                                          conditionalPanel(condition="input.prevreport == 'Questioned Document'",
+                                          shiny::conditionalPanel(condition="input.prevreport == 'Questioned Document'",
                                                            ns = shiny::NS(id),
-                                                           div(id = "autonomous",
+                                                           shiny::div(id = "autonomous",
                                                                format_sidebar(title = "QUESTIONED DOCUMENT",
                                                                               help_text = "Where are the writer IDs located in the file names?",
                                                                               module = qdSidebarUI(ns('qd1'))),
-                                                               fluidRow(column(width = 6, actionButton(ns("qd_back_button"), "Back")), 
-                                                                        column(width = 6, align = "right", actionButton(ns("qd_next_button"), "Next")))
+                                                               shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("qd_back_button"), "Back")), 
+                                                                        shiny::column(width = 6, align = "right", shiny::actionButton(ns("qd_next_button"), "Next")))
                                                            ),
                                           ),
                                           
                                           # Report Button UI ----
-                                          conditionalPanel(condition="input.prevreport == 'Report'",
+                                          shiny::conditionalPanel(condition="input.prevreport == 'Report'",
                                                            ns = shiny::NS(id),
-                                                           div(id = "autonomous",
+                                                           shiny::div(id = "autonomous",
                                                                format_sidebar(title = "REPORT",
                                                                               help_text = "Download the report."),
-                                                               fluidRow(column(width = 3, actionButton(ns("report_back_button"), "Back")), 
-                                                                        column(width = 9, align = "right", reportSidebarUI(ns('report1'))))
+                                                               shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("report_back_button"), "Back")), 
+                                                                        shiny::column(width = 9, align = "right", reportSidebarUI(ns('report1'))))
                                                            ),
                                           ),
                                         ))),
-                  mainPanel(
-                    tabsetPanel(id=ns("prevreport"),
+                  shiny::mainPanel(
+                    shiny::tabsetPanel(id=ns("prevreport"),
                                 type = "hidden",
                                 
                                 # Welcome Display ----
                                 shiny::tabPanel(id = ns("Welcome"),
                                                 title = "Welcome",
-                                                h3("WELCOME TO HANDWRITER!"),
-                                                p("Unlock the power of handwriting analysis with handwriter. Made to aid forensic examiners in their work,
+                                                shiny::h3("WELCOME TO HANDWRITER!"),
+                                                shiny::p("Unlock the power of handwriting analysis with handwriter. Made to aid forensic examiners in their work,
                    this tool analyzes a handwritten document against a closed set of potential writers to determine the probability
                    that each writer wrote the document. Whether you are a forensic document examiner, legal professional, academic,
                    or simply curious about how statistics are applied to handwriting, handwriter provides a cutting-edge way to 
@@ -89,13 +89,13 @@ innerUI <- function(id) {
                                 # Known Writing Display ----
                                 shiny::tabPanel(id = ns("Known Writing"),
                                                 title = "Known Writing",
-                                                knownBodyUI(ns('known1'))
+                                                shinycssloaders::withSpinner(knownBodyUI(ns('known1')))
                                 ),
                                 
                                 # Questioned Document Display ----
                                 shiny::tabPanel(id = ns("Questioned Document"), 
                                                 title = "Questioned Document",
-                                                qdBodyUI(ns('qd1'))
+                                                shinycssloaders::withSpinner(qdBodyUI(ns('qd1')))
                                 ),
                                 
                                 # Comparison Report Display ----
@@ -154,8 +154,8 @@ innerServer <- function(id){
         main_dir = NULL,
         model = NULL,
         qd_image = NULL,
-        qd_name = NULL,
-        qd_path = NULL,
+        qd_names = NULL,
+        qd_paths = NULL,
       )
       
       # MAIN DIRECTORY ----
