@@ -30,12 +30,7 @@ handwriterApp <- function(...){
                                   ),
                                   shiny::tabPanel( 
                                     "About",
-                                    shiny::h4(shiny::HTML("CSAFE Tools is a software suite of state-of-the-art statistical libraries designed to assist practitioners in analyzing forensic data. This work was developed in collaboration with the Center for Statistics and Applications in Forensic Evidence (CSAFE) at Iowa State University and Omni Analytics Group. These procedures are fully open-source and transparent. For more details on the underlying code, please see the <a href='https://github.com/OAITI/bulletmatcher' target='_blank'>GitHub repository</a> for the companion R package.")),
-                                    shiny::br(), 
-                                    shiny::br(),
-                                    shiny::h4(shiny::HTML("This software is an implementation of...")),
-                                    shiny::h4(shiny::HTML("This application will walk through the steps...")),
-                                    shiny::hr()
+                                    includeHTML(system.file(file.path("extdata", "HTML"), "about.HTML", package = "handwriterApp"))
                                   ),
                                   shiny::tabPanel("Instructions",),
                                   shiny::tabPanel("Contact",)
