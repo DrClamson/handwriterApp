@@ -65,7 +65,7 @@ list_names_in_named_vector <- function(paths){
     # get names list where names are the filepaths and values are the filenames
     names <- sapply(paths, basename)
     # swap names and values so the names are the filenames and the values are the filepaths
-    names <- setNames(names(names), names)
+    names <- stats::setNames(names(names), names)
     return(names)
   }
 }
@@ -154,6 +154,9 @@ load_image <- function(path){
 #'
 #' @noRd
 make_posteriors_df <- function(analysis){
+  # prevent note: "no visible binding for global variable"
+  post_probs <- NULL
+  
   df <- analysis$posterior_probabilities
   
   # Format posterior probabilities as percentage

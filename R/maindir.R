@@ -7,7 +7,7 @@ maindirUI <- function(id) {
 }
 
 maindirServer <- function(id, global) {
-  moduleServer(
+  shiny::moduleServer(
     id,
     function(input, output, session) {
       
@@ -18,15 +18,15 @@ maindirServer <- function(id, global) {
         filetypes = c('', 'txt', 'bigWig', "tsv", "csv", "bw")
       )
       
-      dir <- reactive(input$main_dir)
+      dir <- shiny::reactive(input$main_dir)
       
       # display folder path below button
-      output$dir <- renderText({
+      output$dir <- shiny::renderText({
         global$main_dir
       })
       
       # update main directory to the selected directory
-      observeEvent(ignoreInit = TRUE,
+      shiny::observeEvent(ignoreInit = TRUE,
                    eventExpr = {
                      input$main_dir
                    },

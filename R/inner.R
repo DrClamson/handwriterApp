@@ -110,7 +110,7 @@ innerUI <- function(id) {
 
 
 innerServer <- function(id){
-  moduleServer(
+  shiny::moduleServer(
     id,
     function(input, output, session){
       # NEXT BUTTONS ----
@@ -120,35 +120,35 @@ innerServer <- function(id){
       shinyjs::disable("qd_next_button")
       
       # enable next buttons
-      observe({
+      shiny::observe({
         # main_dir needs to be defined
-        req(global$main_dir)
+        shiny::req(global$main_dir)
         shinyjs::enable("setup_next_button")
       })
-      observe({
+      shiny::observe({
         # model needs to be loaded
-        req(global$model)
+        shiny::req(global$model)
         shinyjs::enable("known_next_button")
       })
-      observe({
+      shiny::observe({
         # analysis needs to be loaded
-        req(global$analysis)
+        shiny::req(global$analysis)
         shinyjs::enable("qd_next_button")
       })
       
       # change selected tab in main panel
-      observeEvent(input$begin_button, {updateTabsetPanel(session, "prevreport", selected = "Setup")})
-      observeEvent(input$setup_next_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
-      observeEvent(input$known_next_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
-      observeEvent(input$qd_next_button, {updateTabsetPanel(session, "prevreport", selected = "Report")})
+      shiny::observeEvent(input$begin_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Setup")})
+      shiny::observeEvent(input$setup_next_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
+      shiny::observeEvent(input$known_next_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
+      shiny::observeEvent(input$qd_next_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Report")})
       
-      observeEvent(input$setup_back_button, {updateTabsetPanel(session, "prevreport", selected = "Welcome")})
-      observeEvent(input$known_back_button, {updateTabsetPanel(session, "prevreport", selected = "Setup")})
-      observeEvent(input$qd_back_button, {updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
-      observeEvent(input$report_back_button, {updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
+      shiny::observeEvent(input$setup_back_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Welcome")})
+      shiny::observeEvent(input$known_back_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Setup")})
+      shiny::observeEvent(input$qd_back_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
+      shiny::observeEvent(input$report_back_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
       
       # STORAGE ----
-      global <- reactiveValues(
+      global <- shiny::reactiveValues(
         analysis = NULL,
         known_docs = NULL,
         main_dir = NULL,

@@ -30,7 +30,7 @@ handwriterApp <- function(...){
                                   ),
                                   shiny::tabPanel( 
                                     "About",
-                                    includeHTML(system.file(file.path("extdata", "HTML"), "about.HTML", package = "handwriterApp"))
+                                    shiny::includeHTML(system.file(file.path("extdata", "HTML"), "about.HTML", package = "handwriterApp"))
                                   ),
                                   shiny::tabPanel("Instructions",),
                                   shiny::tabPanel("Contact",)

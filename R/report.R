@@ -6,11 +6,11 @@ reportSidebarUI <- function(id) {
 }
 
 reportServer <- function(id, global) {
-  moduleServer(
+  shiny::moduleServer(
     id,
     function(input, output, session) {
       
-      output$report <- downloadHandler(
+      output$report <- shiny::downloadHandler(
         filename = function() {
           'report.pdf'
         },

@@ -20,10 +20,10 @@ qdBodyUI <- function(id){
 }
 
 qdServer <- function(id, global) {
-  moduleServer(
+  shiny::moduleServer(
     id,
     function(input, output, session) { 
-      observeEvent(input$qd_upload, {
+      shiny::observeEvent(input$qd_upload, {
         global$qd_paths <- input$qd_upload$datapath  # filepaths for temp docs not filepaths on disk
         global$qd_names <- input$qd_upload$name
         
@@ -52,13 +52,13 @@ qdServer <- function(id, global) {
       # Display analysis ----
       # NOTE: this is UI that lives inside server so that the heading is hidden
       # if analysis doesn't exist
-      output$qd_analysis <- renderTable({
-        req(global$analysis)
+      output$qd_analysis <- shiny::renderTable({
+        shiny::req(global$analysis)
         make_posteriors_df(global$analysis)
       })
-      output$qd_results <- renderUI({
+      output$qd_results <- shiny::renderUI({
         ns <- session$ns
-        req(global$analysis)
+        shiny::req(global$analysis)
         shiny::tagList(
           shiny::h3("Evaluation Results"),
           shiny::tableOutput(ns("qd_analysis")),

@@ -21,4 +21,6 @@ Imports:
     shiny,
     shinycssloaders,
     shinyFiles,
-    shinyjs
+    shinyjs,
+    stringr,
+    tidyr

@@ -7,13 +7,17 @@ currentImageUI <- function(id) {
 }
 
 currentImageServer <- function(id, global, type) {
-  moduleServer(
+  shiny::moduleServer(
     id,
     function(input, output, session) { 
       # store current paths, names, image, processed, and profile locally not
       # globally so docs don't carry over when user switched between Known Writing
       # and QD screens
-      local <- reactiveValues(current_paths = NULL,
+      
+      # prevent note: "no visible binding for global variable"
+      docname <- NULL
+      
+      local <- shiny::reactiveValues(current_paths = NULL,
                               current_names = NULL,
                               current_image = NULL,
                               current_processed = NULL,
@@ -22,10 +26,10 @@ currentImageServer <- function(id, global, type) {
       # Select doc from drop-down ----
       # NOTE: this is UI that lives inside server so that the heading is hidden
       # if object doesn't exist
-      output$current_select <- renderUI({
+      output$current_select <- shiny::renderUI({
         ns <- session$ns
         local$current_paths <- switch(type, "model" = global$known_paths, "questioned" = global$qd_paths)
-        req(local$current_paths)
+        shiny::req(local$current_paths)
         local$current_names <- list_names_in_named_vector(local$current_paths)
         shiny::tagList(
           shiny::h3("Supporting Materials"),
@@ -35,15 +39,15 @@ currentImageServer <- function(id, global, type) {
         )
       })
       
-      observeEvent(input$current_select, {
+      shiny::observeEvent(input$current_select, {
         local$current_image <- load_image(input$current_select)
         local$current_name <- basename(input$current_select)
         local$current_processed <- load_processed_doc(main_dir = global$main_dir, name = local$current_name, type = type)
       })
       
       # display current doc
-      output$current_image <- renderImage({
-        req(local$current_image)
+      output$current_image <- shiny::renderImage({
+        shiny::req(local$current_image)
         
         tmp <- local$current_image %>%
           magick::image_write(tempfile(fileext='png'), format = 'png')
@@ -54,13 +58,13 @@ currentImageServer <- function(id, global, type) {
       )
       
       # display processed current doc
-      output$current_nodes <- renderPlot({
-        req(local$current_processed)
+      output$current_nodes <- shiny::renderPlot({
+        shiny::req(local$current_processed)
         handwriter::plotNodes(local$current_processed, nodeSize = 2)
       })
       
       # display writer profile for current doc
-      output$current_profile <- renderPlot({
+      output$current_profile <- shiny::renderPlot({
         shiny::req(local$current_name)
         switch(type, 
                "model" = {
@@ -78,19 +82,19 @@ currentImageServer <- function(id, global, type) {
       
       # NOTE: this is UI that lives inside server so that tabs are hidden
       # if qd_image doesn't exist
-      output$current_tabs <- renderUI({
+      output$current_tabs <- shiny::renderUI({
         ns <- session$ns
-        req(local$current_image)
+        shiny::req(local$current_image)
         shiny::tagList(
-          tabsetPanel(
-            tabPanel("Document",
-                     imageOutput(ns("current_image"))
+          shiny::tabsetPanel(
+            shiny::tabPanel("Document",
+                            shiny::imageOutput(ns("current_image"))
             ),
-            tabPanel("Processed Document",
-                     plotOutput(ns("current_nodes"))
+            shiny::tabPanel("Processed Document",
+                            shiny::plotOutput(ns("current_nodes"))
             ),
-            tabPanel("Writer Profile",
-                     plotOutput(ns("current_profile"))
+            shiny::tabPanel("Writer Profile",
+                            shiny::plotOutput(ns("current_profile"))
             )
           )
         )
