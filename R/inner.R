@@ -10,7 +10,7 @@ innerUI <- function(id) {
                                                            ns = shiny::NS(id),
                                                            shiny::div(id = "autonomous",
                                                                format_sidebar(title = "GET STARTED",
-                                                                              help_text = "Press the button to start using the app to compare questioned documents to known writing samples."),
+                                                                              help_text = "Press the button to start using handwriter to compare questioned documents to known writing samples."),
                                                                shiny::actionButton(ns("begin_button"), "Start")
                                                            ),
                                           ),
