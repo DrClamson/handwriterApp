@@ -25,13 +25,15 @@ set_indices <- function(id, label){
 #' @return numericInput
 #'
 #' @noRd
-format_sidebar <- function(title, help_text, module = NULL){
+format_sidebar <- function(title, help_text, module = NULL, break_after_module = TRUE){
   output <- shiny::tagList(
     shiny::tags$h1(class = "responsive-text", title),
     shiny::br(),
     shiny::helpText(help_text),
     module,
-    shiny::br(),
+    if (break_after_module){
+      shiny::br()
+    }
   )
   return(output)
 }
