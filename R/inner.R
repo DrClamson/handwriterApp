@@ -80,7 +80,7 @@ innerUI <- function(id) {
                                                 documents against a closed set of potential writers. It determines the probability 
                                                 that each writer wrote the document. Whether you are a forensic document examiner, 
                                                 legal professional, academic, or simply curious about how statistics are applied to 
-                                                handwriting, handwriter provides a cutting-edge way to evaluate handwriting samples."),
+                                                handwriting, handwriter provides an automated way to evaluate handwriting samples."),
                                                               shiny::br(),
                                               ),
                                               
