@@ -73,11 +73,12 @@ innerUI <- function(id) {
                                 shiny::tabPanel(id = ns("Welcome"),
                                                 title = "Welcome",
                                                 shiny::h3("WELCOME TO HANDWRITER!"),
-                                                shiny::p("Unlock the power of handwriting analysis with handwriter. Made to aid forensic examiners in their work,
-                   this tool analyzes a handwritten document against a closed set of potential writers to determine the probability
-                   that each writer wrote the document. Whether you are a forensic document examiner, legal professional, academic,
-                   or simply curious about how statistics are applied to handwriting, handwriter provides a cutting-edge way to 
-                   evaluate handwriting samples."),
+                                                shiny::p("Unlock the power of handwriting analysis with handwriter. 
+                                                This tool is designed to assist forensic examiners by analyzing handwritten 
+                                                documents against a closed set of potential writers. It determines the probability 
+                                                that each writer wrote the document. Whether you are a forensic document examiner, 
+                                                legal professional, academic, or simply curious about how statistics are applied to 
+                                                handwriting, handwriter provides a cutting-edge way to evaluate handwriting samples."),
                                                 shiny::br(),
                                 ),
                                 
