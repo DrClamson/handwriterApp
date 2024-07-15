@@ -58,9 +58,8 @@ address {
 }
 
 #app-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  display: block;
+  overflow: auto;
 }
 
 #global-navbar {
