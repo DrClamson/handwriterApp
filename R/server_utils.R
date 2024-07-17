@@ -194,5 +194,5 @@ setup_main_dir <- function(main_dir){
     create_dir(file.path(main_dir, "data", "model_docs"))
     
     # handwriter requires template.rds to exist in main_dir > data
-    saveRDS(template, file.path(main_dir, "data", "template.rds"))
+    saveRDS(templateK8, file.path(main_dir, "data", "template.rds"))
 }
