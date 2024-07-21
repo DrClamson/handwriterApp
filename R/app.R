@@ -6,16 +6,14 @@ handwriterApp <- function(...){
   ui <- shiny::shinyUI({
     shiny::fluidPage(title = "handwriter",
                      shinyjs::useShinyjs(),
+                     shiny::includeCSS(system.file("extdata", "styles.css", package = "handwriterApp")),
                      shiny::tags$head(
                        shiny::tags$link(
                          href = "https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900|Ubuntu:400,500,700",
                          rel = "stylesheet",
                          type = "text/css"
                        ),
-                       # tags$link(rel = "shortcut icon", href = "favicon.png", type = "image/png"),
-                       # tags$link(rel = "icon", href = "favicon.png", type = "image/png")
                      ),
-                     shiny::includeCSS(system.file("extdata", "styles.css", package = "handwriterApp")),
                      shiny::tags$div(id="app-container",
                                      shiny::fluidRow(
                                        shiny::column(width = 4, shiny::tags$a(target = "_blank", href="https://forensicstats.org", shiny::tags$img(src = "images/CSAFE_Tools_handwriter_cropped.png", height="100px"))),

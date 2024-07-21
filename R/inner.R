@@ -6,7 +6,7 @@ innerUI <- function(id) {
                                                              shiny::fluidPage(
                                                                
                                                                # Welcome UI ----
-                                                               shiny::conditionalPanel(condition="input.prevreport == 'Welcome'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Welcome'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "GET STARTED",
@@ -16,7 +16,7 @@ innerUI <- function(id) {
                                                                ),
                                                                
                                                                # Setup UI ----
-                                                               shiny::conditionalPanel(condition="input.prevreport == 'Setup'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Setup'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "SETUP", 
@@ -31,7 +31,7 @@ innerUI <- function(id) {
                                                                ),
                                                                
                                                                # Known Writing UI ----
-                                                               shiny::conditionalPanel(condition="input.prevreport == 'Known Writing'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Known Writing'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "KNOWN WRITING",
@@ -44,7 +44,7 @@ innerUI <- function(id) {
                                                                ),
                                                                
                                                                # Questioned Document UI ----
-                                                               shiny::conditionalPanel(condition="input.prevreport == 'Questioned Document'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Questioned Document'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "QUESTIONED DOCUMENT",
@@ -57,7 +57,7 @@ innerUI <- function(id) {
                                                                ),
                                                                
                                                                # Report Button UI ----
-                                                               shiny::conditionalPanel(condition="input.prevreport == 'Report'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Report'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "REPORT",
@@ -68,7 +68,7 @@ innerUI <- function(id) {
                                                                ),
                                                              ))),
                          shiny::mainPanel(
-                           shiny::tabsetPanel(id=ns("prevreport"),
+                           shiny::tabsetPanel(id=ns("screen"),
                                               type = "hidden",
                                               
                                               # Welcome Display ----
@@ -140,15 +140,15 @@ innerServer <- function(id){
       })
       
       # change selected tab in main panel
-      shiny::observeEvent(input$begin_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Setup")})
-      shiny::observeEvent(input$setup_next_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
-      shiny::observeEvent(input$known_next_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
-      shiny::observeEvent(input$qd_next_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Report")})
+      shiny::observeEvent(input$begin_button, {shiny::updateTabsetPanel(session, "screen", selected = "Setup")})
+      shiny::observeEvent(input$setup_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Known Writing")})
+      shiny::observeEvent(input$known_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Questioned Document")})
+      shiny::observeEvent(input$qd_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Report")})
       
-      shiny::observeEvent(input$setup_back_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Welcome")})
-      shiny::observeEvent(input$known_back_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Setup")})
-      shiny::observeEvent(input$qd_back_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Known Writing")})
-      shiny::observeEvent(input$report_back_button, {shiny::updateTabsetPanel(session, "prevreport", selected = "Questioned Document")})
+      shiny::observeEvent(input$setup_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
+      shiny::observeEvent(input$known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Setup")})
+      shiny::observeEvent(input$qd_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Known Writing")})
+      shiny::observeEvent(input$report_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Questioned Document")})
       
       # STORAGE ----
       global <- shiny::reactiveValues(
