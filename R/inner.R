@@ -15,18 +15,45 @@ innerUI <- function(id) {
                                                                                        ),
                                                                ),
                                                                
-                                                               # Setup UI ----
-                                                               shiny::conditionalPanel(condition="input.screen == 'Setup'",
+                                                               # Setup Requirements UI ----
+                                                               shiny::conditionalPanel(condition="input.screen == 'Requirements'",
+                                                                                       ns = shiny::NS(id),
+                                                                                       shiny::includeHTML(system.file(file.path("extdata", "HTML"), "setup_requirements.html", package = "handwriterApp")),
+                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("requirements_back_button"), "Back")), 
+                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("requirements_next_button"), "Next")))
+
+                                                               ),
+                                                               
+                                                               # Setup Dowload UI ----
+                                                               shiny::conditionalPanel(condition="input.screen == 'Download'",
+                                                                                       ns = shiny::NS(id),
+                                                                                       shiny::includeHTML(system.file(file.path("extdata", "HTML"), "setup_download.html", package = "handwriterApp")),
+                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("download_back_button"), "Back")), 
+                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("download_next_button"), "Next")))
+                                                                                       
+                                                               ),
+                                                               
+                                                               # Setup Files UI ----
+                                                               shiny::conditionalPanel(condition="input.screen == 'Files'",
+                                                                                       ns = shiny::NS(id),
+                                                                                       shiny::includeHTML(system.file(file.path("extdata", "HTML"), "setup_files.html", package = "handwriterApp")),
+                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("files_back_button"), "Back")), 
+                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("files_next_button"), "Next")))
+                                                                                       
+                                                               ),
+                                                               
+                                                               # Setup Project UI ----
+                                                               shiny::conditionalPanel(condition="input.screen == 'Project'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
-                                                                                                  format_sidebar(title = "SETUP", 
-                                                                                                                 help_text = "The app saves files to the main 
+                                                                                                  format_sidebar(title = "PROJECT FOLDER", 
+                                                                                                                 help_text = "The app saves files to the project 
                                                                             folder as you analyze a questioned document. Choose 
                                                                             an empty folder to start a new analysis. If you want
                                                                             to continue an analysis, select that folder.",
                                                                                                                  module = maindirUI(ns('maindir1'))),
-                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("setup_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("setup_next_button"), "Next")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("project_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("project_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
@@ -84,9 +111,24 @@ innerUI <- function(id) {
                                                               shiny::br(),
                                               ),
                                               
-                                              # Setup Display ----
-                                              shiny::tabPanel(id = ns("Setup"),
-                                                              title = "Setup"
+                                              # Setup Requirements Display ----
+                                              shiny::tabPanel(id = ns("Requirements"),
+                                                              title = "Requirements",
+                                              ),
+                                              
+                                              # Setup Download Display ----
+                                              shiny::tabPanel(id = ns("Download"),
+                                                              title = "Download",
+                                              ),
+                                              
+                                              # Setup Files Display ----
+                                              shiny::tabPanel(id = ns("Files"),
+                                                              title = "Files",
+                                              ),
+                                              
+                                              # Setup Project Display ----
+                                              shiny::tabPanel(id = ns("Project"),
+                                                              title = "Project",
                                               ),
                                               
                                               # Known Writing Display ----
@@ -118,7 +160,7 @@ innerServer <- function(id){
     function(input, output, session){
       # NEXT BUTTONS ----
       # disable next buttons at start
-      shinyjs::disable("setup_next_button")
+      shinyjs::disable("project_next_button")
       shinyjs::disable("known_next_button")
       shinyjs::disable("qd_next_button")
       
@@ -126,7 +168,7 @@ innerServer <- function(id){
       shiny::observe({
         # main_dir needs to be defined
         shiny::req(global$main_dir)
-        shinyjs::enable("setup_next_button")
+        shinyjs::enable("project_next_button")
       })
       shiny::observe({
         # model needs to be loaded
@@ -140,13 +182,19 @@ innerServer <- function(id){
       })
       
       # change selected tab in main panel
-      shiny::observeEvent(input$begin_button, {shiny::updateTabsetPanel(session, "screen", selected = "Setup")})
-      shiny::observeEvent(input$setup_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Known Writing")})
+      shiny::observeEvent(input$begin_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
+      shiny::observeEvent(input$requirements_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Download")})
+      shiny::observeEvent(input$download_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
+      shiny::observeEvent(input$files_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Project")})
+      shiny::observeEvent(input$project_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Known Writing")})
       shiny::observeEvent(input$known_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Questioned Document")})
       shiny::observeEvent(input$qd_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Report")})
       
-      shiny::observeEvent(input$setup_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
-      shiny::observeEvent(input$known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Setup")})
+      shiny::observeEvent(input$requirements_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
+      shiny::observeEvent(input$download_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
+      shiny::observeEvent(input$files_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Download")})
+      shiny::observeEvent(input$project_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
+      shiny::observeEvent(input$known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Project")})
       shiny::observeEvent(input$qd_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Known Writing")})
       shiny::observeEvent(input$report_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Questioned Document")})
       
