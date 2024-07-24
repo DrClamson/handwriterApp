@@ -47,8 +47,8 @@ innerUI <- function(id) {
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "PROJECT FOLDER", 
-                                                                                                                 help_text = "The app saves files to the project 
-                                                                            folder as you analyze a questioned document. Choose 
+                                                                                                                 help_text = "Handwriter saves files to a project 
+                                                                            folder on your computer as you analyze a questioned document. Choose 
                                                                             an empty folder to start a new analysis. If you want
                                                                             to continue an analysis, select that folder.",
                                                                                                                  module = maindirUI(ns('maindir1'))),
