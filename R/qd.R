@@ -61,6 +61,9 @@ qdServer <- function(id, global) {
         shiny::req(global$analysis)
         shiny::tagList(
           shiny::h3("Evaluation Results"),
+          shiny::HTML("<p>The table shows the posterior probability of writership for each questioned document and each known writer. Each
+                      column corresponds to a questioned document and each row corresponds to a known writer. The posterior probability of 
+                      writership in each column sums to 100%.</p>"),
           shiny::tableOutput(ns("qd_analysis")),
           shiny::br()
         )

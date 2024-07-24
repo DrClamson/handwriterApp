@@ -33,7 +33,7 @@ The estimated writer profile(s) for each questioned document are displayed in Fi
 1. Convert the image to black and white.
 2. Thin the writing so that it is only one pixel wide.
 3. Split the writing into component shapes called *graphs*.
-4. Assign each graph in the document to the nearest cluster in the clustering template. 
+4. Assign each graph in the document to the nearest cluster. 
 5. Count the number of graphs assigned to each cluster. 
 
 The *cluster fill counts* are an estimate of the *writer's profile*.
@@ -58,7 +58,7 @@ Each known writing sample was processed with the handwriter package with the sam
 1. Convert the image to black and white.
 2. Thin the writing so that it is only one pixel wide.
 3. Split the writing into component shapes called *graphs*.
-4. Assign each graph in the document to the nearest cluster in the clustering template. 
+4. Assign each graph in the document to the nearest cluster. 
 5. Count the number of graphs assigned to each cluster.
 
 Next, handwriter fit a statistical model, called a Bayesian hierarchical model, to the cluster fill counts of all known writing samples to estimate the true writer profile of each person of interest. The estimated writer profiles of the persons of interest are displayed in Figure 2.
@@ -68,7 +68,7 @@ handwriter::plot_credible_intervals(params$model, facet=TRUE)
 ```
 
 # Writership Analysis
-The handwriter package used the statistical model and the estimated writer profile from a questioned document to calculate the posterior probability that each person wrote the questioned document. Table 3 shows the posterior probabilities of writership for each questioned document and each person of interest. Each row in the table corresponds to a person of interest and each column corresponds to a questioned document.
+The handwriter package used the statistical model and the estimated writer profile(s) from a questioned document(s) to calculate the posterior probability that each person wrote the questioned document(s). Table 3 shows the posterior probabilities of writership for each questioned document and each person of interest. Each row in the table corresponds to a person of interest and each column corresponds to a questioned document. The posterior probability in each column sums to 100%.
 
 ```{r analysis, echo=FALSE}
 pp <- make_posteriors_df(analysis = params$analysis)
