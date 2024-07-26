@@ -26,15 +26,6 @@ innerUI <- function(id) {
                                                                                        
                                                                ),
                                                                
-                                                               # Setup Dowload UI ----
-                                                               shiny::conditionalPanel(condition="input.screen == 'Download'",
-                                                                                       ns = shiny::NS(id),
-                                                                                       shiny::includeHTML(system.file(file.path("extdata", "HTML"), "setup_download.html", package = "handwriterApp")),
-                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("download_back_button"), "Back")), 
-                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("download_next_button"), "Next")))
-                                                                                       
-                                                               ),
-                                                               
                                                                # Setup Files UI ----
                                                                shiny::conditionalPanel(condition="input.screen == 'Files'",
                                                                                        ns = shiny::NS(id),
@@ -118,11 +109,6 @@ innerUI <- function(id) {
                                                               title = "Requirements",
                                               ),
                                               
-                                              # Setup Download Display ----
-                                              shiny::tabPanel(id = ns("Download"),
-                                                              title = "Download",
-                                              ),
-                                              
                                               # Setup Files Display ----
                                               shiny::tabPanel(id = ns("Files"),
                                                               title = "Files",
@@ -185,16 +171,14 @@ innerServer <- function(id){
       
       # change selected tab in main panel
       shiny::observeEvent(input$casework_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
-      shiny::observeEvent(input$requirements_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Download")})
-      shiny::observeEvent(input$download_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
+      shiny::observeEvent(input$requirements_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
       shiny::observeEvent(input$files_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Project")})
       shiny::observeEvent(input$project_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Known Writing")})
       shiny::observeEvent(input$known_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Questioned Document")})
       shiny::observeEvent(input$qd_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Report")})
       
       shiny::observeEvent(input$requirements_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
-      shiny::observeEvent(input$download_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
-      shiny::observeEvent(input$files_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Download")})
+      shiny::observeEvent(input$files_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
       shiny::observeEvent(input$project_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
       shiny::observeEvent(input$known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Project")})
       shiny::observeEvent(input$qd_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Known Writing")})
