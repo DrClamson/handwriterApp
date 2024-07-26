@@ -10,8 +10,10 @@ innerUI <- function(id) {
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "GET STARTED",
-                                                                                                                 help_text = "Press the button to start using handwriter to compare questioned documents to known writing samples."),
-                                                                                                  shiny::actionButton(ns("begin_button"), "Start")
+                                                                                                                 help_text = "Start using handwriter to compare questioned documents to known writing samples. See a demo with 
+                                                                                                                 example data or simulate casework and analyze your handwriting samples."),
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_button"), "Demo")), 
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("casework_button"), align="right", "Casework Simulation")))
                                                                                        ),
                                                                ),
                                                                
@@ -21,7 +23,7 @@ innerUI <- function(id) {
                                                                                        shiny::includeHTML(system.file(file.path("extdata", "HTML"), "setup_requirements.html", package = "handwriterApp")),
                                                                                        shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("requirements_back_button"), "Back")), 
                                                                                                        shiny::column(width = 6, align = "right", shiny::actionButton(ns("requirements_next_button"), "Next")))
-
+                                                                                       
                                                                ),
                                                                
                                                                # Setup Dowload UI ----
@@ -182,7 +184,7 @@ innerServer <- function(id){
       })
       
       # change selected tab in main panel
-      shiny::observeEvent(input$begin_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
+      shiny::observeEvent(input$casework_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
       shiny::observeEvent(input$requirements_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Download")})
       shiny::observeEvent(input$download_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
       shiny::observeEvent(input$files_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Project")})
