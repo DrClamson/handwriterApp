@@ -91,9 +91,16 @@ currentImageServer <- function(id, global, type) {
                             shiny::imageOutput(ns("current_image"))
             ),
             shiny::tabPanel("Processed Document",
+                            shiny::HTML("<p>Handwriter processes handwriting by placing <i>nodes</i>, displayed as red dots, at interesections and the ends of lines. Then handwriter 
+                                     uses the nodes and a set of rules to break the handwriting into component shapes called <i>graphs</i>. Graphs capture shapes, not necessarily individual letters. 
+                                     Graphs might be a part of a letter or contain parts of multiple letters.</p>"),
                             shiny::plotOutput(ns("current_nodes"))
             ),
             shiny::tabPanel("Writer Profile",
+                            shiny::HTML("<p>The key idea behind handwriter is that the rate at which a writer produces 
+                            different types of graphs, called <i>clusters</i>, serves as an estimate of a <i>writer profile</i>. Handwriter groups graphs 
+                            with similar shapes into <i>clusters</i> and counts the number of graphs from a document 
+                            that fall into each cluster.</p>"),
                             shiny::plotOutput(ns("current_profile"))
             )
           )
