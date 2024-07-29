@@ -23,7 +23,7 @@ innerUI <- function(id) {
                                                                                        shiny::div(id = "autonomous",
                                                                                                   shiny::includeHTML(system.file(file.path("extdata", "HTML"), "demo_preview.html", package = "handwriterApp")),
                                                                                                   shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_preview_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_preview_next_button"), "Estimate Writer Profiles")))
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_preview_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
@@ -31,9 +31,12 @@ innerUI <- function(id) {
                                                                shiny::conditionalPanel(condition="input.screen == 'Demo Known'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
-                                                                                                  h3("Demo Known"),
+                                                                                                  format_sidebar(title = "KNOWN WRITING",
+                                                                                                                 help_text = "Estimate writer profiles from the known writing samples.",
+                                                                                                                 module = demoKnownSidebarUI(ns("demo_known")),
+                                                                                                                 break_after_module = TRUE),
                                                                                                   shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_known_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_known_next_button"), "Analyze Questioned Docs")))
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_known_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
@@ -133,7 +136,7 @@ innerUI <- function(id) {
                                               # Demo Known Display ----
                                               shiny::tabPanel(id = ns("Demo Known"),
                                                               title = "Demo Known",
-                                                              # shinycssloaders::withSpinner(demoPreviewBodyUI(ns('demo1')))
+                                                              shinycssloaders::withSpinner(demoKnownBodyUI(ns('demo_known')))
                                               ),
                                               
                                               # Setup Requirements Display ----
@@ -180,6 +183,7 @@ innerServer <- function(id){
     function(input, output, session){
       # NEXT BUTTONS ----
       # disable next buttons at start
+      shinyjs::disable("demo_known_next_button")
       shinyjs::disable("case_project_next_button")
       shinyjs::disable("case_known_next_button")
       shinyjs::disable("case_qd_next_button")
@@ -194,6 +198,7 @@ innerServer <- function(id){
         # model needs to be loaded
         shiny::req(global$model)
         shinyjs::enable("case_known_next_button")
+        shinyjs::enable("demo_known_next_button")
       })
       shiny::observe({
         # analysis needs to be loaded
@@ -236,8 +241,11 @@ innerServer <- function(id){
         qd_paths = NULL,
       )
       
-      # DEMO ----
+      # DEMO PREVIEW ----
       demoPreviewServer('demo_preview', global)
+      
+      # DEMO KNOWN ----
+      demoKnownServer('demo_known', global)
       
       # MAIN DIRECTORY ----
       caseMaindirServer('case_maindir', global)
