@@ -17,6 +17,27 @@ innerUI <- function(id) {
                                                                                        ),
                                                                ),
                                                                
+                                                               # Demo UI ----
+                                                               shiny::conditionalPanel(condition="input.screen == 'Demo'",
+                                                                                       ns = shiny::NS(id),
+                                                                                       shiny::div(id = "autonomous",
+                                                                                                  shiny::includeHTML(system.file(file.path("extdata", "HTML"), "demo.html", package = "handwriterApp")),
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_next_button"), "Estimate Writer Profiles")))
+                                                                                       ),
+                                                               ),
+                                                               
+                                                               # Demo Known UI ----
+                                                               shiny::conditionalPanel(condition="input.screen == 'Demo Known'",
+                                                                                       ns = shiny::NS(id),
+                                                                                       shiny::div(id = "autonomous",
+                                                                                                  # shiny::includeHTML(system.file(file.path("extdata", "HTML"), "demo.html", package = "handwriterApp")),
+                                                                                                  h3("Demo Known"),
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_known_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_known_next_button"), "Analyze Questioned Docs")))
+                                                                                       ),
+                                                               ),
+                                                               
                                                                # Setup Requirements UI ----
                                                                shiny::conditionalPanel(condition="input.screen == 'Requirements'",
                                                                                        ns = shiny::NS(id),
@@ -104,6 +125,18 @@ innerUI <- function(id) {
                                                               shiny::br(),
                                               ),
                                               
+                                              # Demo Display ----
+                                              shiny::tabPanel(id = ns("Demo"),
+                                                              title = "Demo",
+                                                              shinycssloaders::withSpinner(demoBodyUI(ns('demo1')))
+                                              ),
+                                              
+                                              # Demo Known Display ----
+                                              shiny::tabPanel(id = ns("Demo Known"),
+                                                              title = "Demo Known",
+                                                              # shinycssloaders::withSpinner(demoBodyUI(ns('demo1')))
+                                              ),
+                                              
                                               # Setup Requirements Display ----
                                               shiny::tabPanel(id = ns("Requirements"),
                                                               title = "Requirements",
@@ -169,7 +202,11 @@ innerServer <- function(id){
         shinyjs::enable("qd_next_button")
       })
       
-      # change selected tab in main panel
+      # demo next buttons
+      shiny::observeEvent(input$demo_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo")})
+      shiny::observeEvent(input$demo_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Known")})
+    
+      # casework next buttons
       shiny::observeEvent(input$casework_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
       shiny::observeEvent(input$requirements_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
       shiny::observeEvent(input$files_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Project")})
@@ -177,6 +214,11 @@ innerServer <- function(id){
       shiny::observeEvent(input$known_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Questioned Document")})
       shiny::observeEvent(input$qd_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Report")})
       
+      # demo back buttons
+      shiny::observeEvent(input$demo_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
+      shiny::observeEvent(input$demo_known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo")})
+      
+      # casework back buttons
       shiny::observeEvent(input$requirements_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
       shiny::observeEvent(input$files_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
       shiny::observeEvent(input$project_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
@@ -194,6 +236,9 @@ innerServer <- function(id){
         qd_names = NULL,
         qd_paths = NULL,
       )
+      
+      # DEMO ----
+      demoServer('demo1', global)
       
       # MAIN DIRECTORY ----
       maindirServer('maindir1', global)

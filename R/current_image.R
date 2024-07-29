@@ -18,10 +18,10 @@ currentImageServer <- function(id, global, type) {
       docname <- NULL
       
       local <- shiny::reactiveValues(current_paths = NULL,
-                              current_names = NULL,
-                              current_image = NULL,
-                              current_processed = NULL,
-                              current_profile = NULL)
+                                     current_names = NULL,
+                                     current_image = NULL,
+                                     current_processed = NULL,
+                                     current_profile = NULL)
       
       # Select doc from drop-down ----
       # NOTE: this is UI that lives inside server so that the heading is hidden
