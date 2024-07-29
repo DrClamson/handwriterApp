@@ -1,4 +1,4 @@
-maindirUI <- function(id) {
+caseMaindirUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shinyFiles::shinyDirButton(ns("main_dir"), "Main folder", "Select a folder"),
@@ -6,7 +6,7 @@ maindirUI <- function(id) {
   )
 }
 
-maindirServer <- function(id, global) {
+caseMaindirServer <- function(id, global) {
   shiny::moduleServer(
     id,
     function(input, output, session) {

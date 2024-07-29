@@ -65,7 +65,7 @@ innerUI <- function(id) {
                                                                             folder on your computer as you analyze a questioned document. Choose 
                                                                             an empty folder to start a new analysis. If you want
                                                                             to continue an analysis, select that folder.",
-                                                                                                                 module = maindirUI(ns('maindir1'))),
+                                                                                                                 module = caseMaindirUI(ns('case_maindir'))),
                                                                                                   shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("project_back_button"), "Back")), 
                                                                                                                   shiny::column(width = 6, align = "right", shiny::actionButton(ns("project_next_button"), "Next")))
                                                                                        ),
@@ -241,7 +241,7 @@ innerServer <- function(id){
       demoPreviewServer('demo_preview', global)
       
       # MAIN DIRECTORY ----
-      maindirServer('maindir1', global)
+      caseMaindirServer('case_maindir', global)
       
       # KNOWN WRITING ----
       caseKnownServer('case_known', global)
