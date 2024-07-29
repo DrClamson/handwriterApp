@@ -103,8 +103,8 @@ innerUI <- function(id) {
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "REPORT",
                                                                                                                  help_text = "Download the report."),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("report_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 9, align = "right", reportSidebarUI(ns('report1'))))
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("case_report_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 9, align = "right", caseReportSidebarUI(ns('case_report'))))
                                                                                        ),
                                                                ),
                                                              ))),
@@ -224,7 +224,7 @@ innerServer <- function(id){
       shiny::observeEvent(input$project_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
       shiny::observeEvent(input$known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Project")})
       shiny::observeEvent(input$qd_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Known Writing")})
-      shiny::observeEvent(input$report_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Questioned Document")})
+      shiny::observeEvent(input$case_report_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Questioned Document")})
       
       # STORAGE ----
       global <- shiny::reactiveValues(
@@ -250,7 +250,7 @@ innerServer <- function(id){
       caseQDServer('case_qd', global)
       
       # REPORT ----
-      reportServer('report1', global)
+      caseReportServer('case_report', global)
       
     }
   )

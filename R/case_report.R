@@ -1,11 +1,11 @@
-reportSidebarUI <- function(id) {
+caseReportSidebarUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::fluidRow(shiny::column(12, shiny::downloadButton(ns("report"), "Generate report"), align="center"))
   )
 }
 
-reportServer <- function(id, global) {
+caseReportServer <- function(id, global) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
