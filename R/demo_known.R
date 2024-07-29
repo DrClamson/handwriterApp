@@ -1,7 +1,7 @@
 demoKnownSidebarUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    actionButton(ns("demo_known_estimate"), "Estimate Writer Profiles"),
+    shiny::fluidRow(shiny::column(width=12, align = "center", actionButton(ns("demo_known_estimate"), "Estimate Writer Profiles"))),
     shiny::br()
   )
 }

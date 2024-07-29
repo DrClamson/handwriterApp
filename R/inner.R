@@ -40,6 +40,18 @@ innerUI <- function(id) {
                                                                                        ),
                                                                ),
                                                                
+                                                               # Demo QD UI ----
+                                                               shiny::conditionalPanel(condition="input.screen == 'Demo QD'",
+                                                                                       ns = shiny::NS(id),
+                                                                                       shiny::div(id = "autonomous",
+                                                                                                  format_sidebar(title = "QUESTIONED DOCUMENTS",
+                                                                                                                 help_text = "Estimate writer profiles from the questioned documents and compare with the persons of interests' writer profiles.",
+                                                                                                                 module = demoQDSidebarUI(ns("demo_qd")),
+                                                                                                                 break_after_module = TRUE),
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_qd_back_button"), "Back")))
+                                                                                       ),
+                                                               ),
+                                                               
                                                                # Setup Requirements UI ----
                                                                shiny::conditionalPanel(condition="input.screen == 'Case Requirements'",
                                                                                        ns = shiny::NS(id),
@@ -139,6 +151,12 @@ innerUI <- function(id) {
                                                               shinycssloaders::withSpinner(demoKnownBodyUI(ns('demo_known')))
                                               ),
                                               
+                                              # Demo QD Display ----
+                                              shiny::tabPanel(id = ns("Demo QD"),
+                                                              title = "Demo QD",
+                                                              shinycssloaders::withSpinner(demoQDBodyUI(ns('demo_qd')))
+                                              ),
+                                              
                                               # Setup Requirements Display ----
                                               shiny::tabPanel(id = ns("Case Requirements"),
                                                               title = "Case Requirements",
@@ -209,7 +227,8 @@ innerServer <- function(id){
       # demo next buttons
       shiny::observeEvent(input$demo_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Preview")})
       shiny::observeEvent(input$demo_preview_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Known")})
-    
+      shiny::observeEvent(input$demo_known_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo QD")})
+      
       # casework next buttons
       shiny::observeEvent(input$case_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Requirements")})
       shiny::observeEvent(input$case_requirements_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Files")})
@@ -221,6 +240,7 @@ innerServer <- function(id){
       # demo back buttons
       shiny::observeEvent(input$demo_preview_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
       shiny::observeEvent(input$demo_known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Preview")})
+      shiny::observeEvent(input$demo_qd_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Known")})
       
       # casework back buttons
       shiny::observeEvent(input$case_requirements_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
@@ -246,6 +266,9 @@ innerServer <- function(id){
       
       # DEMO KNOWN ----
       demoKnownServer('demo_known', global)
+      
+      # DEMO QD ----
+      demoQDServer('demo_qd', global)
       
       # MAIN DIRECTORY ----
       caseMaindirServer('case_maindir', global)
