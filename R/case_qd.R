@@ -1,4 +1,4 @@
-qdSidebarUI <- function(id) {
+caseQDSidebarUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::fluidRow(shiny::column(5, set_indices(id = ns("qd_writer_start_char"), label = "Start location")),
@@ -11,7 +11,7 @@ qdSidebarUI <- function(id) {
   )
 }
 
-qdBodyUI <- function(id){
+caseQDBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
     shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_results"))),
@@ -19,7 +19,7 @@ qdBodyUI <- function(id){
   )
 }
 
-qdServer <- function(id, global) {
+caseQDServer <- function(id, global) {
   shiny::moduleServer(
     id,
     function(input, output, session) { 

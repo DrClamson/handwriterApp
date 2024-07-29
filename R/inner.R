@@ -90,7 +90,7 @@ innerUI <- function(id) {
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "QUESTIONED DOCUMENT",
                                                                                                                  help_text = "Where are the writer IDs located in the file names?",
-                                                                                                                 module = qdSidebarUI(ns('qd1')),
+                                                                                                                 module = caseQDSidebarUI(ns('case_qd')),
                                                                                                                  break_after_module = FALSE),
                                                                                                   shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("qd_back_button"), "Back")), 
                                                                                                                   shiny::column(width = 6, align = "right", shiny::actionButton(ns("qd_next_button"), "Next")))
@@ -161,7 +161,7 @@ innerUI <- function(id) {
                                               # Questioned Document Display ----
                                               shiny::tabPanel(id = ns("Questioned Document"), 
                                                               title = "Questioned Document",
-                                                              shinycssloaders::withSpinner(qdBodyUI(ns('qd1')))
+                                                              shinycssloaders::withSpinner(caseQDBodyUI(ns('case_qd')))
                                               ),
                                               
                                               # Comparison Report Display ----
@@ -247,7 +247,7 @@ innerServer <- function(id){
       caseKnownServer('case_known', global)
       
       # QUESTIONED DOCUMENT ----
-      qdServer('qd1', global)
+      caseQDServer('case_qd', global)
       
       # REPORT ----
       reportServer('report1', global)
