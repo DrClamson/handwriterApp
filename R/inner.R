@@ -18,12 +18,12 @@ innerUI <- function(id) {
                                                                ),
                                                                
                                                                # Demo UI ----
-                                                               shiny::conditionalPanel(condition="input.screen == 'Demo'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Demo Preview'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
-                                                                                                  shiny::includeHTML(system.file(file.path("extdata", "HTML"), "demo.html", package = "handwriterApp")),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_next_button"), "Estimate Writer Profiles")))
+                                                                                                  shiny::includeHTML(system.file(file.path("extdata", "HTML"), "demo_preview.html", package = "handwriterApp")),
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_preview_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_preview_next_button"), "Estimate Writer Profiles")))
                                                                                        ),
                                                                ),
                                                                
@@ -126,15 +126,15 @@ innerUI <- function(id) {
                                               ),
                                               
                                               # Demo Display ----
-                                              shiny::tabPanel(id = ns("Demo"),
-                                                              title = "Demo",
-                                                              shinycssloaders::withSpinner(demoBodyUI(ns('demo1')))
+                                              shiny::tabPanel(id = ns("Demo Preview"),
+                                                              title = "Demo Preview",
+                                                              shinycssloaders::withSpinner(demoPreviewBodyUI(ns('demo_preview')))
                                               ),
                                               
                                               # Demo Known Display ----
                                               shiny::tabPanel(id = ns("Demo Known"),
                                                               title = "Demo Known",
-                                                              # shinycssloaders::withSpinner(demoBodyUI(ns('demo1')))
+                                                              # shinycssloaders::withSpinner(demoPreviewBodyUI(ns('demo1')))
                                               ),
                                               
                                               # Setup Requirements Display ----
@@ -203,8 +203,8 @@ innerServer <- function(id){
       })
       
       # demo next buttons
-      shiny::observeEvent(input$demo_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo")})
-      shiny::observeEvent(input$demo_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Known")})
+      shiny::observeEvent(input$demo_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Preview")})
+      shiny::observeEvent(input$demo_preview_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Known")})
     
       # casework next buttons
       shiny::observeEvent(input$casework_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
@@ -215,8 +215,8 @@ innerServer <- function(id){
       shiny::observeEvent(input$qd_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Report")})
       
       # demo back buttons
-      shiny::observeEvent(input$demo_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
-      shiny::observeEvent(input$demo_known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo")})
+      shiny::observeEvent(input$demo_preview_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
+      shiny::observeEvent(input$demo_known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Preview")})
       
       # casework back buttons
       shiny::observeEvent(input$requirements_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
@@ -238,7 +238,7 @@ innerServer <- function(id){
       )
       
       # DEMO ----
-      demoServer('demo1', global)
+      demoPreviewServer('demo_preview', global)
       
       # MAIN DIRECTORY ----
       maindirServer('maindir1', global)

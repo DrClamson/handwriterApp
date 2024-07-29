@@ -1,4 +1,4 @@
-demoBodyUI <- function(id){
+demoPreviewBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h3("Known Writing Examples"),
@@ -25,7 +25,7 @@ demoBodyUI <- function(id){
   )
 }
 
-demoServer <- function(id, global) {
+demoPreviewServer <- function(id, global) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
