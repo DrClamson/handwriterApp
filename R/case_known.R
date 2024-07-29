@@ -1,4 +1,4 @@
-knownSidebarUI <- function(id) {
+caseKnownSidebarUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::fluidRow(shiny::column(5, set_indices(id = ns("known_writer_start_char"), label = "Start location")),
@@ -11,14 +11,14 @@ knownSidebarUI <- function(id) {
   )
 }
 
-knownBodyUI <- function(id){
+caseKnownBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
     currentImageUI(ns("known"))
   )
 }
 
-knownServer <- function(id, global) {
+caseKnownServer <- function(id, global) {
   shiny::moduleServer(
     id,
     function(input, output, session) {

@@ -77,7 +77,7 @@ innerUI <- function(id) {
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "KNOWN WRITING",
                                                                                                                  help_text = "Where are the writer IDs located in the file names?",
-                                                                                                                 module = knownSidebarUI(ns('known1')),
+                                                                                                                 module = caseKnownSidebarUI(ns('case_known')),
                                                                                                                  break_after_module = FALSE),
                                                                                                   shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("known_back_button"), "Back")), 
                                                                                                                   shiny::column(width = 6, align = "right", shiny::actionButton(ns("known_next_button"), "Next")))
@@ -155,7 +155,7 @@ innerUI <- function(id) {
                                               # Known Writing Display ----
                                               shiny::tabPanel(id = ns("Known Writing"),
                                                               title = "Known Writing",
-                                                              shinycssloaders::withSpinner(knownBodyUI(ns('known1')))
+                                                              shinycssloaders::withSpinner(caseKnownBodyUI(ns('case_known')))
                                               ),
                                               
                                               # Questioned Document Display ----
@@ -244,7 +244,7 @@ innerServer <- function(id){
       maindirServer('maindir1', global)
       
       # KNOWN WRITING ----
-      knownServer('known1', global)
+      caseKnownServer('case_known', global)
       
       # QUESTIONED DOCUMENT ----
       qdServer('qd1', global)
