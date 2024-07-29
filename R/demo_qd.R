@@ -1,7 +1,7 @@
 demoQDSidebarUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::fluidRow(shiny::column(width=12, align = "center", actionButton(ns("demo_qd_analyze"), "Analyze Questioned Docs"))),
+    shiny::fluidRow(shiny::column(width=12, shiny::actionButton(ns("demo_qd_analyze"), "Analyze Questioned Docs"))),
     shiny::br()
   )
 }

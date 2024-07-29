@@ -32,7 +32,7 @@ innerUI <- function(id) {
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "KNOWN WRITING",
-                                                                                                                 help_text = "Estimate writer profiles from the known writing samples.",
+                                                                                                                 help_text = "Estimate writer profiles from the known writing samples and fit a statistical model to the writer profiles.",
                                                                                                                  module = demoKnownSidebarUI(ns("demo_known")),
                                                                                                                  break_after_module = TRUE),
                                                                                                   shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_known_back_button"), "Back")), 
@@ -45,7 +45,7 @@ innerUI <- function(id) {
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "QUESTIONED DOCUMENTS",
-                                                                                                                 help_text = "Estimate writer profiles from the questioned documents and compare with the persons of interests' writer profiles.",
+                                                                                                                 help_text = "Estimate writer profiles from the questioned documents. Use the statistical model to estimate the posterior probabilities that each POI wrote a questioned document.",
                                                                                                                  module = demoQDSidebarUI(ns("demo_qd")),
                                                                                                                  break_after_module = TRUE),
                                                                                                   shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_qd_back_button"), "Back")))
