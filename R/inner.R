@@ -10,40 +10,69 @@ innerUI <- function(id) {
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "GET STARTED",
-                                                                                                                 help_text = "Press the button to start using handwriter to compare questioned documents to known writing samples."),
-                                                                                                  shiny::actionButton(ns("begin_button"), "Start")
+                                                                                                                 help_text = "Start using handwriter to compare questioned documents to known writing samples. See a demo with 
+                                                                                                                 example data or simulate casework and analyze your handwriting samples."),
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_button"), "Demo")), 
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("case_button"), align="right", "Casework Simulation")))
+                                                                                       ),
+                                                               ),
+                                                               
+                                                               # Demo UI ----
+                                                               shiny::conditionalPanel(condition="input.screen == 'Demo Preview'",
+                                                                                       ns = shiny::NS(id),
+                                                                                       shiny::div(id = "autonomous",
+                                                                                                  shiny::includeHTML(system.file(file.path("extdata", "HTML"), "demo_preview.html", package = "handwriterApp")),
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_preview_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_preview_next_button"), "Next")))
+                                                                                       ),
+                                                               ),
+                                                               
+                                                               # Demo Known UI ----
+                                                               shiny::conditionalPanel(condition="input.screen == 'Demo Known'",
+                                                                                       ns = shiny::NS(id),
+                                                                                       shiny::div(id = "autonomous",
+                                                                                                  format_sidebar(title = "KNOWN WRITING",
+                                                                                                                 help_text = "Estimate writer profiles from the known writing samples and fit a statistical model to the writer profiles.",
+                                                                                                                 module = demoKnownSidebarUI(ns("demo_known")),
+                                                                                                                 break_after_module = TRUE),
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_known_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_known_next_button"), "Next")))
+                                                                                       ),
+                                                               ),
+                                                               
+                                                               # Demo QD UI ----
+                                                               shiny::conditionalPanel(condition="input.screen == 'Demo QD'",
+                                                                                       ns = shiny::NS(id),
+                                                                                       shiny::div(id = "autonomous",
+                                                                                                  format_sidebar(title = "QUESTIONED DOCUMENTS",
+                                                                                                                 help_text = "Estimate writer profiles from the questioned documents. Use the statistical model to estimate the posterior probabilities that each POI wrote a questioned document.",
+                                                                                                                 module = demoQDSidebarUI(ns("demo_qd")),
+                                                                                                                 break_after_module = TRUE),
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_qd_back_button"), "Back")),
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_qd_next_button"), "Finish")))
                                                                                        ),
                                                                ),
                                                                
                                                                # Setup Requirements UI ----
-                                                               shiny::conditionalPanel(condition="input.screen == 'Requirements'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Case Requirements'",
                                                                                        ns = shiny::NS(id),
-                                                                                       shiny::includeHTML(system.file(file.path("extdata", "HTML"), "setup_requirements.html", package = "handwriterApp")),
-                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("requirements_back_button"), "Back")), 
-                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("requirements_next_button"), "Next")))
-
-                                                               ),
-                                                               
-                                                               # Setup Dowload UI ----
-                                                               shiny::conditionalPanel(condition="input.screen == 'Download'",
-                                                                                       ns = shiny::NS(id),
-                                                                                       shiny::includeHTML(system.file(file.path("extdata", "HTML"), "setup_download.html", package = "handwriterApp")),
-                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("download_back_button"), "Back")), 
-                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("download_next_button"), "Next")))
+                                                                                       shiny::includeHTML(system.file(file.path("extdata", "HTML"), "case_requirements.html", package = "handwriterApp")),
+                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("case_requirements_back_button"), "Back")), 
+                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("case_requirements_next_button"), "Next")))
                                                                                        
                                                                ),
                                                                
                                                                # Setup Files UI ----
-                                                               shiny::conditionalPanel(condition="input.screen == 'Files'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Case Files'",
                                                                                        ns = shiny::NS(id),
-                                                                                       shiny::includeHTML(system.file(file.path("extdata", "HTML"), "setup_files.html", package = "handwriterApp")),
-                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("files_back_button"), "Back")), 
-                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("files_next_button"), "Next")))
+                                                                                       shiny::includeHTML(system.file(file.path("extdata", "HTML"), "case_files.html", package = "handwriterApp")),
+                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("case_files_back_button"), "Back")), 
+                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("case_files_next_button"), "Next")))
                                                                                        
                                                                ),
                                                                
                                                                # Setup Project UI ----
-                                                               shiny::conditionalPanel(condition="input.screen == 'Project'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Case Project'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "PROJECT FOLDER", 
@@ -51,46 +80,46 @@ innerUI <- function(id) {
                                                                             folder on your computer as you analyze a questioned document. Choose 
                                                                             an empty folder to start a new analysis. If you want
                                                                             to continue an analysis, select that folder.",
-                                                                                                                 module = maindirUI(ns('maindir1'))),
-                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("project_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("project_next_button"), "Next")))
+                                                                                                                 module = caseMaindirUI(ns('case_maindir'))),
+                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("case_project_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("case_project_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
                                                                # Known Writing UI ----
-                                                               shiny::conditionalPanel(condition="input.screen == 'Known Writing'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Case Known'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "KNOWN WRITING",
                                                                                                                  help_text = "Where are the writer IDs located in the file names?",
-                                                                                                                 module = knownSidebarUI(ns('known1')),
+                                                                                                                 module = caseKnownSidebarUI(ns('case_known')),
                                                                                                                  break_after_module = FALSE),
-                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("known_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("known_next_button"), "Next")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("case_known_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("case_known_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
                                                                # Questioned Document UI ----
-                                                               shiny::conditionalPanel(condition="input.screen == 'Questioned Document'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Case Questioned'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "QUESTIONED DOCUMENT",
                                                                                                                  help_text = "Where are the writer IDs located in the file names?",
-                                                                                                                 module = qdSidebarUI(ns('qd1')),
+                                                                                                                 module = caseQDSidebarUI(ns('case_qd')),
                                                                                                                  break_after_module = FALSE),
-                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("qd_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("qd_next_button"), "Next")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("case_qd_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("case_qd_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
                                                                # Report Button UI ----
-                                                               shiny::conditionalPanel(condition="input.screen == 'Report'",
+                                                               shiny::conditionalPanel(condition="input.screen == 'Case Report'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "REPORT",
                                                                                                                  help_text = "Download the report."),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("report_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 9, align = "right", reportSidebarUI(ns('report1'))))
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("case_report_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 9, align = "right", caseReportSidebarUI(ns('case_report'))))
                                                                                        ),
                                                                ),
                                                              ))),
@@ -111,41 +140,54 @@ innerUI <- function(id) {
                                                               shiny::br(),
                                               ),
                                               
-                                              # Setup Requirements Display ----
-                                              shiny::tabPanel(id = ns("Requirements"),
-                                                              title = "Requirements",
+                                              # Demo Display ----
+                                              shiny::tabPanel(id = ns("Demo Preview"),
+                                                              title = "Demo Preview",
+                                                              shinycssloaders::withSpinner(demoPreviewBodyUI(ns('demo_preview')))
                                               ),
                                               
-                                              # Setup Download Display ----
-                                              shiny::tabPanel(id = ns("Download"),
-                                                              title = "Download",
+                                              # Demo Known Display ----
+                                              shiny::tabPanel(id = ns("Demo Known"),
+                                                              title = "Demo Known",
+                                                              shinycssloaders::withSpinner(demoKnownBodyUI(ns('demo_known')))
+                                              ),
+                                              
+                                              # Demo QD Display ----
+                                              shiny::tabPanel(id = ns("Demo QD"),
+                                                              title = "Demo QD",
+                                                              shinycssloaders::withSpinner(demoQDBodyUI(ns('demo_qd')))
+                                              ),
+                                              
+                                              # Setup Requirements Display ----
+                                              shiny::tabPanel(id = ns("Case Requirements"),
+                                                              title = "Case Requirements",
                                               ),
                                               
                                               # Setup Files Display ----
-                                              shiny::tabPanel(id = ns("Files"),
-                                                              title = "Files",
+                                              shiny::tabPanel(id = ns("Case Files"),
+                                                              title = "Case Files",
                                               ),
                                               
                                               # Setup Project Display ----
-                                              shiny::tabPanel(id = ns("Project"),
-                                                              title = "Project",
+                                              shiny::tabPanel(id = ns("Case Project"),
+                                                              title = "Case Project",
                                               ),
                                               
                                               # Known Writing Display ----
-                                              shiny::tabPanel(id = ns("Known Writing"),
-                                                              title = "Known Writing",
-                                                              shinycssloaders::withSpinner(knownBodyUI(ns('known1')))
+                                              shiny::tabPanel(id = ns("Case Known"),
+                                                              title = "Case Known",
+                                                              shinycssloaders::withSpinner(caseKnownBodyUI(ns('case_known')))
                                               ),
                                               
                                               # Questioned Document Display ----
-                                              shiny::tabPanel(id = ns("Questioned Document"), 
-                                                              title = "Questioned Document",
-                                                              shinycssloaders::withSpinner(qdBodyUI(ns('qd1')))
+                                              shiny::tabPanel(id = ns("Case Questioned"), 
+                                                              title = "Case Questioned",
+                                                              shinycssloaders::withSpinner(caseQDBodyUI(ns('case_qd')))
                                               ),
                                               
                                               # Comparison Report Display ----
-                                              shiny::tabPanel(id = ns("Report"),
-                                                              title = "Report",
+                                              shiny::tabPanel(id = ns("Case Report"),
+                                                              title = "Case Report",
                                               )  
                            )
                          )
@@ -160,66 +202,107 @@ innerServer <- function(id){
     function(input, output, session){
       # NEXT BUTTONS ----
       # disable next buttons at start
-      shinyjs::disable("project_next_button")
-      shinyjs::disable("known_next_button")
-      shinyjs::disable("qd_next_button")
+      shinyjs::disable("demo_known_next_button")
+      shinyjs::disable("case_project_next_button")
+      shinyjs::disable("case_known_next_button")
+      shinyjs::disable("case_qd_next_button")
       
       # enable next buttons
       shiny::observe({
         # main_dir needs to be defined
         shiny::req(global$main_dir)
-        shinyjs::enable("project_next_button")
+        shinyjs::enable("case_project_next_button")
       })
       shiny::observe({
         # model needs to be loaded
         shiny::req(global$model)
-        shinyjs::enable("known_next_button")
+        shinyjs::enable("case_known_next_button")
+        shinyjs::enable("demo_known_next_button")
       })
       shiny::observe({
         # analysis needs to be loaded
         shiny::req(global$analysis)
-        shinyjs::enable("qd_next_button")
+        shinyjs::enable("case_qd_next_button")
       })
       
-      # change selected tab in main panel
-      shiny::observeEvent(input$begin_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
-      shiny::observeEvent(input$requirements_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Download")})
-      shiny::observeEvent(input$download_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
-      shiny::observeEvent(input$files_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Project")})
-      shiny::observeEvent(input$project_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Known Writing")})
-      shiny::observeEvent(input$known_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Questioned Document")})
-      shiny::observeEvent(input$qd_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Report")})
+      # demo next buttons
+      shiny::observeEvent(input$demo_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Preview")})
+      shiny::observeEvent(input$demo_preview_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Known")})
+      shiny::observeEvent(input$demo_known_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo QD")})
+      shiny::observeEvent(input$demo_qd_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
       
-      shiny::observeEvent(input$requirements_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
-      shiny::observeEvent(input$download_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Requirements")})
-      shiny::observeEvent(input$files_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Download")})
-      shiny::observeEvent(input$project_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Files")})
-      shiny::observeEvent(input$known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Project")})
-      shiny::observeEvent(input$qd_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Known Writing")})
-      shiny::observeEvent(input$report_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Questioned Document")})
+      # casework next buttons
+      shiny::observeEvent(input$case_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Requirements")})
+      shiny::observeEvent(input$case_requirements_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Files")})
+      shiny::observeEvent(input$case_files_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Project")})
+      shiny::observeEvent(input$case_project_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Known")})
+      shiny::observeEvent(input$case_known_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Questioned")})
+      shiny::observeEvent(input$case_qd_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Report")})
+      
+      # demo back buttons
+      shiny::observeEvent(input$demo_preview_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
+      shiny::observeEvent(input$demo_known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Preview")})
+      shiny::observeEvent(input$demo_qd_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Known")})
+      
+      # casework back buttons
+      shiny::observeEvent(input$case_requirements_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
+      shiny::observeEvent(input$case_files_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Requirements")})
+      shiny::observeEvent(input$case_project_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Files")})
+      shiny::observeEvent(input$case_known_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Project")})
+      shiny::observeEvent(input$case_qd_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Known")})
+      shiny::observeEvent(input$case_report_back_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Questioned")})
       
       # STORAGE ----
       global <- shiny::reactiveValues(
         analysis = NULL,
-        known_docs = NULL,
+        known_names = NULL,
+        known_paths = NULL,
         main_dir = NULL,
         model = NULL,
-        qd_image = NULL,
         qd_names = NULL,
-        qd_paths = NULL,
+        qd_paths = NULL
       )
       
+      # Reset storage
+      shiny::observeEvent(input$demo_button, {
+        reset_app(global)
+        delete_demo_dir()
+      })
+      
+      # Reset storage
+      shiny::observeEvent(input$case_button, {
+        reset_app(global)
+        delete_demo_dir()
+      })
+      
+      # Reset storage and empty temp > demo directory
+      shiny::observeEvent(input$demo_qd_next_button, {
+        reset_app(global)
+        delete_demo_dir()
+      })
+      
+
+      
+      # DEMO PREVIEW ----
+      demoPreviewServer('demo_preview', global)
+      
+      # DEMO KNOWN ----
+      demoKnownServer('demo_known', global)
+      
+      # DEMO QD ----
+      demoQDServer('demo_qd', global)
+      
       # MAIN DIRECTORY ----
-      maindirServer('maindir1', global)
+      caseMaindirServer('case_maindir', global)
       
       # KNOWN WRITING ----
-      knownServer('known1', global)
+      caseKnownServer('case_known', global)
       
       # QUESTIONED DOCUMENT ----
-      qdServer('qd1', global)
+      caseQDServer('case_qd', global)
       
       # REPORT ----
-      reportServer('report1', global)
+      caseReportServer('case_report', global)
       
     }
   )

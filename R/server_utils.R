@@ -33,6 +33,17 @@ create_dir <- function(folder){
   }
 }
 
+#' Delete the Demo Folder
+#' 
+#' Delete the demo folder and its contents from the temporary directory.
+#'
+#' @return NULL
+#'
+#' @noRd
+delete_demo_dir <- function() {
+  unlink(file.path(tempdir(), "demo"), recursive = TRUE)
+}
+
 #' List Handwriting Samples in Folder
 #'
 #' This helper function lists the documents in main_dir > data > model_docs or
@@ -171,6 +182,25 @@ make_posteriors_df <- function(analysis){
   colnames(df)[1] <- "Known Writer"
   
   return(df)
+}
+
+#' Reset the App
+#' 
+#' Reset the global reactive values.
+#'
+#' @param global 
+#'
+#' @return NULL
+#'
+#' @noRd
+reset_app <- function(global) {
+  global$analysis <- NULL
+  global$known_names <- NULL
+  global$known_paths <- NULL
+  global$main_dir <- NULL
+  global$model <- NULL
+  global$qd_names <- NULL
+  global$qd_paths <- NULL
 }
 
 #' Setup Main Directory
