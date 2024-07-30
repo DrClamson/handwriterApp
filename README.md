@@ -4,9 +4,6 @@
 # handwriterApp
 
 <!-- badges: start -->
-
-[![CRAN
-status](https://www.r-pkg.org/badges/version/handwriterApp)](https://CRAN.R-project.org/package=handwriterApp)
 <!-- badges: end -->
 
 Handwriter is designed to assist forensic examiners by analyzing
