@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/handwriterApp)](https://CRAN.R-project.org/package=handwriterApp)
-[![R-CMD-check](https://github.com/CSAFE-ISU/handwriterApp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CSAFE-ISU/handwriterApp/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Handwriter is designed to assist forensic examiners by analyzing handwritten documents against a closed set of potential writers. It determines the probability that each writer wrote the document. Whether you are a forensic document examiner, legal professional, academic, or simply curious about how statistics are applied to handwriting, handwriter provides an automated way to evaluate handwriting samples.
