@@ -7,8 +7,8 @@
 handwriterApp(...)
 }
 \arguments{
-\item{...}{Other arguments passed on to arguments \code{onStart}, \code{options},
-\code{uiPattern}, and \code{enableBookmarking} of \code{shiny::shinyApp}}
+\item{...}{Other arguments passed on to \code{onStart}, \code{options},
+\code{uiPattern}, or \code{enableBookmarking} of \code{shiny::shinyApp}}
 }
 \description{
 Lauch a Shiny App for the \code{handwriter} R package.

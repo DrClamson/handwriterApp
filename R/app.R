@@ -20,7 +20,7 @@
 #' 
 #' Lauch a Shiny App for the `handwriter` R package.
 #'
-#' @param ... Other arguments passed on to arguments `onStart`, `options`,
+#' @param ... Other arguments passed on to `onStart`, `options`,
 #'   `uiPattern`, or `enableBookmarking` of `shiny::shinyApp`
 #'
 #' @return NULL
