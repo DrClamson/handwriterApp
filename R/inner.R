@@ -264,19 +264,19 @@ innerServer <- function(id){
       )
       
       # Reset storage
-      observeEvent(input$demo_button, {
+      shiny::observeEvent(input$demo_button, {
         reset_app(global)
         delete_demo_dir()
       })
       
       # Reset storage
-      observeEvent(input$case_button, {
+      shiny::observeEvent(input$case_button, {
         reset_app(global)
         delete_demo_dir()
       })
       
       # Reset storage and empty temp > demo directory
-      observeEvent(input$demo_qd_next_button, {
+      shiny::observeEvent(input$demo_qd_next_button, {
         reset_app(global)
         delete_demo_dir()
       })

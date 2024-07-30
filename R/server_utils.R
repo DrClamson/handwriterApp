@@ -37,7 +37,7 @@ create_dir <- function(folder){
 #' 
 #' Delete the demo folder and its contents from the temporary directory.
 #'
-#' @return
+#' @return NULL
 #'
 #' @noRd
 delete_demo_dir <- function() {
@@ -190,7 +190,7 @@ make_posteriors_df <- function(analysis){
 #'
 #' @param global 
 #'
-#' @return
+#' @return NULL
 #'
 #' @noRd
 reset_app <- function(global) {

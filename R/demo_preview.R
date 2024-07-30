@@ -71,7 +71,7 @@ demoImageServer <- function(id, global, image_path) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
-      output$path <- renderText({basename(image_path)})
+      output$path <- shiny::renderText({basename(image_path)})
       
       output$image <- shiny::renderImage({
         path <- image_path
