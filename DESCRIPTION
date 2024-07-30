@@ -1,5 +1,5 @@
 Package: handwriterApp
-Title: Handwriting Analysis in R
+Title: Shiny App for Handwriting Analysis in R
 Version: 0.0.0.9000
 Authors@R: 
     c(person("Iowa State University of Science and Technology on behalf of its Center for Statistics and Applications in Forensic Evidence", role = c("aut", "cph", "fnd")),
