@@ -48,7 +48,8 @@ innerUI <- function(id) {
                                                                                                                  help_text = "Estimate writer profiles from the questioned documents. Use the statistical model to estimate the posterior probabilities that each POI wrote a questioned document.",
                                                                                                                  module = demoQDSidebarUI(ns("demo_qd")),
                                                                                                                  break_after_module = TRUE),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_qd_back_button"), "Back")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_qd_back_button"), "Back")),
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_qd_next_button"), "Finish")))
                                                                                        ),
                                                                ),
                                                                
@@ -228,6 +229,7 @@ innerServer <- function(id){
       shiny::observeEvent(input$demo_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Preview")})
       shiny::observeEvent(input$demo_preview_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo Known")})
       shiny::observeEvent(input$demo_known_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Demo QD")})
+      shiny::observeEvent(input$demo_qd_next_button, {shiny::updateTabsetPanel(session, "screen", selected = "Welcome")})
       
       # casework next buttons
       shiny::observeEvent(input$case_button, {shiny::updateTabsetPanel(session, "screen", selected = "Case Requirements")})
@@ -253,13 +255,33 @@ innerServer <- function(id){
       # STORAGE ----
       global <- shiny::reactiveValues(
         analysis = NULL,
-        known_docs = NULL,
+        known_names = NULL,
+        known_paths = NULL,
         main_dir = NULL,
         model = NULL,
-        qd_image = NULL,
         qd_names = NULL,
-        qd_paths = NULL,
+        qd_paths = NULL
       )
+      
+      # Reset storage
+      observeEvent(input$demo_button, {
+        reset_app(global)
+        delete_demo_dir()
+      })
+      
+      # Reset storage
+      observeEvent(input$case_button, {
+        reset_app(global)
+        delete_demo_dir()
+      })
+      
+      # Reset storage and empty temp > demo directory
+      observeEvent(input$demo_qd_next_button, {
+        reset_app(global)
+        delete_demo_dir()
+      })
+      
+
       
       # DEMO PREVIEW ----
       demoPreviewServer('demo_preview', global)
