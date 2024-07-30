@@ -79,9 +79,14 @@
 #' \item{wcss}{A vector of the
 #'   within-cluster sum of squares on each iteration of the K-means algorithm.}}
 #' @examples
-#' # view cluster fill counts for the template training documents
-#' template_data <- handwriter::format_template_data(templateK8)
-#' handwriter::plot_cluster_fill_counts(template_data, facet = TRUE)
+#' # view number of clusters
+#' templateK40$K
+#' 
+#' # view number of iterations
+#' templateK40$iters
+#' 
+#' # view cluster centers
+#' templateK40$centers
 #'
 #' @md
 "templateK40"
