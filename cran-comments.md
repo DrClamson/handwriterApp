@@ -2,4 +2,9 @@
 
 0 errors | 0 warnings | 1 note
 
-* This is a new release.
+checking CRAN incoming feasibility ... [3s/12s] NOTE
+  Maintainer: ‘Stephanie Reinders <srein@iastate.edu>’
+  
+  New submission
+
+* This is a new release
