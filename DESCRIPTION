@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     c(person("Iowa State University of Science and Technology on behalf of its Center for Statistics and Applications in Forensic Evidence", role = c("aut", "cph", "fnd")),
       person("Stephanie", "Reinders", role = c("aut", "cre"), email = "srein@iastate.edu"))
-Description: Perform statistical writership analysis of scanned handwritten documents in a Shiny App.
+Description: Perform statistical writership analysis of scanned handwritten documents with a Shiny App for the `handwriter` R package.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
