@@ -51,7 +51,7 @@ currentImageServer <- function(id, global, type) {
         shiny::tagList(
           shiny::h3("Supporting Materials"),
           shiny::selectInput(ns("current_select"), 
-                             label = switch(type, "model" = "Chose a Known Writing Sample", "questioned" = "Choose a Questioned Document"), 
+                             label = switch(type, "model" = "Choose a Known Writing Sample", "questioned" = "Choose a Questioned Document"), 
                              choices = local$current_names),
         )
       })
