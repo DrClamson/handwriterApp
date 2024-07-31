@@ -1,3 +1,20 @@
+# The handwriterApp R package performs writership analysis of handwritten
+# documents. Copyright (C) 2024 Iowa State University of Science and Technology
+# on behalf of its Center for Statistics and Applications in Forensic Evidence
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #' Small Cluster Template with 8 Clusters
 #'
 #' A small cluster template created by the handwriter R package with K=8
@@ -79,9 +96,14 @@
 #' \item{wcss}{A vector of the
 #'   within-cluster sum of squares on each iteration of the K-means algorithm.}}
 #' @examples
-#' # view cluster fill counts for the template training documents
-#' template_data <- handwriter::format_template_data(templateK8)
-#' handwriter::plot_cluster_fill_counts(template_data, facet = TRUE)
+#' # view number of clusters
+#' templateK40$K
+#' 
+#' # view number of iterations
+#' templateK40$iters
+#' 
+#' # view cluster centers
+#' templateK40$centers
 #'
 #' @md
 "templateK40"

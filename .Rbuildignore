@@ -5,3 +5,5 @@
 
 ^scratch.R$
 ^cran-comments\.md$
+^README\.Rmd$
+^\.github$

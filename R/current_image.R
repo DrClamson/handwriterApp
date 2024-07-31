@@ -1,3 +1,20 @@
+# The handwriterApp R package performs writership analysis of handwritten
+# documents. Copyright (C) 2024 Iowa State University of Science and Technology
+# on behalf of its Center for Statistics and Applications in Forensic Evidence
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <https://www.gnu.org/licenses/>.
+
 currentImageUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
@@ -34,7 +51,7 @@ currentImageServer <- function(id, global, type) {
         shiny::tagList(
           shiny::h3("Supporting Materials"),
           shiny::selectInput(ns("current_select"), 
-                             label = switch(type, "model" = "Chose a Known Writing Sample", "questioned" = "Choose a Questioned Document"), 
+                             label = switch(type, "model" = "Choose a Known Writing Sample", "questioned" = "Choose a Questioned Document"), 
                              choices = local$current_names),
         )
       })
