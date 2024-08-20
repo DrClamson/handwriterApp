@@ -1,10 +1,10 @@
 Package: handwriterApp
-Title: Shiny App for Handwriting Analysis in R
+Title: A 'shiny' Application for Handwriting Analysis
 Version: 1.0.0
 Authors@R: 
     c(person("Iowa State University of Science and Technology on behalf of its Center for Statistics and Applications in Forensic Evidence", role = c("aut", "cph", "fnd")),
       person("Stephanie", "Reinders", role = c("aut", "cre"), email = "srein@iastate.edu"))
-Description: Perform statistical writership analysis of scanned handwritten documents with a Shiny App for the `handwriter` R package.
+Description: Perform statistical writership analysis of scanned handwritten documents with a 'shiny' app for 'handwriter'.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

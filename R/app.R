@@ -18,12 +18,12 @@
 
 #' Handwriter Application
 #' 
-#' Lauch a Shiny App for the `handwriter` R package.
+#' Lauch a Shiny App for 'handwriter'.
 #'
-#' @param ... Other arguments passed on to `onStart`, `options`,
-#'   `uiPattern`, or `enableBookmarking` of `shiny::shinyApp`
+#' @param ... Other arguments passed on to 'onStart', 'options',
+#'   'uiPattern', or 'enableBookmarking' of 'shiny::shinyApp'
 #'
-#' @return NULL
+#' @return No return value, called to launch 'shiny' app
 #'
 #' @export
 #'

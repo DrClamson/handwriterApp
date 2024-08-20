@@ -45,7 +45,7 @@ demoKnownServer <- function(id, global) {
         saveRDS(templateK8, file.path(global$main_dir, "data", "template.rds"))
         
         # known writing samples in tests folder
-        known_paths <- list.files(testthat::test_path("fixtures", "template", "data", "model_docs"), full.names = TRUE)
+        known_paths <- list.files(system.file(file.path("extdata", "template", "data", "model_docs"), package = "handwriterApp"), full.names = TRUE)
         known_names <- basename(known_paths)
         
         # copy known docs to temp directory > data > model_docs

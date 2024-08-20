@@ -50,7 +50,7 @@ caseReportServer <- function(id, global) {
             model = global$model
           )
           
-          # Knit the document, passing in the `params` list, and eval it in a
+          # Knit the document, passing in the 'params' list, and eval it in a
           # child of the global environment (this isolates the code in the document
           # from the code in this app).
           rmarkdown::render(tempReport, 

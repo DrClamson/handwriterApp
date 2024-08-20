@@ -226,8 +226,8 @@ reset_app <- function(global) {
 #' This helper function creates directory called "data" inside the main directory.
 #' Inside the "data" directory, "questioned_docs," "questioned_graphs," and "model_docs"
 #' directories are created. The data object "template" is saved in the "data" directory
-#' as template.rds. These directories and the template.rds file are required by the 
-#' handwriter package to analyze a questioned document.
+#' as template.rds. These directories and the template.rds file are required 
+#' 'handwriter' to analyze a questioned document.
 #'
 #' @param main_dir A filepath to the project folder
 #'

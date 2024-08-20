@@ -17,14 +17,14 @@
 
 #' Small Cluster Template with 8 Clusters
 #'
-#' A small cluster template created by the handwriter R package with K=8
+#' A small cluster template created by 'handwriter' with K=8
 #' clusters. This template was created from 10 handwriting samples from the
 #' CSAFE Handwriting Database. This small template should only be used for
-#' examples. Use the `templateK40` for casework.
+#' examples. Use the 'templateK40' for casework.
 #'
-#' The handwriter R package splits handwriting samples into component shapes
+#' 'handwriter' splits handwriting samples into component shapes
 #' called *graphs*. The graphs are sorted into 8 clusters with a K-Means
-#' algorithm. See the handwriter R package for more details.
+#' algorithm. See 'handwriter' for more details.
 #'
 #' @format A list containing the contents of the cluster template.
 #' \describe{
@@ -61,13 +61,13 @@
 
 #' Cluster Template with 40 Clusters
 #'
-#' A cluster template created by the handwriter R package with K=40
+#' A cluster template created by 'handwriter' with K=40
 #' clusters. This template was created from 100 handwriting samples from the
 #' CSAFE Handwriting Database. This template is suitable for casework.
 #'
-#' The handwriter R package splits handwriting samples into component shapes
+#' 'handwriter' splits handwriting samples into component shapes
 #' called *graphs*. The graphs are sorted into 40 clusters with a K-Means
-#' algorithm. See the handwriter R package for more details.
+#' algorithm. See 'handwriter' for more details.
 #'
 #' @format A list containing the contents of the cluster template.
 #' \describe{
@@ -91,7 +91,7 @@
 #' \item{wcd}{The within cluster
 #'   distances on the final iteration of the K-means algorithm. More specifically,
 #'   the distance between each graph and the center of the cluster to which it
-#'   was assigned  on each iteration. The output of `handwriter::make_clustering_template` stores
+#'   was assigned  on each iteration. The output of 'handwriter::make_clustering_template' stores
 #'   the within cluster distances on each iteration, but the previous iterations were removed here to reduce the file size.}
 #' \item{wcss}{A vector of the
 #'   within-cluster sum of squares on each iteration of the K-means algorithm.}}
