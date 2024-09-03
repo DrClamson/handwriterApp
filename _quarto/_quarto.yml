@@ -2,20 +2,11 @@ project:
   type: website
 website:
   navbar:
-    background: white
     logo: CSAFE_Tools_handwriter.png
     search: true
     left:
       - text: Home
         file: index.qmd
-      - text: About
-        file: about.qmd
-      - text: Contact
-        file: contact.qmd
-      - text: News
-        file: NEWS.md
-      - text: License
-        file: LICENSE.md
     right:
       - icon: github
         href: https://github.com/CSAFE-ISU/handwriterApp
@@ -24,4 +15,5 @@ format:
   html:
     css: csafe.css
     toc: true
+    toc-depth: 2
     toc-location: left

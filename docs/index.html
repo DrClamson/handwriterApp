@@ -126,22 +126,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link active" href="./index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
-<span class="menu-text">About</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./contact.html"> 
-<span class="menu-text">Contact</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./NEWS.html"> 
-<span class="menu-text">News</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./LICENSE.html"> 
-<span class="menu-text">License</span></a>
-  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -163,15 +147,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul>
+  <ul class="collapse">
   <li><a href="#quick-start" id="toc-quick-start" class="nav-link active" data-scroll-target="#quick-start">Quick Start</a>
   <ul class="collapse">
   <li><a href="#view-a-demo" id="toc-view-a-demo" class="nav-link" data-scroll-target="#view-a-demo">View a Demo</a></li>
-  <li><a href="#simulate-casework-with-example-documents" id="toc-simulate-casework-with-example-documents" class="nav-link" data-scroll-target="#simulate-casework-with-example-documents">Simulate Casework with Example Documents</a>
-  <ul class="collapse">
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">INSTALLATION</a></li>
-  <li><a href="#launch-the-app" id="toc-launch-the-app" class="nav-link" data-scroll-target="#launch-the-app">LAUNCH THE APP</a></li>
-  </ul></li>
+  <li><a href="#simulate-casework-with-example-documents" id="toc-simulate-casework-with-example-documents" class="nav-link" data-scroll-target="#simulate-casework-with-example-documents">Simulate Casework with Example Documents</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -212,7 +192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="simulate-casework-with-example-documents" class="level2">
 <h2 class="anchored" data-anchor-id="simulate-casework-with-example-documents">Simulate Casework with Example Documents</h2>
 <section id="installation" class="level3">
-<h3 class="anchored" data-anchor-id="installation">INSTALLATION</h3>
+<h3 class="anchored" data-anchor-id="installation">Installation</h3>
 <p>Handwriter requires R, RStudio IDE, and JAGS.</p>
 <ul>
 <li>Install R and RStudio from <a href="https://posit.co/download/rstudio-desktop/">POSIT</a></li>
@@ -220,7 +200,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 <section id="launch-the-app" class="level3">
-<h3 class="anchored" data-anchor-id="launch-the-app">LAUNCH THE APP</h3>
+<h3 class="anchored" data-anchor-id="launch-the-app">Launch the App</h3>
 <p>Open RStudio, navigate to the console window, and type:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>

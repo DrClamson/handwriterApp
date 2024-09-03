@@ -3,20 +3,11 @@ project:
 
 website:
   navbar:
-    background: "white"
     logo: "CSAFE_Tools_handwriter.png"
     search: true
     left:
       - text: Home
         file: index.qmd
-      - text: About
-        file: about.qmd
-      - text: Contact
-        file: contact.qmd
-      - text: News
-        file: $ALTDOC_NEWS
-      - text: License
-        file: $ALTDOC_LICENSE
     right:
       - icon: github
         href: $ALTDOC_PACKAGE_URL_GITHUB
@@ -26,4 +17,5 @@ format:
   html:
     css: csafe.css
     toc: true
+    toc-depth: 2
     toc-location: left
