@@ -14,7 +14,7 @@ handwriterApp(...)
 No return value, called to launch 'shiny' app
 }
 \description{
-Lauch a Shiny App for 'handwriter'.
+Lauch a 'shiny' application for 'handwriter'.
 }
 \examples{
 ## Only run this example in interactive R sessions
