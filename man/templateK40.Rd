@@ -56,4 +56,4 @@ templateK40$iters
 templateK40$centers
 
 }
-\keyword{datasets}
+\keyword{cluster}

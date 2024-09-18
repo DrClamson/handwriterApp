@@ -7,20 +7,20 @@
 handwriterApp(...)
 }
 \arguments{
-\item{...}{Other arguments passed on to 'onStart', 'options',
-'uiPattern', or 'enableBookmarking' of 'shiny::shinyApp'}
+\item{...}{Optional arguments passed to shiny::shinyApp}
 }
 \value{
 No return value, called to launch 'shiny' app
+
+A Shiny app
 }
 \description{
 Lauch a 'shiny' application for 'handwriter'.
 }
 \examples{
-## Only run this example in interactive R sessions
-if (interactive()) {
-  options(device.ask.default = FALSE)
-  handwriterApp()
+\dontrun{
+handwriterApp()
 }
 
 }
+\keyword{Shiny}

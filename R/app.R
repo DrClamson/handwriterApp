@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
 #' Handwriter Application
 #' 
 #' Lauch a 'shiny' application for 'handwriter'.
@@ -25,15 +24,17 @@
 #'
 #' @return No return value, called to launch 'shiny' app
 #'
+#' @name handwriterApp
+#' @rdname handwriterApp
+#' @keywords Shiny
 #' @export
-#'
+#' @param ... Optional arguments passed to shiny::shinyApp
 #' @examples
-#' ## Only run this example in interactive R sessions
-#' if (interactive()) {
-#'   options(device.ask.default = FALSE)
-#'   handwriterApp()
+#' \dontrun{
+#' handwriterApp()
 #' }
 #' 
+#' @return A Shiny app
 handwriterApp <- function(...){
   # increase maximum allowed file size
   options(shiny.maxRequestSize = 30*1024^2)

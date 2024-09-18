@@ -1,10 +1,16 @@
-^LICENSE\.md$
+^\.github$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^data-raw$
 
-^scratch.R$
 ^cran-comments\.md$
+^LICENSE\.md$
+^README\.qmd$
+^README\.pdf$
 ^README\.Rmd$
-^\.github$
+^scratch.R$
+^altdoc$
+^data-raw$
+^docs$
+^manuals$
+^_quarto$
 ^CRAN-SUBMISSION$

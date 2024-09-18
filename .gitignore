@@ -5,3 +5,6 @@
 
 **/tmp.png
 scratch.R
+altdoc/freeze.rds
+inst/doc
+^_quarto$
