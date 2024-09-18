@@ -2,7 +2,7 @@
 % Please edit documentation in R/app.R
 \name{handwriterApp}
 \alias{handwriterApp}
-\title{Handwriter App}
+\title{Handwriter Application}
 \usage{
 handwriterApp(...)
 }
@@ -10,10 +10,12 @@ handwriterApp(...)
 \item{...}{Optional arguments passed to shiny::shinyApp}
 }
 \value{
+No return value, called to launch 'shiny' app
+
 A Shiny app
 }
 \description{
-An R Shiny app for the \code{handwriter} R package.
+Lauch a 'shiny' application for 'handwriter'.
 }
 \examples{
 \dontrun{

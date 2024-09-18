@@ -7,10 +7,9 @@
 ^README\.pdf$
 ^README\.Rmd$
 ^scratch.R$
-
 ^altdoc$
 ^data-raw$
 ^docs$
 ^manuals$
-
 ^_quarto$
+^CRAN-SUBMISSION$

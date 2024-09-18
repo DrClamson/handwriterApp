@@ -1,4 +1,4 @@
-# The handwriterApp R package performs writership analysis of handwritten
+# The 'handwriterApp' R package performs writership analysis of handwritten
 # documents. Copyright (C) 2024 Iowa State University of Science and Technology
 # on behalf of its Center for Statistics and Applications in Forensic Evidence
 #
@@ -15,30 +15,29 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#' Cluster Template with Forty Clusters
+
+#' Cluster Template with 40 Clusters
 #'
-#' A list containing a single cluster template created by
-#' \code{handwriter::make_clustering_template}. The cluster template was created
-#' by sorting graphs from 120 training documents into 40 clusters with a K-means
-#' algorithm. The training documents are from the CSAFE Handwriting Database: 50
-#' Wizard of Oz prompts, 50 London Letter prompts, and 20 common phrase prompts.
-#' Each prompt is from a distinct writer.
-#' 
-#' @name templateK40
-#' @rdname templateK40
-#' @keywords clusters
-#' @format The cluster template is a named list with 16 items:
+#' A cluster template created by 'handwriter' with K=40
+#' clusters. This template was created from 100 handwriting samples from the
+#' CSAFE Handwriting Database. This template is suitable for casework.
+#'
+#' 'handwriter' splits handwriting samples into component shapes
+#' called *graphs*. The graphs are sorted into 40 clusters with a K-Means
+#' algorithm. See 'handwriter' for more details.
+#'
+#' @format A list containing the contents of the cluster template.
 #' \describe{
-#' \item{centers_seed}{The integer use for the random number generator to select starting cluster centers.}
+#' \item{centers_seed}{An integer for the random number generator use to select the
+#' starting cluster centers for the K-Means algorithm.}
 #' \item{cluster}{A vector of cluster assignments
-#'   for each graph used to create the cluster template.}
+#'   for each graph used to create the cluster template. The clusters are numbered sequentially 1, 2,...,K.}
 #' \item{centers}{The final cluster centers produced by the K-Means algorithm.}
-#' \item{K}{The number of clusters.}
-#' \item{n}{The number of training graphs to used in the K-means
-#'   algorithm.}
+#' \item{K}{The number of clusters in the template.}
+#' \item{n}{The number of training graphs to used to create the template.}
 #' \item{docnames}{A vector that lists the training document from which each graph originated.}
-#' \item{writers}{A vector that lists the writer ID of each graph.}
-#' \item{iters}{The maximum number of iterations of the K-means
+#' \item{writers}{A vector that lists the writer of each graph.}
+#' \item{iters}{The maximum number of iterations for the K-means
 #'   algorithm.}
 #' \item{changes}{A vector of the number of graphs that
 #'   changed clusters on each iteration of the K-means algorithm.}
@@ -46,12 +45,22 @@
 #'   each iteration of the K-means algorithm.}
 #' \item{stop_reason}{The reason the
 #'   K-means algorithm terminated.}
-#' \item{wcd}{A matrix of the within cluster
-#'   distances on the last iteration of the K-means algorithm. More specifically,
+#' \item{wcd}{The within cluster
+#'   distances on the final iteration of the K-means algorithm. More specifically,
 #'   the distance between each graph and the center of the cluster to which it
-#'   was assigned  on each iteration.}
+#'   was assigned  on each iteration. The output of 'handwriter::make_clustering_template' stores
+#'   the within cluster distances on each iteration, but the previous iterations were removed here to reduce the file size.}
 #' \item{wcss}{A vector of the
 #'   within-cluster sum of squares on each iteration of the K-means algorithm.}}
+#' @examples
+#' # view number of clusters
+#' templateK40$K
+#' 
+#' # view number of iterations
+#' templateK40$iters
+#' 
+#' # view cluster centers
+#' templateK40$centers
 #'
 #' @keywords cluster
 #' @md

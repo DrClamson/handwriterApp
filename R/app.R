@@ -1,4 +1,4 @@
-# The handwriterApp R package performs writership analysis of handwritten
+# The 'handwriterApp' R package performs writership analysis of handwritten
 # documents. Copyright (C) 2024 Iowa State University of Science and Technology
 # on behalf of its Center for Statistics and Applications in Forensic Evidence
 #
@@ -15,10 +15,14 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
-#' Handwriter App
+#' Handwriter Application
+#' 
+#' Lauch a 'shiny' application for 'handwriter'.
 #'
-#' An R Shiny app for the \code{handwriter} R package.
+#' @param ... Other arguments passed on to 'onStart', 'options',
+#'   'uiPattern', or 'enableBookmarking' of 'shiny::shinyApp'
+#'
+#' @return No return value, called to launch 'shiny' app
 #'
 #' @name handwriterApp
 #' @rdname handwriterApp
