@@ -37,7 +37,7 @@ demoQDServer <- function(id, global) {
     function(input, output, session) { 
       shiny::observeEvent(input$demo_qd_analyze, {
         # known writing samples in tests folder
-        qd_paths <- list.files(testthat::test_path("fixtures", "template", "data", "questioned_docs"), full.names = TRUE)
+        qd_paths <- list.files(system.file(file.path("extdata", "template", "data", "questioned_docs"), package = "handwriterApp"), full.names = TRUE)
         qd_names <- basename(qd_paths)
         
         # copy qd to main directory

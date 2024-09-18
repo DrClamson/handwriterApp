@@ -35,15 +35,15 @@ within-cluster sum of squares on each iteration of the K-means algorithm.}}
 templateK8
 }
 \description{
-A small cluster template created by the handwriter R package with K=8
+A small cluster template created by 'handwriter' with K=8
 clusters. This template was created from 10 handwriting samples from the
 CSAFE Handwriting Database. This small template should only be used for
-examples. Use the \code{templateK40} for casework.
+examples. Use the 'templateK40' for casework.
 }
 \details{
-The handwriter R package splits handwriting samples into component shapes
+'handwriter' splits handwriting samples into component shapes
 called \emph{graphs}. The graphs are sorted into 8 clusters with a K-Means
-algorithm. See the handwriter R package for more details.
+algorithm. See 'handwriter' for more details.
 }
 \examples{
 # view cluster fill counts for the template training documents

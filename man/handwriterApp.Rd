@@ -7,11 +7,14 @@
 handwriterApp(...)
 }
 \arguments{
-\item{...}{Other arguments passed on to \code{onStart}, \code{options},
-\code{uiPattern}, or \code{enableBookmarking} of \code{shiny::shinyApp}}
+\item{...}{Other arguments passed on to 'onStart', 'options',
+'uiPattern', or 'enableBookmarking' of 'shiny::shinyApp'}
+}
+\value{
+No return value, called to launch 'shiny' app
 }
 \description{
-Lauch a Shiny App for the \code{handwriter} R package.
+Lauch a 'shiny' application for 'handwriter'.
 }
 \examples{
 ## Only run this example in interactive R sessions
