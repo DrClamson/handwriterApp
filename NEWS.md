@@ -1,3 +1,5 @@
+# handwriterApp (development version)
+
 # handwriterApp 1.0.1
 
 * Changed the title from "Shiny App for Handwriting Analysis in R" to "A 'shiny' Application for Handwriting Analysis"
