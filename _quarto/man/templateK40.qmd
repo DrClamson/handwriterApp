@@ -1,15 +1,11 @@
-
-## Cluster Template with Forty Clusters {.unnumbered}
+## Cluster Template with 40 Clusters {.unnumbered}
 
 
 ### Description
 
-A list containing a single cluster template created by
-<code>handwriter::make_clustering_template</code>. The cluster template was created
-by sorting graphs from 120 training documents into 40 clusters with a K-means
-algorithm. The training documents are from the CSAFE Handwriting Database: 50
-Wizard of Oz prompts, 50 London Letter prompts, and 20 common phrase prompts.
-Each prompt is from a distinct writer.
+A cluster template created by 'handwriter' with K=40
+clusters. This template was created from 100 handwriting samples from the
+CSAFE Handwriting Database. This template is suitable for casework.
 
 
 
@@ -21,27 +17,27 @@ Each prompt is from a distinct writer.
 
 ### Format
 
-The cluster template is a named list with 16 items:
+A list containing the contents of the cluster template.
 
 
 <dl>
-<dt>centers_seed</dt><dd>The integer use for the random number generator to select starting cluster centers.
+<dt>centers_seed</dt><dd>An integer for the random number generator use to select the
+starting cluster centers for the K-Means algorithm.
 </dd>
 <dt>cluster</dt><dd>A vector of cluster assignments
-for each graph used to create the cluster template.
+for each graph used to create the cluster template. The clusters are numbered sequentially 1, 2,...,K.
 </dd>
 <dt>centers</dt><dd>The final cluster centers produced by the K-Means algorithm.
 </dd>
-<dt>K</dt><dd>The number of clusters.
+<dt>K</dt><dd>The number of clusters in the template.
 </dd>
-<dt>n</dt><dd>The number of training graphs to used in the K-means
-algorithm.
+<dt>n</dt><dd>The number of training graphs to used to create the template.
 </dd>
 <dt>docnames</dt><dd>A vector that lists the training document from which each graph originated.
 </dd>
-<dt>writers</dt><dd>A vector that lists the writer ID of each graph.
+<dt>writers</dt><dd>A vector that lists the writer of each graph.
 </dd>
-<dt>iters</dt><dd>The maximum number of iterations of the K-means
+<dt>iters</dt><dd>The maximum number of iterations for the K-means
 algorithm.
 </dd>
 <dt>changes</dt><dd>A vector of the number of graphs that
@@ -53,13 +49,39 @@ each iteration of the K-means algorithm.
 <dt>stop_reason</dt><dd>The reason the
 K-means algorithm terminated.
 </dd>
-<dt>wcd</dt><dd>A matrix of the within cluster
-distances on the last iteration of the K-means algorithm. More specifically,
+<dt>wcd</dt><dd>The within cluster
+distances on the final iteration of the K-means algorithm. More specifically,
 the distance between each graph and the center of the cluster to which it
-was assigned  on each iteration.
+was assigned  on each iteration. The output of 'handwriter::make_clustering_template' stores
+the within cluster distances on each iteration, but the previous iterations were removed here to reduce the file size.
 </dd>
 <dt>wcss</dt><dd>A vector of the
 within-cluster sum of squares on each iteration of the K-means algorithm.
 </dd></dl>
 
 
+
+### Details
+
+'handwriter' splits handwriting samples into component shapes
+called <em>graphs</em>. The graphs are sorted into 40 clusters with a K-Means
+algorithm. See 'handwriter' for more details.
+
+
+
+### Examples
+```{r, warning=FALSE, message=FALSE, eval=TRUE}
+library(handwriterApp)
+
+# view number of clusters
+templateK40$K
+
+# view number of iterations
+templateK40$iters
+
+# view cluster centers
+templateK40$centers
+
+
+
+```

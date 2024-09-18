@@ -1,9 +1,9 @@
-## Handwriter App {.unnumbered}
+## Handwriter Application {.unnumbered}
 
 
 ### Description
 
-An R Shiny app for the <code>handwriter</code> R package.
+Lauch a 'shiny' application for 'handwriter'.
 
 
 
@@ -24,6 +24,8 @@ Optional arguments passed to shiny::shinyApp
 
 
 ### Value
+
+No return value, called to launch 'shiny' app
 
 A Shiny app
 

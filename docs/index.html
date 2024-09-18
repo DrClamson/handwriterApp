@@ -198,15 +198,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Install R and RStudio from <a href="https://posit.co/download/rstudio-desktop/">POSIT</a></li>
 <li>Install JAGS from <a href="https://sourceforge.net/projects/mcmc-jags/files/">SourceForge</a></li>
 </ul>
+<p>Install the handwriterApp R package. Open RStudio and navigate to the console window and type</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"handwriterApp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="launch-the-app" class="level3">
 <h3 class="anchored" data-anchor-id="launch-the-app">Launch the App</h3>
 <p>Open RStudio, navigate to the console window, and type:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"CSAFE-ISU/handwriterApp"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(handwriterApp)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">handwriterApp</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(handwriterApp)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">handwriterApp</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In the pop-up window, click <strong>Open in Browser</strong>. If you use the app in the pop-up window instead of in a browser, some links will not work.</p>
 <p>Click <strong>Simulate Casework</strong> and follow the instructions in the app.</p>

@@ -4,6 +4,7 @@
 
 ^cran-comments\.md$
 ^LICENSE\.md$
+^README\.qmd$
 ^README\.pdf$
 ^README\.Rmd$
 ^scratch.R$

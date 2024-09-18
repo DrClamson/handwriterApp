@@ -27,13 +27,18 @@ Handwriter requires R, RStudio IDE, and JAGS.
 -   Install JAGS from
     [SourceForge](https://sourceforge.net/projects/mcmc-jags/files/)
 
+Install the handwriterApp R package. Open RStudio and navigate to the
+console window and type
+
+``` r
+install.packages("handwriterApp")
+```
+
 ### Launch the App
 
 Open RStudio, navigate to the console window, and type:
 
 ``` r
-install.packages("devtools")
-devtools::install_github("CSAFE-ISU/handwriterApp")
 library(handwriterApp)
 handwriterApp()
 ```
