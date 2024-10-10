@@ -45,11 +45,15 @@ openSampleServer <- function(id, open_global) {
         ns <- session$ns
         shiny::tagList(
           shiny::h3("Comparison Results"),
+          shiny::fluidRow(shiny::column(width=6, singleImageBodyUI(ns("sample1"))),
+                          shiny::column(width=6, singleImageBodyUI(ns("sample2")))),
           shiny::HTML("Score-based Likelihood Ratio"),
-          shiny::textOutput(ns("slr")),
-          shiny::br()
+          shiny::textOutput(ns("slr"))
         )
       })
+      
+      singleImageServer("sample1", open_global$sample1_path)
+      singleImageServer("sample2", open_global$sample2_path)
     }
   )
 }
