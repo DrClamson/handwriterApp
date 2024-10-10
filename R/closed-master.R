@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-homeUI <- function(id) {
+closedUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::sidebarLayout(shiny::tags$div(id=ns("my-sidebar"),
@@ -26,11 +26,11 @@ homeUI <- function(id) {
                                                                shiny::conditionalPanel(condition="input.screen == 'Welcome'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
-                                                                                                  format_sidebar(title = "GET STARTED",
+                                                                                                  format_sidebar(title = "WELCOME",
                                                                                                                  help_text = "Start using handwriter to compare questioned documents to known writing samples. See a demo with 
                                                                                                                  example data or simulate casework and analyze your handwriting samples."),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_button"), "Demo")), 
-                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("case_button"), align="right", "Casework Simulation")))
+                                                                                                  # shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_button"), "Demo")), 
+                                                                                                  #                 shiny::column(width = 9, align = "right", shiny::actionButton(ns("case_button"), align="right", "Casework Simulation")))
                                                                                        ),
                                                                ),
                                                                
@@ -213,7 +213,7 @@ homeUI <- function(id) {
 }
 
 
-homeServer <- function(id){
+closedServer <- function(id){
   shiny::moduleServer(
     id,
     function(input, output, session){
