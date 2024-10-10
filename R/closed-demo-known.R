@@ -26,7 +26,7 @@ demoKnownSidebarUI <- function(id) {
 demoKnownBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
-    currentImageUI(ns("demo_known"))
+    selectImageUI(ns("demo_known"))
   )
 }
 
@@ -68,7 +68,7 @@ demoKnownServer <- function(id, global) {
                                               doc_indices = c(7, 18))
       })
       
-      currentImageServer("demo_known", global, "model")
+      selectImageServer("demo_known", global, "model")
     }
   )
 }

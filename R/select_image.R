@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-currentImageUI <- function(id) {
+selectImageUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::uiOutput(ns("current_select")),
@@ -23,7 +23,7 @@ currentImageUI <- function(id) {
   )
 }
 
-currentImageServer <- function(id, global, type) {
+selectImageServer <- function(id, global, type) {
   shiny::moduleServer(
     id,
     function(input, output, session) { 

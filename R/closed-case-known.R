@@ -31,7 +31,7 @@ caseKnownSidebarUI <- function(id) {
 caseKnownBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
-    currentImageUI(ns("known"))
+    selectImageUI(ns("known"))
   )
 }
 
@@ -66,7 +66,7 @@ caseKnownServer <- function(id, global) {
                                                               input$known_doc_end_char))
       })
       
-      currentImageServer("known", global, "model")
+      selectImageServer("known", global, "model")
     }
   )
 }

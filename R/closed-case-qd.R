@@ -32,7 +32,7 @@ caseQDBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
     shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_results"))),
-    currentImageUI(ns("qd"))
+    selectImageUI(ns("qd"))
   )
 }
 
@@ -86,7 +86,7 @@ caseQDServer <- function(id, global) {
         )
       })
       
-      currentImageServer("qd", global, "questioned")
+      selectImageServer("qd", global, "questioned")
     }
   )
 }
