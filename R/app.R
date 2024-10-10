@@ -43,7 +43,9 @@ handwriterApp <- function(...){
   ui <- shiny::shinyUI({
     shiny::fluidPage(title = "handwriter",
                      shinyjs::useShinyjs(),
+                     # use styles.css
                      shiny::includeCSS(system.file("extdata", "styles.css", package = "handwriterApp")),
+                     # use Montserrat
                      shiny::tags$head(
                        shiny::tags$link(
                          href = "https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900|Ubuntu:400,500,700",
@@ -51,7 +53,9 @@ handwriterApp <- function(...){
                          type = "text/css"
                        ),
                      ),
+                     
                      shiny::tags$div(id="app-container",
+                                     # header
                                      shiny::fluidRow(
                                        shiny::column(width = 4, shiny::tags$a(target = "_blank", href="https://forensicstats.org", shiny::tags$img(src = "images/CSAFE_Tools_handwriter_cropped.png", height="100px"))),
                                        shiny::column(width = 4, shiny::br()),
@@ -59,10 +63,14 @@ handwriterApp <- function(...){
                                      ),
                                      shiny::tags$div(id="main-content",
                                                      shiny::navbarPage(
+                                                       
+                                                       # CSAFE Tools logo on navigation bar
                                                        shiny::tags$script(shiny::HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><a href=\"https://forensicstats.org\"><img src=\"images/CSAFE-Tools_Stacked_white_cropped.png\" alt=\"alt\" style=\"float:right;width:117px;height:50px;padding-right:5px;\"> </a></div>'); console.log(header)")),
+                                                       
+                                                       # navigation bar
                                                        shiny::tabPanel(
                                                          "Home",
-                                                         innerUI('inner1'),
+                                                         homeUI('home1'),
                                                        ),
                                                        shiny::tabPanel( 
                                                          "About",
@@ -73,7 +81,7 @@ handwriterApp <- function(...){
                                                          shiny::includeHTML(system.file(file.path("extdata", "HTML"), "contact.HTML", package = "handwriterApp"))
                                                        )
                                                      ))),
-                     # Footer
+                     # footer
                      shiny::tags$div(id="global-footer",
                               shiny::fluidRow(
                                 shiny::column(width = 4, shiny::tags$img(src="images/csafe_tools_blue_h.png", alt="Logo", height = "40px")),
@@ -86,7 +94,7 @@ handwriterApp <- function(...){
   
   # SERVER ------------------------------------------------------------------
   server <- function(input, output, session) {
-    innerServer('inner1')
+    homeServer('home1')
   }
   
   shiny::shinyApp(ui, server, ...)

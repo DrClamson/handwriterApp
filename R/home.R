@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-innerUI <- function(id) {
+homeUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::sidebarLayout(shiny::tags$div(id=ns("my-sidebar"),
@@ -213,7 +213,7 @@ innerUI <- function(id) {
 }
 
 
-innerServer <- function(id){
+homeServer <- function(id){
   shiny::moduleServer(
     id,
     function(input, output, session){
@@ -298,7 +298,6 @@ innerServer <- function(id){
         delete_demo_dir()
       })
       
-
       
       # DEMO PREVIEW ----
       demoPreviewServer('demo_preview', global)
