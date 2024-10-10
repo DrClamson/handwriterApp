@@ -69,6 +69,11 @@ handwriterApp <- function(...){
                                                        
                                                        # navigation bar
                                                        shiny::tabPanel(
+                                                         "Open-Set",
+                                                         openUI('open1'),
+                                                       ),
+                                                       # navigation bar
+                                                       shiny::tabPanel(
                                                          "Closed-Set",
                                                          closedUI('closed1'),
                                                        ),
@@ -94,6 +99,7 @@ handwriterApp <- function(...){
   
   # SERVER ------------------------------------------------------------------
   server <- function(input, output, session) {
+    openServer('open1')
     closedServer('closed1')
   }
   
