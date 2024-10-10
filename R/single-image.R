@@ -13,13 +13,18 @@ singleImageBodyUI <- function(id){
   )
 }
 
-singleImageServer <- function(id, image_path) {
+singleImageServer <- function(id, image_path, image_name = NULL) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
       output$path <- shiny::renderText({
         req(image_path)
-        basename(image_path)
+        
+        if (is.null(image_name)) {
+          basename(image_path)
+        } else {
+          image_name
+        }
       })
       
       output$image <- shiny::renderImage({

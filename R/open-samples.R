@@ -1,7 +1,7 @@
 openSampleSidebarUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::helpText("Select two scanned handwriting samples saved as a PNG images."),
+    shiny::helpText("Select two scanned handwriting samples saved as PNG images."),
     shiny::fileInput(ns("open_upload1"), "Sample 1", accept = ".png", multiple=FALSE),
     shiny::fileInput(ns("open_upload2"), "Sample 2", accept = ".png", multiple=FALSE)
   )
@@ -21,7 +21,9 @@ openSampleServer <- function(id, open_global) {
       
       shiny::observeEvent(input$open_upload1, {
         path <- input$open_upload1$datapath
+        name <- input$open_upload1$name
         open_global$sample1_path <- path
+        open_global$sample1_name <- name
       })
       
       shiny::observeEvent(input$open_upload2, {
@@ -29,7 +31,9 @@ openSampleServer <- function(id, open_global) {
         open_global$slr <- NULL
         
         path <- input$open_upload2$datapath
+        name <- input$open_upload2$name
         open_global$sample2_path <- path
+        open_global$sample2_name <- name
         
         open_global$slr <- handwriterRF::calculate_slr(
           sample1_path = open_global$sample1_path,
@@ -52,8 +56,8 @@ openSampleServer <- function(id, open_global) {
         )
       })
       
-      singleImageServer("sample1", open_global$sample1_path)
-      singleImageServer("sample2", open_global$sample2_path)
+      singleImageServer("sample1", open_global$sample1_path, open_global$sample1_name)
+      singleImageServer("sample2", open_global$sample2_path, open_global$sample2_name)
     }
   )
 }
