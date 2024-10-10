@@ -29,8 +29,8 @@ closedUI <- function(id) {
                                                                                                   format_sidebar(title = "WELCOME",
                                                                                                                  help_text = "Start using handwriter to compare questioned documents to known writing samples. See a demo with 
                                                                                                                  example data or simulate casework and analyze your handwriting samples."),
-                                                                                                  # shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_button"), "Demo")), 
-                                                                                                  #                 shiny::column(width = 9, align = "right", shiny::actionButton(ns("case_button"), align="right", "Casework Simulation")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_button"), "Demo")),
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("case_button"), align="right", "Casework Simulation")))
                                                                                        ),
                                                                ),
                                                                
