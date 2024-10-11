@@ -26,10 +26,10 @@ openUI <- function(id) {
                                                                shiny::conditionalPanel(condition="input.screen == 'Welcome'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
-                                                                                                  format_sidebar(title = "WELCOME",
-                                                                                                                 help_text = NULL,
-                                                                                                                 module = shiny::tagList(
-                                                                                                                   openSampleSidebarUI(ns('samples'))))
+                                                                                                  format_sidebar(title = "COMPARE TWO DOCUMENTS",
+                                                                                                                 help_text = "Select two handwritten documents to compare. The files must be PNG images.",
+                                                                                                                 module = openSampleSidebarUI(ns('samples')),
+                                                                                                                 break_after_module = FALSE)
                                                                                        ),
                                                                ),
                                                                
