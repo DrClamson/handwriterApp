@@ -70,10 +70,10 @@ handwriterApp <- function(...){
                                                        shiny::tags$script(shiny::HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><a href=\"https://forensicstats.org\"><img src=\"images/CSAFE-Tools_Stacked_white_cropped.png\" alt=\"alt\" style=\"float:right;width:117px;height:50px;padding-right:5px;\"> </a></div>'); console.log(header)")),
                                                        
                                                        # navigation bar
-                                                       # shiny::tabPanel(
-                                                       #   "Home",
-                                                       #   homeUI('home1')
-                                                       # ),
+                                                       shiny::tabPanel(
+                                                         "Home",
+                                                         homeUI('home1')
+                                                       ),
                                                        
                                                        shiny::tabPanel(
                                                          "Open-Set",
@@ -108,7 +108,7 @@ handwriterApp <- function(...){
   
   # SERVER ------------------------------------------------------------------
   server <- function(input, output, session) {
-    # homeServer('home1')
+    homeServer('home1')
     openServer('open1')
     closedServer('closed1')
   }
