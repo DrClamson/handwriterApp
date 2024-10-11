@@ -54,6 +54,7 @@ handwriterApp <- function(...){
                        ),
                      ),
                      
+                     # navigation bar
                      shiny::tags$div(id="app-container",
                                      # header
                                      shiny::fluidRow(
@@ -61,6 +62,7 @@ handwriterApp <- function(...){
                                        shiny::column(width = 4, shiny::br()),
                                        shiny::column(width = 4, shiny::tags$a(target = "_blank", href="https://forensicstats.org", shiny::tags$img(src = "images/handwriter_graphic.png", height="100px"), class="right-float")),
                                      ),
+                                     
                                      shiny::tags$div(id="main-content",
                                                      shiny::navbarPage(
                                                        
@@ -68,19 +70,26 @@ handwriterApp <- function(...){
                                                        shiny::tags$script(shiny::HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><a href=\"https://forensicstats.org\"><img src=\"images/CSAFE-Tools_Stacked_white_cropped.png\" alt=\"alt\" style=\"float:right;width:117px;height:50px;padding-right:5px;\"> </a></div>'); console.log(header)")),
                                                        
                                                        # navigation bar
+                                                       # shiny::tabPanel(
+                                                       #   "Home",
+                                                       #   homeUI('home1')
+                                                       # ),
+                                                       
                                                        shiny::tabPanel(
                                                          "Open-Set",
                                                          openUI('open1'),
                                                        ),
-                                                       # navigation bar
+                                                       
                                                        shiny::tabPanel(
                                                          "Closed-Set",
                                                          closedUI('closed1'),
                                                        ),
+                                                       
                                                        shiny::tabPanel( 
                                                          "About",
                                                          shiny::includeHTML(system.file(file.path("extdata", "HTML"), "about.HTML", package = "handwriterApp"))
                                                        ),
+                                                       
                                                        shiny::tabPanel(
                                                          "Contact",
                                                          shiny::includeHTML(system.file(file.path("extdata", "HTML"), "contact.HTML", package = "handwriterApp"))
@@ -88,17 +97,18 @@ handwriterApp <- function(...){
                                                      ))),
                      # footer
                      shiny::tags$div(id="global-footer",
-                              shiny::fluidRow(
-                                shiny::column(width = 4, shiny::tags$img(src="images/csafe_tools_blue_h.png", alt="Logo", height = "40px")),
-                                shiny::column(width = 4, shiny::tags$p("195 Durham Center, 613 Morrill Road, Ames, Iowa, 50011")),
-                                shiny::column(width = 4, shiny::tags$p("(C) 2023 | All Rights Reserved", class="right-float"))
-                              )
+                                     shiny::fluidRow(
+                                       shiny::column(width = 4, shiny::tags$img(src="images/csafe_tools_blue_h.png", alt="Logo", height = "40px")),
+                                       shiny::column(width = 4, shiny::tags$p("195 Durham Center, 613 Morrill Road, Ames, Iowa, 50011")),
+                                       shiny::column(width = 4, shiny::tags$p("(C) 2023 | All Rights Reserved", class="right-float"))
+                                     )
                      )
     )  
   })
   
   # SERVER ------------------------------------------------------------------
   server <- function(input, output, session) {
+    # homeServer('home1')
     openServer('open1')
     closedServer('closed1')
   }
