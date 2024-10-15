@@ -18,11 +18,12 @@
 homeUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    bslib::page_fluid(
-      bslib::layout_columns( 
-        bslib::card("Card 1"), 
-        bslib::card("Card 2"), 
-        col_widths = c(4, 8) 
+    shiny::fluidPage(
+      shiny::fluidRow(
+        shiny::column(6,
+                      bslib::card("Card 1")), 
+        shiny::column(6,
+                      bslib::card("Card 2")), 
       ) 
     )
   )
