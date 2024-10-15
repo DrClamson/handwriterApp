@@ -135,11 +135,45 @@
   margin-bottom: 15px;
 }
 
+/* Indents home tab */
+#indent-home {
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-bottom: 15px;
+}
+
+/* Home sceneario cards */
+.scenario {
+  background-color: white;
+  border: 1px solid #545859;
+  padding: 14px;
+  margin: 25px;
+  border-radius: 0.5rem;
+}
+
+/* Aligns text to top in the card-body of Home scenario cards */
+.scenario-body {
+  display: flex; /* Use flexbox layout */
+  flex-direction: column; /* Stack items vertically */
+  justify-content: flex-start; /* Align items to the top */
+  padding: 14px; /* Adjust padding if needed */
+}
+
+/* Buttons on Home scenario cards */
+.scenario-btn {
+  color: white;
+  background-color: #6BA4B8;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  border: 1px solid #545859;
+}
+
 /* Headings */
 h4 {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-/*  color: #003A70;*/
+  font-size: 22px;
+  color: #6BA4B8;
 }
 
 h3 {
@@ -169,4 +203,12 @@ body {
 
 html, body {
   height: 100%;
+}
+
+hr {
+  margin: 1rem 0;
+  color: #545859;
+  border: 0;
+  border-top: 1px solid;
+  opacity: 0.25;
 }
