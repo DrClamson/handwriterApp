@@ -63,15 +63,6 @@ openServer <- function(id){
     id,
     function(input, output, session){
       
-      # STORAGE ----
-      open_global <- shiny::reactiveValues(
-        sample1_path = NULL,
-        sample2_path = NULL,
-        sample1_name = NULL,
-        sample2_name = NULL,
-        slr_df = NULL
-      )
-      
       # RESET ----
       shiny::observeEvent(input$clear_open, {
         # handwriterRF::calculate_slr() deletes the contents of tempdir() >
@@ -81,58 +72,41 @@ openServer <- function(id){
         # contents when the clear_open button is clicked.
         unlink(file.path(tempdir(), "comparison1"), recursive = TRUE)
         
-        # reset global values
-        open_global$sample1_path <- NULL
-        open_global$sample2_path <- NULL
-        open_global$sample1_name <- NULL
-        open_global$sample2_name <- NULL
-        open_global$slr_df <- NULL  # hides the display on right side of screen
-        
         # reset module
         shinyjs::reset('open_upload1')
         shinyjs::reset('open_upload2')
       })
       
       # LOAD ----
-      # load sample 1 and get path and name
-      shiny::observeEvent(input$open_upload1, {
-        # change temp file name assigned by shiny to original file name
-        fixed <- fix_upload_name(input$open_upload1)
-        
-        open_global$sample1_path <- fixed$datapath
-        open_global$sample1_name <- fixed$name
+      sample1 <- reactive({
+        req(input$open_upload1)
+        fix_upload_name(input$open_upload1)
       })
       
-      # load sample 2, get path and name, and calculate slr
-      shiny::observeEvent(input$open_upload2, {
-        # reset slr
-        open_global$slr_df <- NULL
-        
-        # change temp file name assigned by shiny to original file name
-        fixed <- fix_upload_name(input$open_upload2)
-        
-        open_global$sample2_path <- fixed$datapath
-        open_global$sample2_name <- fixed$name
-        
-        open_global$slr_df <- handwriterRF::calculate_slr(
-          sample1_path = open_global$sample1_path,
-          sample2_path = open_global$sample2_path,
+      sample2 <- reactive({
+        req(input$open_upload2)
+        fix_upload_name(input$open_upload2)
+      })
+      
+      slr_df <- reactive({
+        req(sample1(), sample2())
+        handwriterRF::calculate_slr(
+          sample1_path = sample1()$datapath,
+          sample2_path = sample2()$datapath,
           project_dir = file.path(tempdir(), "comparison1"))
       })
       
       # RENDER ----
       # display similarity score
       output$score <- shiny::renderText({
-        req(open_global$slr_df)
-        
-        open_global$slr_df$score
+        req(slr_df())
+        slr_df()$score
       })
       
       # display slr
       output$slr <- shiny::renderText({
-        req(open_global$slr_df)
-        
-        slr <- open_global$slr_df$slr
+        req(slr_df())
+        slr <- slr_df()$slr
         
         if (slr >= 1) {
           # add commas to large numbers
@@ -147,13 +121,12 @@ openServer <- function(id){
       
       # display slr interpretation
       output$slr_interpretation <- shiny::renderText({
-        req(open_global$slr_df)
-        
-        handwriterRF::interpret_slr(open_global$slr_df)
+        req(slr_df())
+        handwriterRF::interpret_slr(slr_df())
       })
       
       output$slr_results <- shiny::renderUI({
-        req(open_global$slr_df)
+        req(slr_df())
         ns <- session$ns
         
         shiny::tagList(
@@ -178,11 +151,11 @@ openServer <- function(id){
         )
       })
       
-      singleImageServer("sample1", open_global$sample1_path, open_global$sample1_name)
-      singleImageServer("sample2", open_global$sample2_path, open_global$sample2_name)
+      singleImageServer("sample1", sample1()$datapath, sample1()$name)
+      singleImageServer("sample2", sample2()$datapath, sample2()$name)
       
-      writerProfileServer("writer1_profile", open_global$sample1_path, open_global$sample1_name, sample_num = 1)
-      writerProfileServer("writer2_profile", open_global$sample2_path, open_global$sample2_name, sample_num = 2)
+      writerProfileServer("writer1_profile", sample1()$datapath, sample1()$name, sample_num = 1)
+      writerProfileServer("writer2_profile", sample2()$datapath, sample2()$name, sample_num = 2)
     }
   )
 }
