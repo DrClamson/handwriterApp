@@ -64,6 +64,30 @@ delete_demo_dir <- function() {
 }
 
 
+#' Fix Name of Uploaded File
+#'
+#' Shiny automatically assigns uploaded files a new file path and file name in
+#' the temp directory. This function keeps the temporary file path but renames
+#' the file to the original file name.
+#'
+#' @param f
+#'
+#' @return Uploaded object
+#'
+#' @noRd
+fix_upload_name <- function(f){
+  # temp file path and file name assigned by shiny. File name is NOT the
+  # original file name.
+  temp_path <- f$datapath
+  # change file name in temp file path to original file name
+  f$datapath <- file.path(dirname(temp_path), f$name)
+  
+  # rename temporary file
+  file.rename(temp_path, f$datapath)
+  
+  return(f)
+}
+
 #' List Handwriting Samples in Folder
 #'
 #' This helper function lists the documents in main_dir > data > model_docs or
