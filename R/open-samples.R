@@ -38,10 +38,34 @@ openSampleServer <- function(id, open_global) {
         
         open_global$slr_df <- handwriterRF::calculate_slr(
           sample1_path = open_global$sample1_path,
-          sample2_path = open_global$sample2_path)
+          sample2_path = open_global$sample2_path,
+          project_dir = file.path(tempdir(), "comparison1"))
       })
       
-      # display slr data frame
+      
+      output$writer2_profile <- shiny::renderPlot({
+        # Don't display plot until slr_df is calculated, even though
+        # the plot doesn't use slr_df
+        req(open_global$slr_df)
+        
+        # load the cluster assignments for document 2
+        clusters <- list.files(file.path(tempdir(), "comparison1", "clusters"), full.names = TRUE)
+        clusters <- clusters[which(basename(clusters) != "all_clusters.rds")]
+        clusters <- readRDS(clusters[2])
+        
+        counts <- handwriter::get_cluster_fill_counts(clusters)
+        
+        plot_writer_profile(counts)
+      })
+      
+      # display similarity score
+      output$score <- shiny::renderText({
+        req(open_global$slr_df)
+        
+        open_global$slr_df$score
+      })
+      
+      # display slr
       output$slr <- shiny::renderText({
         req(open_global$slr_df)
         
@@ -74,6 +98,12 @@ openSampleServer <- function(id, open_global) {
           shiny::h4("Handwriting Samples"),
           shiny::fluidRow(shiny::column(width=6, singleImageBodyUI(ns("sample1"))),
                           shiny::column(width=6, singleImageBodyUI(ns("sample2")))),
+          shiny::h4("Writer Profiles"),
+          shiny::fluidRow(shiny::column(width=6, writerProfileBodyUI(ns("writer1_profile"))),
+                          shiny::column(width=6, writerProfileBodyUI(ns("writer2_profile")))),
+          shiny::h4("Similarity Score"),
+          shiny::textOutput(ns("score")),
+          shiny::br(),
           shiny::h4("Score-based Likelihood Ratio"),
           shiny::textOutput(ns("slr")),
           shiny::br(),
@@ -86,6 +116,9 @@ openSampleServer <- function(id, open_global) {
       
       singleImageServer("sample1", open_global$sample1_path, open_global$sample1_name)
       singleImageServer("sample2", open_global$sample2_path, open_global$sample2_name)
+      
+      writerProfileServer("writer1_profile", open_global$sample1_path, open_global$sample1_name, sample_num = 1)
+      writerProfileServer("writer2_profile", open_global$sample2_path, open_global$sample2_name, sample_num = 2)
     }
   )
 }

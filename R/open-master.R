@@ -29,11 +29,13 @@ openUI <- function(id) {
                                                                                                   format_sidebar(title = "COMPARE TWO DOCUMENTS",
                                                                                                                  help_text = "Select two handwritten documents to compare. The files must be PNG images.",
                                                                                                                  module = openSampleSidebarUI(ns('samples')),
-                                                                                                                 break_after_module = FALSE)
+                                                                                                                 break_after_module = FALSE),
+                                                                                                  shiny::hr(),
+                                                                                                  shiny::actionButton(ns("clear_open"), "Start New Comparison")
                                                                                        ),
                                                                ),
                                                                
-
+                                                               
                                                              )
                                          )
     ),
@@ -57,15 +59,36 @@ openServer <- function(id){
   shiny::moduleServer(
     id,
     function(input, output, session){
-
+      
       # STORAGE ----
       open_global <- shiny::reactiveValues(
         sample1_path = NULL,
-        sample2_path = NULL
+        sample2_path = NULL,
+        sample1_name = NULL,
+        sample2_name = NULL,
+        slr_df = NULL
       )
       
-      # WELCOME ----
-      openSampleServer('samples', open_global)
+      shiny::observeEvent(input$clear_open, {
+        # delete comparison1 folder and contents in tempdir()
+        # unlink(file.path(tempdir(), "comparison1"), recursive = TRUE)
+        
+        open_global <- shiny::reactiveValues(
+          sample1_path = NULL,
+          sample2_path = NULL,
+          sample1_name = NULL,
+          sample2_name = NULL,
+          slr_df = NULL
+        )
+        
+        # reset module
+        shinyjs::reset('samples-open_upload1')
+        shinyjs::reset('samples-open_upload2')
+      })
+      
+      if (!open_global$hide) {
+        openSampleServer('samples', open_global)
+      } 
     }
   )
 }
