@@ -75,8 +75,16 @@ handwriterApp <- function(...){
                                                                          shiny::tags$div(id="indent-home",
                                                                                          shiny::fluidPage(
                                                                                            shiny::tags$h3("WELCOME TO HANDWRITER"),
-                                                                                           shiny::tags$body("Unlock the power of handwriting analysis with handwriter. Choose the scenario that best describes your handwriting samples. Say something here about how this is for testing purposes only and not to be used in casework?"),
-                                                                                           shiny::br(),
+                                                                                           shiny::tags$body(
+                                                                                             shiny::tags$p("Unlock the power of handwriting analysis with handwriter. 
+                                                                                                           This tool is designed to assist forensic examiners by analyzing 
+                                                                                                           handwritten documents. Whether you are a forensic document examiner, legal professional, 
+                                                                                                           academic, or simply curious about how statistics are applied to handwriting, 
+                                                                                                           handwriter provides an automated way to evaluate handwriting samples."),
+                                                                                             shiny::tags$p("Say something here that the app is only for testing and not casework?"),
+                                                                                             shiny::br(),
+                                                                                             shiny::tags$h4("Choose the scenario that best describes your handwriting samples")), 
+                                                                                           
                                                                                            bslib::layout_column_wrap(
                                                                                              width = 1/3,
                                                                                              bslib::card(class="scenario",
