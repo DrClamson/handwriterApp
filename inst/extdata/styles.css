@@ -168,6 +168,14 @@
   border: 1px solid #545859;
 }
 
+/* Single image cards */
+.single-image {
+  background-color: white;
+  border: 1px solid #545859;
+  padding: 14px;
+  border-radius: 0.5rem;
+}
+
 /* Headings */
 h4 {
   font-family: 'Montserrat', sans-serif;

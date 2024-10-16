@@ -72,6 +72,8 @@ handwriterApp <- function(...){
                                                                        # navigation bar
                                                                        shiny::tabPanel(
                                                                          "Home",
+                                                                         # NOTE: Because the actionButtons on the home page are placed inside cards, 
+                                                                         # placing the home page inside a module becomes quite complicated.
                                                                          shiny::tags$div(id="indent-home",
                                                                                          shiny::fluidPage(
                                                                                            shiny::tags$h3("WELCOME TO HANDWRITER"),
@@ -109,8 +111,7 @@ handwriterApp <- function(...){
                                                                                                          shiny::hr(),
                                                                                                          bslib::card_body(shiny::tags$p(shiny::tags$b("Requirements:")),
                                                                                                                           shiny::tags$ul(shiny::tags$li(shiny::tags$b("Questioned Document:"), "From an unknown author."), 
-                                                                                                                                         shiny::tags$li(shiny::tags$b("Additional Documents:"), "Three known writing samples from each writer in a group of potential writers. 
-                                                                         The questioned document MUST have been written by someone in this group")),
+                                                                                                                                         shiny::tags$li(shiny::tags$b("Additional Documents:"), "Three known writing samples from each writer in a group of potential writers. The questioned document MUST have been written by someone in this group")),
                                                                                                                           shiny::tags$p(shiny::tags$b("Result:"), "The posterior probability that each potential writer wrote the questioned document.")),
                                                                                                          shiny::hr(),
                                                                                                          shiny::tags$div(
@@ -158,10 +159,16 @@ handwriterApp <- function(...){
   
   # SERVER ------------------------------------------------------------------
   server <- function(input, output, session) {
+    
+    # NOTE: Because the actionButtons on the home page are placed inside cards, 
+    # placing the home page inside a module becomes quite complicated.
+    
+    # Switch to Scenario 1 tab
     observeEvent(input$open_button, {
       updateNavbarPage(session, "my-navbar", selected = "Scenario 1")
     })
     
+    # Switch to Scenario 2 tab
     observeEvent(input$closed_button, {
       updateNavbarPage(session, "my-navbar", selected = "Scenario 2")
     })

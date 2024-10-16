@@ -18,7 +18,7 @@
 demoPreviewBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::h3("Known Writing Examples"),
+    shiny::h3("KNOWN WRITING EXAMPLES"),
     shiny::fluidRow(shiny::column(width=4, singleImageBodyUI(ns("demo1"))),
                     shiny::column(width=4, singleImageBodyUI(ns("demo2"))),
                     shiny::column(width=4, singleImageBodyUI(ns("demo3")))),
@@ -35,7 +35,7 @@ demoPreviewBodyUI <- function(id){
                     shiny::column(width=4, singleImageBodyUI(ns("demo14"))),
                     shiny::column(width=4, singleImageBodyUI(ns("demo15")))),
     shiny::br(),
-    shiny::h3("Questioned Writing Examples"),
+    shiny::h3("QUESTIONED WRITING EXAMPLES"),
     shiny::fluidRow(shiny::column(width=4, singleImageBodyUI(ns("demoQ1"))),
                     shiny::column(width=4, singleImageBodyUI(ns("demoQ2"))),
                     shiny::column(width=4, singleImageBodyUI(ns("demoQ3")))),

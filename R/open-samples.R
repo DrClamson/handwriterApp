@@ -69,7 +69,8 @@ openSampleServer <- function(id, open_global) {
         req(open_global$slr_df)
         ns <- session$ns
         shiny::tagList(
-          shiny::h3("Comparison Results"),
+          shiny::h3("COMPARISON RESULTS"),
+          shiny::br(),
           shiny::h4("Handwriting Samples"),
           shiny::fluidRow(shiny::column(width=6, singleImageBodyUI(ns("sample1"))),
                           shiny::column(width=6, singleImageBodyUI(ns("sample2")))),
@@ -78,6 +79,7 @@ openSampleServer <- function(id, open_global) {
           shiny::br(),
           shiny::h4("Verbal Interpretation of the Score-based Likelihood Ratio"),
           shiny::textOutput(ns("slr_interpretation")),
+          shiny::br(),
           shiny::br()
         )
       })
