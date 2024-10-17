@@ -34,7 +34,7 @@ openUI <- function(id) {
                                                                                                     shiny::fileInput(ns("open_upload2"), "Document 2", accept = ".png", multiple=FALSE)
                                                                                                   ),
                                                                                                   shiny::hr(),
-                                                                                                  shiny::actionButton(ns("clear_open"), "Start New Comparison", width = "100%")
+                                                                                                  shiny::actionButton(ns("compare"), "Compare Documents", width = "100%")
                                                                                        ),
                                                                ),
                                                                
@@ -49,7 +49,8 @@ openUI <- function(id) {
                          # Welcome Display ----
                          shiny::tabPanel(id = ns("Welcome"),
                                          title = "Welcome",
-                                         shinycssloaders::withSpinner(shiny::uiOutput(ns("slr_results")))
+                                         shinycssloaders::withSpinner(shiny::uiOutput(ns("samples_display"))),
+                                         shinycssloaders::withSpinner(shiny::uiOutput(ns("slr_display")))
                          ),
       )
     )
@@ -63,8 +64,32 @@ openServer <- function(id){
     id,
     function(input, output, session){
       
-      # RESET ----
-      shiny::observeEvent(input$clear_open, {
+      # ON / OFF BUTTON FOR SLR DISPLAY ----
+      display <- reactiveValues(show = FALSE)
+      
+      # LOAD ----
+      sample1 <- reactive({
+        # turn off slr display
+        display$show = FALSE
+        
+        fix_upload_name(input$open_upload1)
+      }) %>% 
+        shiny::bindEvent(input$open_upload1)
+      
+      sample2 <- reactive({
+        # turn off slr display
+        display$show = FALSE
+        
+        fix_upload_name(input$open_upload2)
+      }) %>% 
+        shiny::bindEvent(input$open_upload2)
+      
+      slr_df <- reactive({
+        req(sample1(), sample2())
+        
+        # turn on slr display
+        display$show = TRUE
+        
         # handwriterRF::calculate_slr() deletes the contents of tempdir() >
         # comparison before the function terminates, but the app needs the
         # cluster assignments to plot the writer profiles, so use tempdir() >
@@ -72,40 +97,23 @@ openServer <- function(id){
         # contents when the clear_open button is clicked.
         unlink(file.path(tempdir(), "comparison1"), recursive = TRUE)
         
-        # reset module
-        shinyjs::reset('open_upload1')
-        shinyjs::reset('open_upload2')
-      })
-      
-      # LOAD ----
-      sample1 <- reactive({
-        req(input$open_upload1)
-        fix_upload_name(input$open_upload1)
-      })
-      
-      sample2 <- reactive({
-        req(input$open_upload2)
-        fix_upload_name(input$open_upload2)
-      })
-      
-      slr_df <- reactive({
-        req(sample1(), sample2())
         handwriterRF::calculate_slr(
           sample1_path = sample1()$datapath,
           sample2_path = sample2()$datapath,
           project_dir = file.path(tempdir(), "comparison1"))
-      })
+      }) %>% 
+        shiny::bindEvent(input$compare)
       
       # RENDER ----
       # display similarity score
       output$score <- shiny::renderText({
-        req(slr_df())
+        req(slr_df(), display$show)
         slr_df()$score
       })
       
       # display slr
       output$slr <- shiny::renderText({
-        req(slr_df())
+        req(slr_df(), display$show)
         slr <- slr_df()$slr
         
         if (slr >= 1) {
@@ -121,20 +129,28 @@ openServer <- function(id){
       
       # display slr interpretation
       output$slr_interpretation <- shiny::renderText({
-        req(slr_df())
+        req(slr_df(), display$show)
         handwriterRF::interpret_slr(slr_df())
       })
       
-      output$slr_results <- shiny::renderUI({
-        req(slr_df())
+      output$samples_display <- shiny::renderUI({
+        req(sample1(), sample2())
+        ns <- session$ns
+        
+        shiny::tagList(
+          shiny::h3("HANDWRITING SAMPLES"),
+          shiny::br(),
+          shiny::fluidRow(shiny::column(width=6, singleImageBodyUI(ns("sample1"))),
+                          shiny::column(width=6, singleImageBodyUI(ns("sample2")))),
+        )
+      })
+      
+      output$slr_display <- shiny::renderUI({
+        req(sample1(), sample2(), slr_df(), display$show)
         ns <- session$ns
         
         shiny::tagList(
           shiny::h3("COMPARISON RESULTS"),
-          shiny::br(),
-          shiny::h4("Handwriting Samples"),
-          shiny::fluidRow(shiny::column(width=6, singleImageBodyUI(ns("sample1"))),
-                          shiny::column(width=6, singleImageBodyUI(ns("sample2")))),
           shiny::h4("Writer Profiles"),
           shiny::fluidRow(shiny::column(width=6, writerProfileBodyUI(ns("writer1_profile"))),
                           shiny::column(width=6, writerProfileBodyUI(ns("writer2_profile")))),
@@ -151,11 +167,11 @@ openServer <- function(id){
         )
       })
       
-      singleImageServer("sample1", sample1()$datapath, sample1()$name)
-      singleImageServer("sample2", sample2()$datapath, sample2()$name)
+      singleImageServer("sample1", sample1)
+      singleImageServer("sample2", sample2)
       
-      writerProfileServer("writer1_profile", sample1()$datapath, sample1()$name, sample_num = 1)
-      writerProfileServer("writer2_profile", sample2()$datapath, sample2()$name, sample_num = 2)
+      writerProfileServer("writer1_profile", sample1)
+      writerProfileServer("writer2_profile", sample2)
     }
   )
 }
