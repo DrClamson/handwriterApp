@@ -13,7 +13,7 @@ writerProfileBodyUI <- function(id){
   )
 }
 
-writerProfileServer <- function(id, sample) {
+writerProfileServer <- function(id, sample, clusters) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
@@ -23,14 +23,7 @@ writerProfileServer <- function(id, sample) {
       })
       
       output$writer_profile <- shiny::renderPlot({
-        # Don't display plot until slr_df is calculated, even though
-        # the plot doesn't use slr_df
-        req(file.exists(file.path(tempdir(), "comparison1", "clusters", stringr::str_replace(basename(sample()$datapath), ".png", ".rds"))))
-        
-        # load the cluster assignments for document
-        clusters <- readRDS(file.path(tempdir(), "comparison1", "clusters", stringr::str_replace(basename(sample()$datapath), ".png", ".rds")))
-        
-        counts <- handwriter::get_cluster_fill_counts(clusters)
+        counts <- handwriter::get_cluster_fill_counts(clusters())
         
         plot_writer_profile(counts)
       })
