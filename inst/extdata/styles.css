@@ -185,15 +185,21 @@
   border-radius: 0.5rem;
 }
 
-/* Headings */
-h2 {
+/* Headings for tab body, Home, About, and Contact */
+#indent h3, #indent-home h3, .tab-pane h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--blue);
+}
+
+#indent h2, #indent-home h2, .tab-pane h2 {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 22px;
   color: var(--purple);
 }
 
-/* h1 for tab body, Home, About, and Contact */
 #indent h1, #indent-home h1, .tab-pane h1 {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
@@ -201,7 +207,7 @@ h2 {
   color: var(--blue);
 }
 
-/* h2 in sidebar */
+/* Headings for sidebar */
 .shiny-panel-conditional h2 {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
@@ -209,7 +215,6 @@ h2 {
   color: white;
 }
 
-/* h1 in sidebar */
 .shiny-panel-conditional h1 {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
@@ -234,4 +239,27 @@ hr {
   border: 0;
   border-top: 1px solid;
   opacity: 0.25;
+}
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+#indent ol {
+    counter-reset: list;
+}
+
+#indent ol > li {
+    list-style: none;
+    position: relative;
+}
+
+#indent ol > li:before {
+    content: "[" counter(list) "]";
+    counter-increment: list;
+    left: -40px;
+    padding-right: 10px;
+    position: absolute;
+    text-align: right;
+    width: 40px;
 }
