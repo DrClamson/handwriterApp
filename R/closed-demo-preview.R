@@ -46,25 +46,42 @@ demoPreviewServer <- function(id, global) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
-      singleImageServer("demo1", system.file(file.path("extdata", "template", "data", "model_docs", "w0009_s01_pWOZ_r01.png"), package = "handwriterApp"))
-      singleImageServer("demo2", system.file(file.path("extdata", "template", "data", "model_docs", "w0009_s01_pWOZ_r02.png"), package = "handwriterApp"))
-      singleImageServer("demo3", system.file(file.path("extdata", "template", "data", "model_docs", "w0009_s01_pWOZ_r03.png"), package = "handwriterApp"))
-      singleImageServer("demo4", system.file(file.path("extdata", "template", "data", "model_docs", "w0030_s01_pWOZ_r01.png"), package = "handwriterApp"))
-      singleImageServer("demo5", system.file(file.path("extdata", "template", "data", "model_docs", "w0030_s01_pWOZ_r02.png"), package = "handwriterApp"))
-      singleImageServer("demo6", system.file(file.path("extdata", "template", "data", "model_docs", "w0030_s01_pWOZ_r03.png"), package = "handwriterApp"))
-      singleImageServer("demo7", system.file(file.path("extdata", "template", "data", "model_docs", "w0203_s01_pWOZ_r01.png"), package = "handwriterApp"))
-      singleImageServer("demo8", system.file(file.path("extdata", "template", "data", "model_docs", "w0203_s01_pWOZ_r02.png"), package = "handwriterApp"))
-      singleImageServer("demo9", system.file(file.path("extdata", "template", "data", "model_docs", "w0203_s01_pWOZ_r03.png"), package = "handwriterApp"))
-      singleImageServer("demo10", system.file(file.path("extdata", "template", "data", "model_docs", "w0238_s01_pWOZ_r01.png"), package = "handwriterApp"))
-      singleImageServer("demo11", system.file(file.path("extdata", "template", "data", "model_docs", "w0238_s01_pWOZ_r02.png"), package = "handwriterApp"))
-      singleImageServer("demo12", system.file(file.path("extdata", "template", "data", "model_docs", "w0238_s01_pWOZ_r03.png"), package = "handwriterApp"))
-      singleImageServer("demo13", system.file(file.path("extdata", "template", "data", "model_docs", "w0400_s01_pWOZ_r01.png"), package = "handwriterApp"))
-      singleImageServer("demo14", system.file(file.path("extdata", "template", "data", "model_docs", "w0400_s01_pWOZ_r02.png"), package = "handwriterApp"))
-      singleImageServer("demo15", system.file(file.path("extdata", "template", "data", "model_docs", "w0400_s01_pWOZ_r03.png"), package = "handwriterApp"))
+      model_docs <- list.files(system.file(file.path("extdata", "template", "data", "model_docs"), package = "handwriterApp"), full.names = TRUE)
+      questioned_docs <- list.files(system.file(file.path("extdata", "template", "data", "questioned_docs"), package = "handwriterApp"), full.names = TRUE)
       
-      singleImageServer("demoQ1", system.file(file.path("extdata", "template", "data", "questioned_docs", "w0009_s03_pLND_r02.png"), package = "handwriterApp"))
-      singleImageServer("demoQ2", system.file(file.path("extdata", "template", "data", "questioned_docs", "w0030_s02_pLND_r01.png"), package = "handwriterApp"))
-      singleImageServer("demoQ3", system.file(file.path("extdata", "template", "data", "questioned_docs", "w0238_s01_pLND_r01.png"), package = "handwriterApp"))
+      # create a reactive for each model doc
+      model_reactives <- lapply(model_docs, function(doc) {
+        reactive({
+          list(datapath = doc)
+        })
+      })
+      
+      # create a reactive for each questioned doc
+      questioned_reactives <- lapply(questioned_docs, function(doc) {
+        reactive({
+          list(datapath = doc)
+        })
+      })
+      
+      singleImageServer("demo1", model_reactives[[1]])
+      singleImageServer("demo2", model_reactives[[2]])
+      singleImageServer("demo3", model_reactives[[3]])
+      singleImageServer("demo4", model_reactives[[4]])
+      singleImageServer("demo5", model_reactives[[5]])
+      singleImageServer("demo6", model_reactives[[6]])
+      singleImageServer("demo7", model_reactives[[7]])
+      singleImageServer("demo8", model_reactives[[8]])
+      singleImageServer("demo9", model_reactives[[9]])
+      singleImageServer("demo10", model_reactives[[10]])
+      singleImageServer("demo11", model_reactives[[11]])
+      singleImageServer("demo12", model_reactives[[12]])
+      singleImageServer("demo13", model_reactives[[13]])
+      singleImageServer("demo14", model_reactives[[14]])
+      singleImageServer("demo15", model_reactives[[15]])
+      
+      singleImageServer("demoQ1", questioned_reactives[[1]])
+      singleImageServer("demoQ2", questioned_reactives[[2]])
+      singleImageServer("demoQ3", questioned_reactives[[3]])
     }
   )
 }
