@@ -76,7 +76,7 @@ handwriterApp <- function(...){
                                                                          # placing the home page inside a module becomes quite complicated.
                                                                          shiny::tags$div(id="indent-home",
                                                                                          shiny::fluidPage(
-                                                                                           shiny::tags$h3("WELCOME TO HANDWRITER"),
+                                                                                           shiny::tags$h1("WELCOME TO HANDWRITER"),
                                                                                            shiny::tags$body(
                                                                                              shiny::tags$p("Unlock the power of handwriting analysis with handwriter. 
                                                                                                            This tool is designed to assist forensic examiners by analyzing 
@@ -85,12 +85,12 @@ handwriterApp <- function(...){
                                                                                                            handwriter provides an automated way to evaluate handwriting samples."),
                                                                                              shiny::tags$p("Say something here that the app is only for testing and not casework?"),
                                                                                              shiny::br(),
-                                                                                             shiny::tags$h4("Choose the scenario that best describes your handwriting samples")), 
+                                                                                             shiny::tags$h2("Choose the scenario that best describes your handwriting samples")), 
                                                                                            
                                                                                            bslib::layout_column_wrap(
                                                                                              width = 1/3,
                                                                                              bslib::card(class="scenario",
-                                                                                                         bslib::card_header(shiny::tags$h4("SCENARIO 1"),
+                                                                                                         bslib::card_header(shiny::tags$h2("SCENARIO 1"),
                                                                                                                             shiny::tags$body(shiny::tags$i("Compare a questioned document to another handwritten document."))),
                                                                                                          shiny::hr(),
                                                                                                          bslib::card_body(class = "scenario-body",
@@ -106,7 +106,7 @@ handwriterApp <- function(...){
                                                                                                          )
                                                                                              ),
                                                                                              bslib::card(class="scenario",
-                                                                                                         bslib::card_header(shiny::tags$h4("SCENARIO 2"),
+                                                                                                         bslib::card_header(shiny::tags$h2("SCENARIO 2"),
                                                                                                                             shiny::tags$body(shiny::tags$i("Compare a questioned document to a group of known handwriting samples."))),
                                                                                                          shiny::hr(),
                                                                                                          bslib::card_body(shiny::tags$p(shiny::tags$b("Requirements:")),

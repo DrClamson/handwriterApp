@@ -20,7 +20,7 @@ homeUI <- function(id) {
   shiny::tagList(
     shiny::tags$div(id="indent-home",
                     shiny::fluidPage(
-                      shiny::tags$h3("WELCOME TO HANDWRITER"),
+                      shiny::tags$h1("WELCOME TO HANDWRITER"),
                       shiny::tags$body("Unlock the power of handwriting analysis with handwriter. Choose the scenario
                                        that best describes your handwriting samples. Say something here about how this
                                        is for testing purposes only and not to be used in casework?"),
@@ -28,7 +28,7 @@ homeUI <- function(id) {
                       bslib::layout_column_wrap(
                         width = 1/3,
                         bslib::card(class="scenario",
-                                    bslib::card_header(shiny::tags$h4("SCENARIO 1"),
+                                    bslib::card_header(shiny::tags$h2("SCENARIO 1"),
                                                        shiny::tags$body(shiny::tags$i("Compare a questioned document to another handwritten document."))),
                                     shiny::hr(),
                                     bslib::card_body(class = "scenario-body",
@@ -45,7 +45,7 @@ homeUI <- function(id) {
                                     )
                         ),
                         bslib::card(class="scenario",
-                          bslib::card_header(shiny::tags$h4("SCENARIO 2"),
+                          bslib::card_header(shiny::tags$h2("SCENARIO 2"),
                                              shiny::tags$body(shiny::tags$i("Compare a questioned document to a group of known handwriting samples."))),
                           shiny::hr(),
                           bslib::card_body(shiny::tags$p(shiny::tags$b("Requirements:")),

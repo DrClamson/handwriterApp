@@ -49,7 +49,7 @@ selectImageServer <- function(id, global, type) {
         shiny::req(local$current_paths)
         local$current_names <- list_names_in_named_vector(local$current_paths)
         shiny::tagList(
-          shiny::h3("SUPPORTING MATERIALS"),
+          shiny::h1("SUPPORTING MATERIALS"),
           shiny::selectInput(ns("current_select"), 
                              label = switch(type, "model" = "Choose a Known Writing Sample", "questioned" = "Choose a Questioned Document"), 
                              choices = local$current_names),

@@ -147,7 +147,7 @@ closedUI <- function(id) {
                                               # Welcome Display ----
                                               shiny::tabPanel(id = ns("Welcome"),
                                                               title = "Welcome",
-                                                              shiny::h3("WELCOME TO HANDWRITER!"),
+                                                              shiny::h1("WELCOME TO HANDWRITER!"),
                                                               shiny::p("Unlock the power of handwriting analysis with handwriter. 
                                                 This tool is designed to assist forensic examiners by analyzing handwritten 
                                                 documents against a closed set of potential writers. It determines the probability 

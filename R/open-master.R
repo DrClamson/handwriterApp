@@ -71,7 +71,7 @@ openServer <- function(id){
       # clusters
       clusters <- shiny::reactiveValues(sample1 = NULL,
                                         sample2 = NULL)
-
+      
       # LOAD ----
       sample1 <- reactive({
         cat(file=stderr(), "sample1 reactive \n")
@@ -127,7 +127,7 @@ openServer <- function(id){
       }) %>% 
         shiny::bindEvent(input$compare)
       
-
+      
       # RENDER ----
       # display similarity score
       output$score <- shiny::renderText({
@@ -171,7 +171,7 @@ openServer <- function(id){
         cat(file=stderr(), "render samples UI \n")
         
         shiny::tagList(
-          shiny::h3("HANDWRITING SAMPLES"),
+          shiny::h1("HANDWRITING SAMPLES"),
           shiny::br(),
           shiny::fluidRow(shiny::column(width=6, singleImageBodyUI(ns("sample1"))),
                           shiny::column(width=6, singleImageBodyUI(ns("sample2")))),
@@ -186,8 +186,8 @@ openServer <- function(id){
         cat(file=stderr(), "render writer profiles UI \n")
         
         shiny::tagList(
-          shiny::h3("COMPARISON RESULTS"),
-          shiny::h4("Writer Profiles"),
+          shiny::h1("COMPARISON RESULTS"),
+          shiny::h2("Writer Profiles"),
           shiny::fluidRow(shiny::column(width=6, writerProfileBodyUI(ns("writer1_profile"))),
                           shiny::column(width=6, writerProfileBodyUI(ns("writer2_profile")))),
         )
@@ -201,13 +201,13 @@ openServer <- function(id){
         cat(file=stderr(), "render slr UI \n")
         
         shiny::tagList(
-          shiny::h4("Similarity Score"),
+          shiny::h2("Similarity Score"),
           shiny::textOutput(ns("score")),
           shiny::br(),
-          shiny::h4("Score-based Likelihood Ratio"),
+          shiny::h2("Score-based Likelihood Ratio"),
           shiny::textOutput(ns("slr")),
           shiny::br(),
-          shiny::h4("Verbal Interpretation of the Score-based Likelihood Ratio"),
+          shiny::h2("Verbal Interpretation of the Score-based Likelihood Ratio"),
           shiny::textOutput(ns("slr_interpretation")),
           shiny::br(),
           shiny::br()
