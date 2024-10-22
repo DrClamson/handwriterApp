@@ -4,7 +4,7 @@
     "href": "CITATION.html",
     "title": "Citation",
     "section": "",
-    "text": "Citation\nTo cite package ‘handwriterApp’ in publications use:\n\n  Iowa State University of Science and Technology on behalf of its Center for\n  Statistics and Applications in Forensic Evidence, Reinders S (????).\n  _handwriterApp: A 'shiny' Application for Handwriting Analysis_. R package\n  version 1.0.1.9000, &lt;https://github.com/CSAFE-ISU/handwriterApp&gt;.\n\nA BibTeX entry for LaTeX users is\n\n  @Manual{,\n    title = {handwriterApp: A 'shiny' Application for Handwriting Analysis},\n    author = {{Iowa State University of Science and Technology on behalf of its Center for Statistics and Applications in Forensic Evidence} and Stephanie Reinders},\n    note = {R package version 1.0.1.9000},\n    url = {https://github.com/CSAFE-ISU/handwriterApp},\n  }"
+    "text": "Citation\nTo cite package ‘handwriterApp’ in publications use:\n\n  Iowa State University of Science and Technology on behalf of its\n  Center for Statistics and Applications in Forensic Evidence, Reinders\n  S (????). _handwriterApp: A 'shiny' Application for Handwriting\n  Analysis_. R package version 1.0.1.9000,\n  &lt;https://github.com/CSAFE-ISU/handwriterApp&gt;.\n\nA BibTeX entry for LaTeX users is\n\n  @Manual{,\n    title = {handwriterApp: A 'shiny' Application for Handwriting Analysis},\n    author = {{Iowa State University of Science and Technology on behalf of its Center for Statistics and Applications in Forensic Evidence} and Stephanie Reinders},\n    note = {R package version 1.0.1.9000},\n    url = {https://github.com/CSAFE-ISU/handwriterApp},\n  }"
   },
   {
     "objectID": "NEWS.html",
@@ -84,10 +84,10 @@
     "text": "View a Demo\nView a demo of handwriter on handwritten documents from the CSAFE Handwriting Database. Go to demo."
   },
   {
-    "objectID": "index.html#simulate-casework-with-example-documents",
-    "href": "index.html#simulate-casework-with-example-documents",
+    "objectID": "index.html#use-your-own-handwriting-samples",
+    "href": "index.html#use-your-own-handwriting-samples",
     "title": "Welcome",
-    "section": "Simulate Casework with Example Documents",
-    "text": "Simulate Casework with Example Documents\n\nInstallation\nHandwriter requires R, RStudio IDE, and JAGS.\n\nInstall R and RStudio from POSIT\nInstall JAGS from SourceForge\n\nInstall the handwriterApp R package. Open RStudio and navigate to the console window and type\n\ninstall.packages(\"handwriterApp\")\n\n\n\nLaunch the App\nOpen RStudio, navigate to the console window, and type:\n\nlibrary(handwriterApp)\nhandwriterApp()\n\nIn the pop-up window, click Open in Browser. If you use the app in the pop-up window instead of in a browser, some links will not work.\nClick Simulate Casework and follow the instructions in the app."
+    "section": "Use Your Own Handwriting Samples",
+    "text": "Use Your Own Handwriting Samples\n\nInstallation\nHandwriter requires R, RStudio IDE, and JAGS.\n\nInstall R and RStudio from POSIT\nInstall JAGS from SourceForge\n\nInstall the handwriterApp R package. Open RStudio and navigate to the console window and type\n\ninstall.packages(\"handwriterApp\")\n\n\n\nLaunch the App\nOpen RStudio, navigate to the console window, and type:\n\nlibrary(handwriterApp)\nhandwriterApp()\n\nIn the pop-up window, click Open in Browser. If you use the app in the pop-up window instead of in a browser, some links will not work.\nClick Use Your Own Samples and follow the instructions in the app."
   }
 ]

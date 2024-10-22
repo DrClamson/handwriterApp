@@ -16,7 +16,7 @@ View a demo of handwriter on handwritten documents from the CSAFE
 Handwriting Database. Go to
 [demo](https://csafe.shinyapps.io/handwriterAppDemo/).
 
-## Simulate Casework with Example Documents
+## Use Your Own Handwriting Samples
 
 ### Installation
 
@@ -46,4 +46,4 @@ handwriterApp()
 In the pop-up window, click **Open in Browser**. If you use the app in
 the pop-up window instead of in a browser, some links will not work.
 
-Click **Simulate Casework** and follow the instructions in the app.
+Click **Use Your Own Samples** and follow the instructions in the app.

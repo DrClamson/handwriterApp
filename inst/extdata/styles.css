@@ -96,6 +96,31 @@
   margin-top: auto;  
 }
 
+
+/* Links for tab body, Home, About, Contact, and Setup */
+#indent a, #indent-home a, .tab-pane a {
+    color: var(--purple); /* Change to your desired color */
+}
+
+#indent a:visited, #indent-home a:visited, .tab-pane a:visited,
+#indent a:hover, #indent-home a:hover, .tab-pane a:hover,
+#indent a:active, #indent-home a:active, .tab-pane a:active {
+    color: var(--lt-grey); /* Change to your desired color */
+}
+
+/* Links for sidebar */
+.shiny-panel-conditional a {
+  color: var(--lt-blue);
+}
+
+.shiny-panel-conditional a:visited,
+.shiny-panel-conditional a:hover,
+.shiny-panel-conditional a:active, {
+  color: var(--dk-grey);
+}
+
+
+
 /* Popup windows */
 .modal-body{
     max-height: calc(100vh - 200px);
@@ -185,7 +210,7 @@
   border-radius: 0.5rem;
 }
 
-/* Headings for tab body, Home, About, and Contact */
+/* Headings for tab body, Home, About, Contact, and Setup */
 #indent h3, #indent-home h3, .tab-pane h3 {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
