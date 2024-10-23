@@ -115,7 +115,7 @@
 
 .shiny-panel-conditional a:visited,
 .shiny-panel-conditional a:hover,
-.shiny-panel-conditional a:active, {
+.shiny-panel-conditional a:active {
   color: var(--dk-grey);
 }
 

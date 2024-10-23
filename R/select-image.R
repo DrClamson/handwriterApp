@@ -114,10 +114,9 @@ selectImageServer <- function(id, global, type) {
                             shiny::plotOutput(ns("current_nodes"))
             ),
             shiny::tabPanel("Writer Profile",
-                            shiny::HTML("<p>The key idea behind handwriter is that the rate at which a writer produces 
-                            different types of graphs, called <i>clusters</i>, serves as an estimate of a <i>writer profile</i>. Handwriter groups graphs 
-                            with similar shapes into <i>clusters</i> and counts the number of graphs from a document 
-                            that fall into each cluster.</p>"),
+                            shiny::HTML("<p>Handwriter groups graphs with similar shapes into <i>clusters</i> and counts the number of graphs from a document 
+                      that fall into each cluster. The rate at which a writer produces 
+                      graphs in each cluster serves as an estimate of a <i>writer profile</i>.</p>"),
                             shiny::plotOutput(ns("current_profile"))
             )
           )

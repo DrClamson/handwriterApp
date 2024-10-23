@@ -50,6 +50,7 @@ openUI <- function(id) {
                          shiny::tabPanel(id = ns("Welcome"),
                                          title = "Welcome",
                                          shinycssloaders::withSpinner(shiny::uiOutput(ns("samples_display"))),
+                                         shinycssloaders::withSpinner(shiny::uiOutput(ns("graphs_display"))),
                                          shinycssloaders::withSpinner(shiny::uiOutput(ns("profiles_display"))),
                                          shinycssloaders::withSpinner(shiny::uiOutput(ns("slr_display")))
                          ),
@@ -67,6 +68,10 @@ openServer <- function(id){
       
       # ON / OFF BUTTON FOR SLR DISPLAY ----
       display <- reactiveValues(show = FALSE)
+      
+      # graphs
+      graphs <- shiny::reactiveValues(sample1 = NULL,
+                                      sample2 = NULL)
       
       # clusters
       clusters <- shiny::reactiveValues(sample1 = NULL,
@@ -113,6 +118,7 @@ openServer <- function(id){
         # cluster assignments to plot the writer profiles, so use tempdir() >
         # comparison1 as the project directory and delete this folder and its
         # contents when the clear_open button is clicked.
+        
         unlink(file.path(tempdir(), "comparison1"), recursive = TRUE)
         
         slr <- handwriterRF::calculate_slr(
@@ -120,6 +126,11 @@ openServer <- function(id){
           sample2_path = sample2()$datapath,
           project_dir = file.path(tempdir(), "comparison1"))
         
+        # load graphs
+        graphs$sample1 <- readRDS(file.path(tempdir(), "comparison1", "graphs", stringr::str_replace(basename(sample1()$datapath), ".png", "_proclist.rds")))
+        graphs$sample2 <- readRDS(file.path(tempdir(), "comparison1", "graphs", stringr::str_replace(basename(sample2()$datapath), ".png", "_proclist.rds")))
+        
+        # load clusters
         clusters$sample1 <- readRDS(file.path(tempdir(), "comparison1", "clusters", stringr::str_replace(basename(sample1()$datapath), ".png", ".rds")))
         clusters$sample2 <- readRDS(file.path(tempdir(), "comparison1", "clusters", stringr::str_replace(basename(sample2()$datapath), ".png", ".rds")))
         
@@ -178,6 +189,25 @@ openServer <- function(id){
         )
       })
       
+      # display graphs
+      output$graphs_display <- shiny::renderUI({
+        req(graphs$sample1, graphs$sample2)
+        ns <- session$ns
+        
+        cat(file=stderr(), "render graphs UI \n")
+        
+        shiny::tagList(
+          shiny::h1("COMPARISON RESULTS"),
+          shiny::h2("Graphs"),
+          shiny::HTML("<p>Handwriter processes handwriting by placing <i>nodes</i> at interesections and the ends of lines. Then handwriter 
+                      uses the nodes and a set of rules to break the handwriting into component shapes called <i>graphs</i>. Graphs capture shapes, 
+                      not necessarily individual letters. Graphs might be a part of a letter or contain parts of multiple letters.</p>"),
+          shiny::br(),
+          shiny::fluidRow(shiny::column(width=6, graphsBodyUI(ns("sample1_graphs"))),
+                          shiny::column(width=6, graphsBodyUI(ns("sample2_graphs")))),
+        )
+      })
+      
       # display writer profiles
       output$profiles_display <- shiny::renderUI({
         req(clusters$sample1, clusters$sample2)
@@ -186,8 +216,11 @@ openServer <- function(id){
         cat(file=stderr(), "render writer profiles UI \n")
         
         shiny::tagList(
-          shiny::h1("COMPARISON RESULTS"),
           shiny::h2("Writer Profiles"),
+          shiny::HTML("<p>Handwriter groups graphs with similar shapes into <i>clusters</i> and counts the number of graphs from a document 
+                      that fall into each cluster. The rate at which a writer produces 
+                      graphs in each cluster serves as an estimate of a <i>writer profile</i>.</p>"),
+          shiny::br(),
           shiny::fluidRow(shiny::column(width=6, writerProfileBodyUI(ns("writer1_profile"))),
                           shiny::column(width=6, writerProfileBodyUI(ns("writer2_profile")))),
         )
@@ -216,6 +249,9 @@ openServer <- function(id){
       
       singleImageServer("sample1", sample1)
       singleImageServer("sample2", sample2)
+      
+      graphsServer("sample1_graphs", sample1, reactive(graphs$sample1))
+      graphsServer("sample2_graphs", sample2, reactive(graphs$sample2))
       
       writerProfileServer("writer1_profile", sample1, reactive(clusters$sample1))
       writerProfileServer("writer2_profile", sample2, reactive(clusters$sample2))

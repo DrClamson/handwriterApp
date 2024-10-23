@@ -1,14 +1,14 @@
 singleImageBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
-    # allows users to scroll vertically and horizontally
     bslib::card(class = "single-image",
                 max_width = 300,
                 max_height = 250,
-                full_screen = FALSE,
-                bslib::card_header(class = "bg-dark", shiny::textOutput(ns("path"))),
-                shiny::hr(),
-                shiny::imageOutput(ns("image"))
+                full_screen = TRUE,
+                bslib::card_header(class = "bg-dark", 
+                                   shiny::textOutput(ns("path")),
+                                   shiny::hr()),
+                bslib::card_body(shiny::imageOutput(ns("image")))
     ),
     shiny::br()
   )
