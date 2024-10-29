@@ -66,7 +66,7 @@ openServer <- function(id){
     id,
     function(input, output, session){
       
-      # ON / OFF BUTTON FOR SLR DISPLAY ----
+      # ON / OFF BUTTON FOR RESULTS DISPLAY ----
       display <- reactiveValues(show = FALSE)
       
       # graphs
@@ -191,7 +191,7 @@ openServer <- function(id){
       
       # display graphs
       output$graphs_display <- shiny::renderUI({
-        req(graphs$sample1, graphs$sample2)
+        req(graphs$sample1, graphs$sample2, display$show)
         ns <- session$ns
         
         cat(file=stderr(), "render graphs UI \n")
@@ -210,19 +210,17 @@ openServer <- function(id){
       
       # display writer profiles
       output$profiles_display <- shiny::renderUI({
-        req(clusters$sample1, clusters$sample2)
+        req(clusters$sample1, clusters$sample2, display$show)
         ns <- session$ns
         
         cat(file=stderr(), "render writer profiles UI \n")
         
         shiny::tagList(
           shiny::h2("Writer Profiles"),
-          shiny::HTML("<p>Handwriter groups graphs with similar shapes into <i>clusters</i> and counts the number of graphs from a document 
-                      that fall into each cluster. The rate at which a writer produces 
-                      graphs in each cluster serves as an estimate of a <i>writer profile</i>.</p>"),
+          shiny::HTML("<p>Handwriter groups graphs with similar shapes into <i>clusters</i> and calculates the proportion of graphs from a document 
+                      that fall into each cluster. The rate at which a writer produces graphs in each cluster serves as an estimate of a <i>writer profile</i>.</p>"),
           shiny::br(),
-          shiny::fluidRow(shiny::column(width=6, writerProfileBodyUI(ns("writer1_profile"))),
-                          shiny::column(width=6, writerProfileBodyUI(ns("writer2_profile")))),
+          writerProfileBodyUI(ns("writer_profiles"))
         )
       })
       
@@ -253,8 +251,7 @@ openServer <- function(id){
       graphsServer("sample1_graphs", sample1, reactive(graphs$sample1))
       graphsServer("sample2_graphs", sample2, reactive(graphs$sample2))
       
-      writerProfileServer("writer1_profile", sample1, reactive(clusters$sample1))
-      writerProfileServer("writer2_profile", sample2, reactive(clusters$sample2))
+      writerProfileServer("writer_profiles", sample1, sample2, reactive(clusters))
     }
   )
 }
