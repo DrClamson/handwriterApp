@@ -59,7 +59,6 @@ demoKnownServer <- function(id, global) {
         global$known_names <- list_names_in_named_vector(global$known_paths)
         
         # fit model
-        browser()
         global$model <- handwriter::fit_model(main_dir = global$main_dir,
                                               model_docs = file.path(global$main_dir, "data", "model_docs"),
                                               num_iters = 4000,

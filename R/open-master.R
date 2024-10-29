@@ -50,7 +50,8 @@ openUI <- function(id) {
                          shiny::tabPanel(id = ns("Welcome"),
                                          title = "Welcome",
                                          shinycssloaders::withSpinner(shiny::uiOutput(ns("samples_display"))),
-                                         shinycssloaders::withSpinner(shiny::uiOutput(ns("graphs_display"))),
+                                         shinycssloaders::withSpinner(shiny::uiOutput(ns("hypotheses_display"))),
+                                         shinycssloaders::withSpinner(shiny::uiOutput(ns("limitations_display"))),
                                          shinycssloaders::withSpinner(shiny::uiOutput(ns("profiles_display"))),
                                          shinycssloaders::withSpinner(shiny::uiOutput(ns("slr_display")))
                          ),
@@ -104,6 +105,12 @@ openServer <- function(id){
       }) %>% 
         shiny::bindEvent(input$open_upload2)
       
+      template_plot <- reactive({
+        x <- list()
+        x$datapath <- system.file(file.path("extdata", "images", "template.png"), package = "handwriterApp")
+        return(x)
+      })
+      
       # calculate slr
       slr_df <- reactive({
         req(sample1(), sample2())
@@ -140,6 +147,94 @@ openServer <- function(id){
       
       
       # RENDER ----
+      # display handwriting samples
+      output$samples_display <- shiny::renderUI({
+        req(sample1(), sample2())
+        ns <- session$ns
+        
+        cat(file=stderr(), "render samples UI \n")
+        
+        shiny::tagList(
+          shiny::h1("HANDWRITING SAMPLES"),
+          shiny::br(),
+          shiny::fluidRow(shiny::column(width=6, singleImageBodyUI(ns("sample1"))),
+                          shiny::column(width=6, singleImageBodyUI(ns("sample2")))),
+        )
+      })
+      
+      # display hypotheses
+      output$hypotheses_display <- shiny::renderUI({
+        req(sample1(), sample2())
+        ns <- session$ns
+        
+        cat(file=stderr(), "render hypotheses UI \n")
+        
+        shiny::tagList(
+          shiny::h1("HYPOTHESES"),
+          shiny::HTML("<p>Handwriter addresses two hypotheses:
+                      <ul>
+                        <li> <strong>H<sub>p</sub>: The two documents were written by the same writer.</strong>
+                        </li>
+                        <li> <strong>H<sub>d</sub>: The two documents were written by different writers.</strong>
+                        </li>
+                      </ul>
+                      </p>"),
+          shiny::br()
+        )
+      })
+      
+      # display limitations
+      output$limitations_display <- shiny::renderUI({
+        req(sample1(), sample2())
+        ns <- session$ns
+        
+        cat(file=stderr(), "render limiations UI \n")
+        
+        shiny::tagList(
+          shiny::h1("LIMITATIONS"),
+          shiny::HTML("<p>Handwriter assumes that the documents were written in the writer's natural handwriting and that 
+          the writer did not attempt to disguise their handwriting nor forge someone else's handwriting.
+                      </p>
+                      <p>Handwriter has been tested on handwriting examples from publicly available handwriting databases, where
+                      volunteers were asked to copy a writing prompt in their natural handwriting. Error rates on other types of 
+                      handwriting samples are unknown.
+                      </p>"),
+          shiny::br()
+        )
+      })
+      
+      
+      # display writer profiles
+      output$profiles_display <- shiny::renderUI({
+        req(clusters$sample1, clusters$sample2, display$show)
+        ns <- session$ns
+        
+        cat(file=stderr(), "render writer profiles UI \n")
+        
+        shiny::tagList(
+          shiny::h1("WRITER PROFILES"),
+          shiny::h2("Graphs"),
+          shiny::HTML("<p>Handwriter processes handwriting by converting the writing to black and white, thinning the writing to 1 pixel in width, and following a set of rules
+                      to break the writing into component shapes called <i>graphs</i>. Graphs capture shapes, 
+                      not necessarily individual letters. Graphs might be a part of a letter or contain parts of multiple letters.</p>"),
+          shiny::br(),
+          shiny::fluidRow(shiny::column(width=6, graphsBodyUI(ns("sample1_graphs"))),
+                          shiny::column(width=6, graphsBodyUI(ns("sample2_graphs")))),
+          shiny::h2("Clusters"),
+          shiny::HTML("<p>Handwriter use 40 exemplar shapes called <i>clusters</i>. Again, these shapes are not necessarily individual letters. 
+                      They might be part of a letter or contain parts of multiple letters. For more information on how these 40 clusters were created, 
+                      see <cite><a href='https://onlinelibrary.wiley.com/doi/abs/10.1002/sam.11488'> A clustering method for graphical handwriting 
+                      components and statistical writership analysis.</a></cite></p>"),
+          shiny::fluidRow(shiny::column(width=12, singleImageBodyUI(ns("template1"), max_height=NULL))),
+          shiny::h2("Writer Profiles"),
+          shiny::HTML("<p>For each handwriting sample, handwriter assigns each graph to the cluster with the most similar shape. Then
+                      for each document, handwriter calculates the proportation of graphs assigned to each cluster. The rate at which a 
+                      writer produces graphs in each cluster serves as an estimate of a <i>writer profile</i>.</p>"),
+          shiny::br(),
+          writerProfileBodyUI(ns("writer_profiles"))
+        )
+      })
+      
       # display similarity score
       output$score <- shiny::renderText({
         req(slr_df(), display$show)
@@ -173,57 +268,7 @@ openServer <- function(id){
         cat(file=stderr(), "render interpretation \n")
         handwriterRF::interpret_slr(slr_df())
       })
-      
-      # display handwriting samples
-      output$samples_display <- shiny::renderUI({
-        req(sample1(), sample2())
-        ns <- session$ns
-        
-        cat(file=stderr(), "render samples UI \n")
-        
-        shiny::tagList(
-          shiny::h1("HANDWRITING SAMPLES"),
-          shiny::br(),
-          shiny::fluidRow(shiny::column(width=6, singleImageBodyUI(ns("sample1"))),
-                          shiny::column(width=6, singleImageBodyUI(ns("sample2")))),
-        )
-      })
-      
-      # display graphs
-      output$graphs_display <- shiny::renderUI({
-        req(graphs$sample1, graphs$sample2, display$show)
-        ns <- session$ns
-        
-        cat(file=stderr(), "render graphs UI \n")
-        
-        shiny::tagList(
-          shiny::h1("COMPARISON RESULTS"),
-          shiny::h2("Graphs"),
-          shiny::HTML("<p>Handwriter processes handwriting by placing <i>nodes</i> at interesections and the ends of lines. Then handwriter 
-                      uses the nodes and a set of rules to break the handwriting into component shapes called <i>graphs</i>. Graphs capture shapes, 
-                      not necessarily individual letters. Graphs might be a part of a letter or contain parts of multiple letters.</p>"),
-          shiny::br(),
-          shiny::fluidRow(shiny::column(width=6, graphsBodyUI(ns("sample1_graphs"))),
-                          shiny::column(width=6, graphsBodyUI(ns("sample2_graphs")))),
-        )
-      })
-      
-      # display writer profiles
-      output$profiles_display <- shiny::renderUI({
-        req(clusters$sample1, clusters$sample2, display$show)
-        ns <- session$ns
-        
-        cat(file=stderr(), "render writer profiles UI \n")
-        
-        shiny::tagList(
-          shiny::h2("Writer Profiles"),
-          shiny::HTML("<p>Handwriter groups graphs with similar shapes into <i>clusters</i> and calculates the proportion of graphs from a document 
-                      that fall into each cluster. The rate at which a writer produces graphs in each cluster serves as an estimate of a <i>writer profile</i>.</p>"),
-          shiny::br(),
-          writerProfileBodyUI(ns("writer_profiles"))
-        )
-      })
-      
+
       # display slr results
       output$slr_display <- shiny::renderUI({
         req(sample1(), sample2(), slr_df(), display$show)
@@ -232,6 +277,15 @@ openServer <- function(id){
         cat(file=stderr(), "render slr UI \n")
         
         shiny::tagList(
+          shiny::h1("COMPARISON RESULTS"),
+          shiny::HTML("<p>Handwriter measures the similarity between the two writer profiles using a random forest trained 
+          on handwriting samples from the <a href='https://data.csafe.iastate.edu/HandwritingDatabase/'>CSAFE Handwriting Database</a>. 
+          The result is a <i>similarity score</i> between the two writer profiles. Next, handwriter calculates the likelihood of observing the similarity score if the 'same writer' hypothesis is true and the likelihood 
+                      of observing the similarity score if the 'different writers' hypothesis is true. The <i>score-based likelihood ratio</i> is the ratio of these
+                      two likelihoods. For more information, see <cite><a hrer='https://doi.org/10.1002/sam.11566'>Handwriting identification using random forests 
+                      and score‐based likelihood ratios.</a></cite></p>
+                      "
+                      ),
           shiny::h2("Similarity Score"),
           shiny::textOutput(ns("score")),
           shiny::br(),
@@ -250,6 +304,8 @@ openServer <- function(id){
       
       graphsServer("sample1_graphs", sample1, reactive(graphs$sample1))
       graphsServer("sample2_graphs", sample2, reactive(graphs$sample2))
+      
+      singleImageServer("template1", template_plot, title = "Clusters")
       
       writerProfileServer("writer_profiles", sample1, sample2, reactive(clusters))
     }

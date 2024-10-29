@@ -1,12 +1,12 @@
-singleImageBodyUI <- function(id){
+singleImageBodyUI <- function(id, max_height = 250){
   ns <- shiny::NS(id)
   shiny::tagList(
     bslib::card(class = "single-image",
                 max_width = 300,
-                max_height = 250,
+                max_height = max_height,
                 full_screen = TRUE,
                 bslib::card_header(class = "bg-dark", 
-                                   shiny::textOutput(ns("path")),
+                                   shiny::textOutput(ns("title")),
                                    shiny::hr()),
                 bslib::card_body(shiny::imageOutput(ns("image")))
     ),
@@ -14,13 +14,17 @@ singleImageBodyUI <- function(id){
   )
 }
 
-singleImageServer <- function(id, sample) {
+singleImageServer <- function(id, sample, title = NULL) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
-      output$path <- shiny::renderText({
-        req(sample()$datapath)
-        basename(sample()$datapath)
+      output$title <- shiny::renderText({
+        if (!is.null(title)){
+          title
+        } else {
+          req(sample()$datapath)
+          basename(sample()$datapath)
+        }
       })
       
       output$image <- shiny::renderImage({
