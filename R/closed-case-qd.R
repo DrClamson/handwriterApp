@@ -32,7 +32,7 @@ caseQDBodyUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
     shinycssloaders::withSpinner(shiny::uiOutput(ns("qd_results"))),
-    currentImageUI(ns("qd"))
+    selectImageUI(ns("qd"))
   )
 }
 
@@ -77,7 +77,7 @@ caseQDServer <- function(id, global) {
         ns <- session$ns
         shiny::req(global$analysis)
         shiny::tagList(
-          shiny::h3("Evaluation Results"),
+          shiny::h1("EVALUATION RESULTS"),
           shiny::HTML("<p>The table shows the posterior probability of writership for each questioned document and each known writer. Each
                       column corresponds to a questioned document and each row corresponds to a known writer. The posterior probability of 
                       writership in each column sums to 100%.</p>"),
@@ -86,7 +86,7 @@ caseQDServer <- function(id, global) {
         )
       })
       
-      currentImageServer("qd", global, "questioned")
+      selectImageServer("qd", global, "questioned")
     }
   )
 }

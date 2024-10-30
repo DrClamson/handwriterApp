@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-innerUI <- function(id) {
+closedUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::sidebarLayout(shiny::tags$div(id=ns("my-sidebar"),
@@ -26,11 +26,11 @@ innerUI <- function(id) {
                                                                shiny::conditionalPanel(condition="input.screen == 'Welcome'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
-                                                                                                  format_sidebar(title = "GET STARTED",
-                                                                                                                 help_text = "Start using handwriter to compare questioned documents to known writing samples. See a demo with 
-                                                                                                                 example data or simulate casework and analyze your handwriting samples."),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_button"), "Demo")), 
-                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("case_button"), align="right", "Casework Simulation")))
+                                                                                                  format_sidebar(title = "COMPARE QUESTIONED DOCUMENTS TO KNOWN WRITING SAMPLES",
+                                                                                                                 help_text = "Compare one or more questioned documents to known writing samples from each writer in a group of potential writers. The questioned document(s) MUST have been written by someone in this group.
+                                                                                                                 See a demo with example data or use your own handwriting samples."),
+                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_button"), "Demo")),
+                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("case_button"), align="right", "Use Your Own Samples")))
                                                                                        ),
                                                                ),
                                                                
@@ -147,14 +147,6 @@ innerUI <- function(id) {
                                               # Welcome Display ----
                                               shiny::tabPanel(id = ns("Welcome"),
                                                               title = "Welcome",
-                                                              shiny::h3("WELCOME TO HANDWRITER!"),
-                                                              shiny::p("Unlock the power of handwriting analysis with handwriter. 
-                                                This tool is designed to assist forensic examiners by analyzing handwritten 
-                                                documents against a closed set of potential writers. It determines the probability 
-                                                that each writer wrote the document. Whether you are a forensic document examiner, 
-                                                legal professional, academic, or simply curious about how statistics are applied to 
-                                                handwriting, handwriter provides an automated way to evaluate handwriting samples."),
-                                                              shiny::br(),
                                               ),
                                               
                                               # Demo Display ----
@@ -213,7 +205,7 @@ innerUI <- function(id) {
 }
 
 
-innerServer <- function(id){
+closedServer <- function(id){
   shiny::moduleServer(
     id,
     function(input, output, session){
@@ -283,22 +275,21 @@ innerServer <- function(id){
       # Reset storage
       shiny::observeEvent(input$demo_button, {
         reset_app(global)
-        delete_demo_dir()
+        # delete_demo_dir()
       })
       
       # Reset storage
       shiny::observeEvent(input$case_button, {
         reset_app(global)
-        delete_demo_dir()
+        # delete_demo_dir()
       })
       
       # Reset storage and empty temp > demo directory
       shiny::observeEvent(input$demo_qd_next_button, {
         reset_app(global)
-        delete_demo_dir()
+        # delete_demo_dir()
       })
       
-
       
       # DEMO PREVIEW ----
       demoPreviewServer('demo_preview', global)

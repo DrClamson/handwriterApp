@@ -43,7 +43,9 @@ handwriterApp <- function(...){
   ui <- shiny::shinyUI({
     shiny::fluidPage(title = "handwriter",
                      shinyjs::useShinyjs(),
+                     # use styles.css
                      shiny::includeCSS(system.file("extdata", "styles.css", package = "handwriterApp")),
+                     # use Montserrat
                      shiny::tags$head(
                        shiny::tags$link(
                          href = "https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900|Ubuntu:400,500,700",
@@ -51,42 +53,128 @@ handwriterApp <- function(...){
                          type = "text/css"
                        ),
                      ),
+                     
+                     # navigation bar
                      shiny::tags$div(id="app-container",
+                                     # header
                                      shiny::fluidRow(
                                        shiny::column(width = 4, shiny::tags$a(target = "_blank", href="https://forensicstats.org", shiny::tags$img(src = "images/CSAFE_Tools_handwriter_cropped.png", height="100px"))),
                                        shiny::column(width = 4, shiny::br()),
                                        shiny::column(width = 4, shiny::tags$a(target = "_blank", href="https://forensicstats.org", shiny::tags$img(src = "images/handwriter_graphic.png", height="100px"), class="right-float")),
                                      ),
+                                     
                                      shiny::tags$div(id="main-content",
-                                                     shiny::navbarPage(
-                                                       shiny::tags$script(shiny::HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><a href=\"https://forensicstats.org\"><img src=\"images/CSAFE-Tools_Stacked_white_cropped.png\" alt=\"alt\" style=\"float:right;width:117px;height:50px;padding-right:5px;\"> </a></div>'); console.log(header)")),
-                                                       shiny::tabPanel(
-                                                         "Home",
-                                                         innerUI('inner1'),
-                                                       ),
-                                                       shiny::tabPanel( 
-                                                         "About",
-                                                         shiny::includeHTML(system.file(file.path("extdata", "HTML"), "about.HTML", package = "handwriterApp"))
-                                                       ),
-                                                       shiny::tabPanel(
-                                                         "Contact",
-                                                         shiny::includeHTML(system.file(file.path("extdata", "HTML"), "contact.HTML", package = "handwriterApp"))
-                                                       )
+                                                     shiny::navbarPage(id="my-navbar",
+                                                                       
+                                                                       # CSAFE Tools logo on navigation bar
+                                                                       shiny::tags$script(shiny::HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><a href=\"https://forensicstats.org\"><img src=\"images/CSAFE-Tools_Stacked_white_cropped.png\" alt=\"alt\" style=\"float:right;width:117px;height:50px;padding-right:5px;\"> </a></div>'); console.log(header)")),
+                                                                       
+                                                                       # navigation bar
+                                                                       shiny::tabPanel(
+                                                                         "Home",
+                                                                         # NOTE: Because the actionButtons on the home page are placed inside cards, 
+                                                                         # placing the home page inside a module becomes quite complicated.
+                                                                         shiny::tags$div(id="indent-home",
+                                                                                         shiny::fluidPage(
+                                                                                           shiny::tags$h1("WELCOME TO HANDWRITER"),
+                                                                                           shiny::tags$body(
+                                                                                             shiny::tags$p("Unlock the power of handwriting analysis with handwriter. 
+                                                                                                           This tool is designed to assist forensic examiners by analyzing 
+                                                                                                           handwritten documents. Whether you are a forensic document examiner, legal professional, 
+                                                                                                           academic, or simply curious about how statistics are applied to handwriting, 
+                                                                                                           handwriter provides an automated way to evaluate handwriting samples."),
+                                                                                             shiny::tags$p("Say something here that the app is only for testing and not casework?"),
+                                                                                             shiny::br(),
+                                                                                             shiny::tags$h2("Choose the scenario that best describes your handwriting samples")), 
+                                                                                           
+                                                                                           bslib::layout_column_wrap(
+                                                                                             width = 1/3,
+                                                                                             bslib::card(class="scenario",
+                                                                                                         bslib::card_header(shiny::tags$h2("SCENARIO 1"),
+                                                                                                                            shiny::tags$body(shiny::tags$i("Compare a questioned document to another handwritten document."))),
+                                                                                                         shiny::hr(),
+                                                                                                         bslib::card_body(class = "scenario-body",
+                                                                                                                          shiny::tags$p(shiny::tags$b("Requirements:")),
+                                                                                                                          shiny::tags$ul(shiny::tags$li(shiny::tags$b("Questioned Document:"), "From an unknown writer."), 
+                                                                                                                                         shiny::tags$li(shiny::tags$b("Comparison Document:"), "From a known or unknown writer.")),
+                                                                                                                          shiny::tags$p(shiny::tags$b("Result:"), "A score-based likelihood ratio that expresses the support of the evidence in favor of the samples having been written by the same writer or different writers.")),
+                                                                                                         shiny::hr(),
+                                                                                                         shiny::tags$div(
+                                                                                                           class = "text-center",  # Bootstrap class for centering
+                                                                                                           shiny::actionButton(class = "scenario-btn",
+                                                                                                                               "open_button", "Scenario 1", width = "50%")
+                                                                                                         )
+                                                                                             ),
+                                                                                             bslib::card(class="scenario",
+                                                                                                         bslib::card_header(shiny::tags$h2("SCENARIO 2"),
+                                                                                                                            shiny::tags$body(shiny::tags$i("Compare a questioned document to a group of known handwriting samples."))),
+                                                                                                         shiny::hr(),
+                                                                                                         bslib::card_body(shiny::tags$p(shiny::tags$b("Requirements:")),
+                                                                                                                          shiny::tags$ul(shiny::tags$li(shiny::tags$b("Questioned Document:"), "From an unknown author."), 
+                                                                                                                                         shiny::tags$li(shiny::tags$b("Additional Documents:"), "Three known writing samples from each writer in a group of potential writers. The questioned document MUST have been written by someone in this group")),
+                                                                                                                          shiny::tags$p(shiny::tags$b("Result:"), "The posterior probability that each potential writer wrote the questioned document.")),
+                                                                                                         shiny::hr(),
+                                                                                                         shiny::tags$div(
+                                                                                                           class = "text-center",  # Bootstrap class for centering
+                                                                                                           shiny::actionButton(class = "scenario-btn",
+                                                                                                                               "closed_button", "Scenario 2", width = "50%")
+                                                                                                         )
+                                                                                             ),
+                                                                                           ),
+                                                                                           shiny::br(),
+                                                                                         )
+                                                                         )
+                                                                       ),
+                                                                       
+                                                                       shiny::tabPanel(
+                                                                         "Scenario 1",
+                                                                         openUI('open1'),
+                                                                       ),
+                                                                       
+                                                                       shiny::tabPanel(
+                                                                         "Scenario 2",
+                                                                         closedUI('closed1'),
+                                                                       ),
+                                                                       
+                                                                       shiny::tabPanel( 
+                                                                         "About",
+                                                                         shiny::includeHTML(system.file(file.path("extdata", "HTML"), "about.HTML", package = "handwriterApp"))
+                                                                       ),
+                                                                       
+                                                                       shiny::tabPanel(
+                                                                         "Contact",
+                                                                         shiny::includeHTML(system.file(file.path("extdata", "HTML"), "contact.HTML", package = "handwriterApp"))
+                                                                       )
                                                      ))),
-                     # Footer
+                     # footer
                      shiny::tags$div(id="global-footer",
-                              shiny::fluidRow(
-                                shiny::column(width = 4, shiny::tags$img(src="images/csafe_tools_blue_h.png", alt="Logo", height = "40px")),
-                                shiny::column(width = 4, shiny::tags$p("195 Durham Center, 613 Morrill Road, Ames, Iowa, 50011")),
-                                shiny::column(width = 4, shiny::tags$p("(C) 2023 | All Rights Reserved", class="right-float"))
-                              )
+                                     shiny::fluidRow(
+                                       shiny::column(width = 4, shiny::tags$img(src="images/csafe_tools_blue_h.png", alt="Logo", height = "40px")),
+                                       shiny::column(width = 4, shiny::tags$p("195 Durham Center, 613 Morrill Road, Ames, Iowa, 50011")),
+                                       shiny::column(width = 4, shiny::tags$p("(C) 2023 | All Rights Reserved", class="right-float"))
+                                     )
                      )
     )  
   })
   
   # SERVER ------------------------------------------------------------------
   server <- function(input, output, session) {
-    innerServer('inner1')
+    
+    # NOTE: Because the actionButtons on the home page are placed inside cards, 
+    # placing the home page inside a module becomes quite complicated.
+    
+    # Switch to Scenario 1 tab
+    observeEvent(input$open_button, {
+      updateNavbarPage(session, "my-navbar", selected = "Scenario 1")
+    })
+    
+    # Switch to Scenario 2 tab
+    observeEvent(input$closed_button, {
+      updateNavbarPage(session, "my-navbar", selected = "Scenario 2")
+    })
+    
+    openServer('open1')
+    closedServer('closed1')
   }
   
   shiny::shinyApp(ui, server, ...)

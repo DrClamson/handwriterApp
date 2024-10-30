@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-currentImageUI <- function(id) {
+selectImageUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::uiOutput(ns("current_select")),
@@ -23,7 +23,7 @@ currentImageUI <- function(id) {
   )
 }
 
-currentImageServer <- function(id, global, type) {
+selectImageServer <- function(id, global, type) {
   shiny::moduleServer(
     id,
     function(input, output, session) { 
@@ -49,7 +49,7 @@ currentImageServer <- function(id, global, type) {
         shiny::req(local$current_paths)
         local$current_names <- list_names_in_named_vector(local$current_paths)
         shiny::tagList(
-          shiny::h3("Supporting Materials"),
+          shiny::h1("SUPPORTING MATERIALS"),
           shiny::selectInput(ns("current_select"), 
                              label = switch(type, "model" = "Choose a Known Writing Sample", "questioned" = "Choose a Questioned Document"), 
                              choices = local$current_names),
@@ -114,10 +114,9 @@ currentImageServer <- function(id, global, type) {
                             shiny::plotOutput(ns("current_nodes"))
             ),
             shiny::tabPanel("Writer Profile",
-                            shiny::HTML("<p>The key idea behind handwriter is that the rate at which a writer produces 
-                            different types of graphs, called <i>clusters</i>, serves as an estimate of a <i>writer profile</i>. Handwriter groups graphs 
-                            with similar shapes into <i>clusters</i> and counts the number of graphs from a document 
-                            that fall into each cluster.</p>"),
+                            shiny::HTML("<p>Handwriter groups graphs with similar shapes into <i>clusters</i> and counts the number of graphs from a document 
+                      that fall into each cluster. The rate at which a writer produces 
+                      graphs in each cluster serves as an estimate of a <i>writer profile</i>.</p>"),
                             shiny::plotOutput(ns("current_profile"))
             )
           )

@@ -51,6 +51,7 @@ create_dir <- function(folder){
   }
 }
 
+
 #' Delete the Demo Folder
 #' 
 #' Delete the demo folder and its contents from the temporary directory.
@@ -60,6 +61,31 @@ create_dir <- function(folder){
 #' @noRd
 delete_demo_dir <- function() {
   unlink(file.path(tempdir(), "demo"), recursive = TRUE)
+}
+
+
+#' Fix Name of Uploaded File
+#'
+#' Shiny automatically assigns uploaded files a new file path and file name in
+#' the temp directory. This function keeps the temporary file path but renames
+#' the file to the original file name.
+#'
+#' @param f
+#'
+#' @return Uploaded object
+#'
+#' @noRd
+fix_upload_name <- function(f){
+  # temp file path and file name assigned by shiny. File name is NOT the
+  # original file name.
+  temp_path <- f$datapath
+  # change file name in temp file path to original file name
+  f$datapath <- file.path(dirname(temp_path), f$name)
+  
+  # rename temporary file
+  file.rename(temp_path, f$datapath)
+  
+  return(f)
 }
 
 #' List Handwriting Samples in Folder
@@ -78,6 +104,7 @@ list_docs <- function(main_dir, type = "model", filepaths = TRUE){
   docs <- list.files(file.path(main_dir, "data", paste0(type, "_docs")), pattern = ".png", full.names = filepaths)
   return(docs)
 }
+
 
 #' Get the Filenames of the Questioned Documents
 #' 

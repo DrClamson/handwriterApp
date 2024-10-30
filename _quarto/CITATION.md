@@ -3,11 +3,9 @@
 ```verbatim
 To cite package ‘handwriterApp’ in publications use:
 
-  Iowa State University of Science and Technology on behalf of its
-  Center for Statistics and Applications in Forensic Evidence,
-  Reinders S (2024). _handwriterApp: A 'shiny' Application for
-  Handwriting Analysis_. R package version 1.0.1,
-  <https://CRAN.R-project.org/package=handwriterApp>.
+  Iowa State University of Science and Technology on behalf of its Center for Statistics and Applications in
+  Forensic Evidence, Reinders S (2024). _handwriterApp: A 'shiny' Application for Handwriting Analysis_. R package
+  version 1.0.1, <https://CRAN.R-project.org/package=handwriterApp>.
 
 A BibTeX entry for LaTeX users is
 
