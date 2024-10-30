@@ -72,8 +72,8 @@ homeServer <- function(id){
   shiny::moduleServer(
     id,
     function(input, output, session){
-      observeEvent(input$open_button, {
-        updateNavbarPage(session, "my-navbar", selected = "Open-Set")
+      shiny::observeEvent(input$open_button, {
+        shiny::updateNavbarPage(session, "my-navbar", selected = "Open-Set")
       })
     }
   )

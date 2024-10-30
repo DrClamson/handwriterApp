@@ -15,7 +15,9 @@ LazyData: true
 Imports: 
     bslib,
     dplyr,
+    ggplot2,
     handwriter,
+    handwriterRF,
     magick,
     magrittr,
     rmarkdown,

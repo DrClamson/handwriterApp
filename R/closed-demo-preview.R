@@ -51,14 +51,14 @@ demoPreviewServer <- function(id, global) {
       
       # create a reactive for each model doc
       model_reactives <- lapply(model_docs, function(doc) {
-        reactive({
+        shiny::reactive({
           list(datapath = doc)
         })
       })
       
       # create a reactive for each questioned doc
       questioned_reactives <- lapply(questioned_docs, function(doc) {
-        reactive({
+        shiny::reactive({
           list(datapath = doc)
         })
       })

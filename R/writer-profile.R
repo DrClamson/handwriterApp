@@ -20,7 +20,7 @@ writerProfileServer <- function(id, sample1, sample2, clusters) {
     id,
     function(input, output, session) {
       output$path <- shiny::renderText({
-        req(sample1()$datapath, sample2()$datapath)
+        shiny::req(sample1()$datapath, sample2()$datapath)
         paste(basename(sample1()$datapath), "and", basename(sample2()$datapath))
       })
       
