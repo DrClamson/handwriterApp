@@ -1,12 +1,12 @@
 # Welcome
 
 
-Handwriter is designed to assist forensic examiners by analyzing
-handwritten documents against a *closed set* of potential writers. It
-determines the probability that each writer wrote the document. Whether
-you are a forensic document examiner, legal professional, academic, or
-simply curious about how statistics are applied to handwriting,
-handwriter provides an automated way to evaluate handwriting samples.
+Unlock the power of handwriting analysis with handwriter. This tool is
+designed to assist forensic examiners by analyzing handwritten
+documents. Whether you are a forensic document examiner, legal
+professional, academic, or simply curious about how statistics are
+applied to handwriting, handwriter provides an automated way to evaluate
+handwriting samples.
 
 # Quick Start
 
@@ -31,7 +31,10 @@ Install the handwriterApp R package. Open RStudio and navigate to the
 console window and type
 
 ``` r
+options(timeout = 100000)
 install.packages("handwriterApp")
+install.packages("devtools")
+devtools::install_github("CSAFE-ISU/handwriterRF")
 ```
 
 ### Launch the App
@@ -39,6 +42,7 @@ install.packages("handwriterApp")
 Open RStudio, navigate to the console window, and type:
 
 ``` r
+library(handwriterRF)
 library(handwriterApp)
 handwriterApp()
 ```
@@ -46,4 +50,4 @@ handwriterApp()
 In the pop-up window, click **Open in Browser**. If you use the app in
 the pop-up window instead of in a browser, some links will not work.
 
-Click **Use Your Own Samples** and follow the instructions in the app.
+Follow the instructions to analyze handwriting samples.

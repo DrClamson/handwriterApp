@@ -4,7 +4,7 @@
     "href": "CITATION.html",
     "title": "Citation",
     "section": "",
-    "text": "Citation\nTo cite package ‘handwriterApp’ in publications use:\n\n  Iowa State University of Science and Technology on behalf of its Center for Statistics and Applications in\n  Forensic Evidence, Reinders S (2024). _handwriterApp: A 'shiny' Application for Handwriting Analysis_. R package\n  version 1.0.1, &lt;https://CRAN.R-project.org/package=handwriterApp&gt;.\n\nA BibTeX entry for LaTeX users is\n\n  @Manual{,\n    title = {handwriterApp: A 'shiny' Application for Handwriting Analysis},\n    author = {{Iowa State University of Science and Technology on behalf of its Center for Statistics and Applications in Forensic Evidence} and Stephanie Reinders},\n    year = {2024},\n    note = {R package version 1.0.1},\n    url = {https://CRAN.R-project.org/package=handwriterApp},\n  }"
+    "text": "Citation\nTo cite package ‘handwriterApp’ in publications use:\n\n  Iowa State University of Science and Technology on behalf of its Center for Statistics and Applications in\n  Forensic Evidence, Reinders S (????). _handwriterApp: A 'shiny' Application for Handwriting Analysis_. R package\n  version 1.0.1.9000, &lt;https://github.com/CSAFE-ISU/handwriterApp&gt;.\n\nA BibTeX entry for LaTeX users is\n\n  @Manual{,\n    title = {handwriterApp: A 'shiny' Application for Handwriting Analysis},\n    author = {{Iowa State University of Science and Technology on behalf of its Center for Statistics and Applications in Forensic Evidence} and Stephanie Reinders},\n    note = {R package version 1.0.1.9000},\n    url = {https://github.com/CSAFE-ISU/handwriterApp},\n  }"
   },
   {
     "objectID": "NEWS.html",
@@ -74,7 +74,7 @@
     "href": "index.html",
     "title": "Welcome",
     "section": "",
-    "text": "Handwriter is designed to assist forensic examiners by analyzing handwritten documents against a closed set of potential writers. It determines the probability that each writer wrote the document. Whether you are a forensic document examiner, legal professional, academic, or simply curious about how statistics are applied to handwriting, handwriter provides an automated way to evaluate handwriting samples."
+    "text": "Unlock the power of handwriting analysis with handwriter. This tool is designed to assist forensic examiners by analyzing handwritten documents. Whether you are a forensic document examiner, legal professional, academic, or simply curious about how statistics are applied to handwriting, handwriter provides an automated way to evaluate handwriting samples."
   },
   {
     "objectID": "index.html#view-a-demo",
@@ -88,6 +88,6 @@
     "href": "index.html#use-your-own-handwriting-samples",
     "title": "Welcome",
     "section": "Use Your Own Handwriting Samples",
-    "text": "Use Your Own Handwriting Samples\n\nInstallation\nHandwriter requires R, RStudio IDE, and JAGS.\n\nInstall R and RStudio from POSIT\nInstall JAGS from SourceForge\n\nInstall the handwriterApp R package. Open RStudio and navigate to the console window and type\n\ninstall.packages(\"handwriterApp\")\n\n\n\nLaunch the App\nOpen RStudio, navigate to the console window, and type:\n\nlibrary(handwriterApp)\nhandwriterApp()\n\nIn the pop-up window, click Open in Browser. If you use the app in the pop-up window instead of in a browser, some links will not work.\nClick Use Your Own Samples and follow the instructions in the app."
+    "text": "Use Your Own Handwriting Samples\n\nInstallation\nHandwriter requires R, RStudio IDE, and JAGS.\n\nInstall R and RStudio from POSIT\nInstall JAGS from SourceForge\n\nInstall the handwriterApp R package. Open RStudio and navigate to the console window and type\n\noptions(timeout = 100000)\ninstall.packages(\"handwriterApp\")\ninstall.packages(\"devtools\")\ndevtools::install_github(\"CSAFE-ISU/handwriterRF\")\n\n\n\nLaunch the App\nOpen RStudio, navigate to the console window, and type:\n\nlibrary(handwriterRF)\nlibrary(handwriterApp)\nhandwriterApp()\n\nIn the pop-up window, click Open in Browser. If you use the app in the pop-up window instead of in a browser, some links will not work.\nFollow the instructions to analyze handwriting samples."
   }
 ]
