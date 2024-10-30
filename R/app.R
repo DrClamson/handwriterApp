@@ -83,7 +83,6 @@ handwriterApp <- function(...){
                                                                                                            handwritten documents. Whether you are a forensic document examiner, legal professional, 
                                                                                                            academic, or simply curious about how statistics are applied to handwriting, 
                                                                                                            handwriter provides an automated way to evaluate handwriting samples."),
-                                                                                             shiny::tags$p("Say something here that the app is only for testing and not casework?"),
                                                                                              shiny::br(),
                                                                                              shiny::tags$h2("Choose the scenario that best describes your handwriting samples")), 
                                                                                            

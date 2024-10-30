@@ -105,7 +105,7 @@
 #indent a:visited, #indent-home a:visited, .tab-pane a:visited,
 #indent a:hover, #indent-home a:hover, .tab-pane a:hover,
 #indent a:active, #indent-home a:active, .tab-pane a:active {
-    color: var(--lt-grey); /* Change to your desired color */
+    color: var(--lt-blue); /* Change to your desired color */
 }
 
 /* Links for sidebar */
@@ -116,7 +116,7 @@
 .shiny-panel-conditional a:visited,
 .shiny-panel-conditional a:hover,
 .shiny-panel-conditional a:active {
-  color: var(--dk-grey);
+  color: var(--lt-blue);
 }
 
 
