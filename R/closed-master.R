@@ -136,7 +136,7 @@ closedUI <- function(id) {
                                                                                                   format_sidebar(title = "REPORT",
                                                                                                                  help_text = "Download the report."),
                                                                                                   shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("case_report_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 9, align = "right", caseReportSidebarUI(ns('case_report'))))
+                                                                                                                  shiny::column(width = 9, align = "right", reportSidebarUI(ns('case_report'))))
                                                                                        ),
                                                                ),
                                                              ))),
@@ -310,7 +310,19 @@ closedServer <- function(id){
       caseQDServer('case_qd', global)
       
       # REPORT ----
-      caseReportServer('case_report', global)
+      
+      # Set up parameters to pass to Rmd document
+      params <- reactive({
+        x <- list(
+        main_dir = global$main_dir,
+        analysis = global$analysis,
+        model = global$model
+        )
+        return(x)
+        }
+      )
+      
+      reportServer('case_report', params = params, report_template = "report_pdf.Rmd")
       
     }
   )
