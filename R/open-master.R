@@ -68,7 +68,7 @@ openServer <- function(id){
     function(input, output, session){
       
       # ON / OFF BUTTON FOR RESULTS DISPLAY ----
-      display <- reactiveValues(show = FALSE)
+      display <- shiny::reactiveValues(show = FALSE)
       
       # graphs
       graphs <- shiny::reactiveValues(sample1 = NULL,
@@ -92,7 +92,7 @@ openServer <- function(id){
       }) %>% 
         shiny::bindEvent(input$open_upload1)
       
-      sample2 <- reactive({
+      sample2 <- shiny::reactive({
         cat(file=stderr(), "sample2 reactive \n")
         
         # turn off slr display
