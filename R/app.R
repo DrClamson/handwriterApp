@@ -82,12 +82,26 @@ handwriterApp <- function(...){
                                                                                                            This tool is designed to assist forensic examiners by analyzing 
                                                                                                            handwritten documents. Whether you are a forensic document examiner, legal professional, 
                                                                                                            academic, or simply curious about how statistics are applied to handwriting, 
-                                                                                                           handwriter provides an automated way to evaluate handwriting samples."),
-                                                                                             shiny::br(),
-                                                                                             shiny::tags$h2("Choose the scenario that best describes your handwriting samples")), 
-                                                                                           
+                                                                                                           handwriter provides an automated way to evaluate handwriting samples.")), 
+                                                                                           shiny::br(),
+                                                                                           shiny::actionButton(class = "scenario-btn", "get_started", "Get Started"),
+                                                                                           shiny::br(),
+                                                                                           shiny::br()
+                                                                                         )
+                                                                         )
+                                                                       ),
+                                                                       
+                                                                       shiny::tabPanel(
+                                                                         "Scenarios",
+                                                                         # NOTE: Because the actionButtons on the home page are placed inside cards, 
+                                                                         # placing the home page inside a module becomes quite complicated.
+                                                                         shiny::tags$div(id="indent-home",
+                                                                                         shiny::fluidPage(
+                                                                                           shiny::tags$h1("SCENARIOS"),
+                                                                                           shiny::tags$h2("Choose the scenario that best describes your handwriting samples"),
+
                                                                                            bslib::layout_column_wrap(
-                                                                                             width = 1/3,
+                                                                                             width = 1/2,
                                                                                              bslib::card(class="scenario",
                                                                                                          bslib::card_header(shiny::tags$h2("SCENARIO 1"),
                                                                                                                             shiny::tags$body(shiny::tags$i("Compare a questioned document to another handwritten document."))),
@@ -170,6 +184,16 @@ handwriterApp <- function(...){
     
     # NOTE: Because the actionButtons on the home page are placed inside cards, 
     # placing the home page inside a module becomes quite complicated.
+    
+    # Switch to Scenarios tab
+    shiny::observeEvent(input$get_started, {
+      shiny::updateNavbarPage(session, "my-navbar", selected = "Scenarios")
+    })
+    
+    # Switch to Scenario 1 tab
+    shiny::observeEvent(input$open_button, {
+      shiny::updateNavbarPage(session, "my-navbar", selected = "Scenario 1")
+    })
     
     # Switch to Scenario 1 tab
     shiny::observeEvent(input$open_button, {

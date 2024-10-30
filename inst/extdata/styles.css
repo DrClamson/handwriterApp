@@ -181,7 +181,10 @@
   background-color: white;
   border: 1px solid var(--dk-grey);
   padding: 14px;
-  margin: 25px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 15px;
+  margin-bottom: 15px;
   border-radius: 0.5rem;
 }
 
