@@ -1,0 +1,77 @@
+---
+title: "Writership Analysis Report"
+output:
+  bookdown::pdf_document2:
+    extra_dependencies: ["flafter"]
+params:
+  project_dir: NA
+  graphs1: NA
+  graphs2: NA
+  clusters1: NA
+  clusters2: NA
+---
+
+```{r setup, include=FALSE}
+library(handwriter)
+library(magick)
+# knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+```
+
+# HANDWRITING SAMPLES
+
+```{r docs, echo=FALSE}
+qd_paths <- list.files(file.path(params$project_dir, "docs"))
+knitr::kable(
+  data.frame("File" = basename(qd_paths)), 
+  booktabs = TRUE,
+  caption = "Handwriting samples"
+)
+```
+
+# HYPOTHESES
+
+Handwriter addresses two hypotheses:
+
+- $H_p:$ The two documents were written by the same writer.
+- $H_d:$ The two documents were written by different writers.
+
+# LIMITATIONS
+
+Handwriter assumes that the documents were written in the writer's natural handwriting and that the writer did not attempt to disguise their handwriting nor forge someone else's handwriting.
+
+Handwriter has been tested on handwriting examples from publicly available handwriting databases, where volunteers were asked to copy a writing prompt in their natural handwriting. Error rates on other types of handwriting samples are unknown.
+
+# WRITER PROFILES
+
+## Graphs
+Handwriter processes handwriting by converting the writing to black and white, thinning the writing to 1 pixel in width, and following a set of rules to break the writing into component shapes called *graphs*. Graphs capture shapes, not necessarily individual letters. Graphs might be a part of a letter or contain parts of multiple letters.
+
+```{r graphs1, echo=FALSE, fig.cap="Graphs from the first document.", fig.align="center"}
+handwriter::plot_graphs(params$graphs1, ncol=5)
+```
+
+```{r graphs2, echo=FALSE, fig.cap="Graphs from the second document.", fig.align="center"}
+handwriter::plot_graphs(params$graphs2, ncol=5)
+```
+
+## Clusters
+
+Handwriter use 40 exemplar shapes called *clusters*. Again, these shapes are not necessarily individual letters. They might be part of a letter or contain parts of multiple letters. For more information on how these 40 clusters were created, see [https://onlinelibrary.wiley.com/doi/abs/10.1002/sam.11488](A clustering method for graphical handwriting components and statistical writership analysis).
+
+```{r template, echo=FALSE, fig.cap="Cluster template with 40 clusters.", out.width = '100%'}
+knitr::include_graphics(system.file("extdata", "images", "template.png", package = "handwriterApp"))
+```
+
+## Writer Profiles
+
+For each handwriting sample, handwriter assigns each graph to the cluster with the most similar shape. Then for each document, handwriter calculates the proportion of graphs assigned to each cluster. The rate at which a writer produces graphs in each cluster serves as an estimate of a *writer profile*.
+
+```{r profiles, echo=FALSE, fig.cap="Writer profiles estimated from the two documents.", out.width = '100%'}
+df <- rbind(params$clusters1, params$clusters2)
+        
+counts <- handwriter::get_cluster_fill_counts(df)
+rates <- handwriterRF::get_cluster_fill_rates(counts)
+        
+plot_writer_profiles(rates)
+```
+
