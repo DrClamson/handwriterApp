@@ -136,15 +136,24 @@ handwriterApp <- function(...){
                                                                          closedUI('closed1'),
                                                                        ),
                                                                        
-                                                                       shiny::tabPanel( 
-                                                                         "About",
-                                                                         shiny::includeHTML(system.file(file.path("extdata", "HTML"), "about.HTML", package = "handwriterApp"))
-                                                                       ),
-                                                                       
-                                                                       shiny::tabPanel(
-                                                                         "Contact",
-                                                                         shiny::includeHTML(system.file(file.path("extdata", "HTML"), "contact.HTML", package = "handwriterApp"))
+                                                                       shiny::navbarMenu("More",
+                                                                                         shiny::tabPanel( 
+                                                                                           "About",
+                                                                                           shiny::includeHTML(system.file(file.path("extdata", "HTML"), "about.HTML", package = "handwriterApp"))
+                                                                                         ),
+                                                                                         
+                                                                                         shiny::tabPanel(
+                                                                                           "Contact",
+                                                                                           shiny::includeHTML(system.file(file.path("extdata", "HTML"), "contact.HTML", package = "handwriterApp"))
+                                                                                         ),
+                                                                                         
+                                                                                         shiny::tabPanel(
+                                                                                           "License",
+                                                                                           shiny::includeHTML(system.file(file.path("extdata", "HTML"), "license.HTML", package = "handwriterApp"))
+                                                                                         )
                                                                        )
+                                                                       
+                                                                       
                                                      ))),
                      # footer
                      shiny::tags$div(id="global-footer",
