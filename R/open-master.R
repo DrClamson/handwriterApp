@@ -68,7 +68,7 @@ openServer <- function(id){
     function(input, output, session){
       
       # ON / OFF BUTTON FOR RESULTS DISPLAY ----
-      display <- reactiveValues(show = FALSE)
+      display <- shiny::reactiveValues(show = FALSE)
       
       # graphs
       graphs <- shiny::reactiveValues(sample1 = NULL,
@@ -79,7 +79,7 @@ openServer <- function(id){
                                         sample2 = NULL)
       
       # LOAD ----
-      sample1 <- reactive({
+      sample1 <- shiny::reactive({
         cat(file=stderr(), "sample1 reactive \n")
         
         # turn off slr display
@@ -92,7 +92,7 @@ openServer <- function(id){
       }) %>% 
         shiny::bindEvent(input$open_upload1)
       
-      sample2 <- reactive({
+      sample2 <- shiny::reactive({
         cat(file=stderr(), "sample2 reactive \n")
         
         # turn off slr display
@@ -105,15 +105,15 @@ openServer <- function(id){
       }) %>% 
         shiny::bindEvent(input$open_upload2)
       
-      template_plot <- reactive({
+      template_plot <- shiny::reactive({
         x <- list()
         x$datapath <- system.file(file.path("extdata", "images", "template.png"), package = "handwriterApp")
         return(x)
       })
       
       # calculate slr
-      slr_df <- reactive({
-        req(sample1(), sample2())
+      slr_df <- shiny::reactive({
+        shiny::req(sample1(), sample2())
         
         cat(file=stderr(), "slr_df reactive \n")
         
@@ -149,7 +149,7 @@ openServer <- function(id){
       # RENDER ----
       # display handwriting samples
       output$samples_display <- shiny::renderUI({
-        req(sample1(), sample2())
+        shiny::req(sample1(), sample2())
         ns <- session$ns
         
         cat(file=stderr(), "render samples UI \n")
@@ -164,7 +164,7 @@ openServer <- function(id){
       
       # display hypotheses
       output$hypotheses_display <- shiny::renderUI({
-        req(sample1(), sample2())
+        shiny::req(sample1(), sample2())
         ns <- session$ns
         
         cat(file=stderr(), "render hypotheses UI \n")
@@ -185,7 +185,7 @@ openServer <- function(id){
       
       # display limitations
       output$limitations_display <- shiny::renderUI({
-        req(sample1(), sample2())
+        shiny::req(sample1(), sample2())
         ns <- session$ns
         
         cat(file=stderr(), "render limiations UI \n")
@@ -206,7 +206,7 @@ openServer <- function(id){
       
       # display writer profiles
       output$profiles_display <- shiny::renderUI({
-        req(clusters$sample1, clusters$sample2, display$show)
+        shiny::req(clusters$sample1, clusters$sample2, display$show)
         ns <- session$ns
         
         cat(file=stderr(), "render writer profiles UI \n")
@@ -237,7 +237,7 @@ openServer <- function(id){
       
       # display similarity score
       output$score <- shiny::renderText({
-        req(slr_df(), display$show)
+        shiny::req(slr_df(), display$show)
         
         cat(file=stderr(), "render score \n")
         slr_df()$score
@@ -245,7 +245,7 @@ openServer <- function(id){
       
       # display slr
       output$slr <- shiny::renderText({
-        req(slr_df(), display$show)
+        shiny::req(slr_df(), display$show)
         
         cat(file=stderr(), "render slr \n")
         
@@ -264,14 +264,14 @@ openServer <- function(id){
       
       # display slr interpretation
       output$slr_interpretation <- shiny::renderText({
-        req(slr_df(), display$show)
+        shiny::req(slr_df(), display$show)
         cat(file=stderr(), "render interpretation \n")
         handwriterRF::interpret_slr(slr_df())
       })
 
       # display slr results
       output$slr_display <- shiny::renderUI({
-        req(sample1(), sample2(), slr_df(), display$show)
+        shiny::req(sample1(), sample2(), slr_df(), display$show)
         ns <- session$ns
         
         cat(file=stderr(), "render slr UI \n")
@@ -279,11 +279,11 @@ openServer <- function(id){
         shiny::tagList(
           shiny::h1("COMPARISON RESULTS"),
           shiny::HTML("<p>Handwriter measures the similarity between the two writer profiles using a random forest trained 
-          on handwriting samples from the <a href='https://data.csafe.iastate.edu/HandwritingDatabase/'>CSAFE Handwriting Database</a>. 
-          The result is a <i>similarity score</i> between the two writer profiles. Next, handwriter calculates the likelihood of observing the similarity score if the 'same writer' hypothesis is true and the likelihood 
+                      on handwriting samples from the <a href='https://data.csafe.iastate.edu/HandwritingDatabase/'>CSAFE Handwriting Database</a>. 
+                      The result is a <i>similarity score</i> between the two writer profiles. Next, handwriter calculates the likelihood of observing the similarity score if the 'same writer' hypothesis is true and the likelihood 
                       of observing the similarity score if the 'different writers' hypothesis is true. The <i>score-based likelihood ratio</i> is the ratio of these
                       two likelihoods. For more information, see <cite><a hrer='https://doi.org/10.1002/sam.11566'>Handwriting identification using random forests 
-                      and score‐based likelihood ratios.</a></cite></p>
+                      and score-based likelihood ratios.</a></cite></p>
                       "
                       ),
           shiny::h2("Similarity Score"),
@@ -302,12 +302,12 @@ openServer <- function(id){
       singleImageServer("sample1", sample1)
       singleImageServer("sample2", sample2)
       
-      graphsServer("sample1_graphs", sample1, reactive(graphs$sample1))
-      graphsServer("sample2_graphs", sample2, reactive(graphs$sample2))
+      graphsServer("sample1_graphs", sample1, shiny::reactive(graphs$sample1))
+      graphsServer("sample2_graphs", sample2, shiny::reactive(graphs$sample2))
       
       singleImageServer("template1", template_plot, title = "Clusters")
       
-      writerProfileServer("writer_profiles", sample1, sample2, reactive(clusters))
+      writerProfileServer("writer_profiles", sample1, sample2, shiny::reactive(clusters))
     }
   )
 }

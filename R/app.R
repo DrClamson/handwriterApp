@@ -164,13 +164,13 @@ handwriterApp <- function(...){
     # placing the home page inside a module becomes quite complicated.
     
     # Switch to Scenario 1 tab
-    observeEvent(input$open_button, {
-      updateNavbarPage(session, "my-navbar", selected = "Scenario 1")
+    shiny::observeEvent(input$open_button, {
+      shiny::updateNavbarPage(session, "my-navbar", selected = "Scenario 1")
     })
     
     # Switch to Scenario 2 tab
-    observeEvent(input$closed_button, {
-      updateNavbarPage(session, "my-navbar", selected = "Scenario 2")
+    shiny::observeEvent(input$closed_button, {
+      shiny::updateNavbarPage(session, "my-navbar", selected = "Scenario 2")
     })
     
     openServer('open1')

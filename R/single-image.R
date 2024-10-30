@@ -22,13 +22,13 @@ singleImageServer <- function(id, sample, title = NULL) {
         if (!is.null(title)){
           title
         } else {
-          req(sample()$datapath)
+          shiny::req(sample()$datapath)
           basename(sample()$datapath)
         }
       })
       
       output$image <- shiny::renderImage({
-        req(sample()$datapath)
+        shiny::req(sample()$datapath)
         
         image <- magick::image_read(sample()$datapath)
         tmp <- image %>%

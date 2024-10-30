@@ -39,7 +39,7 @@ graphsServer <- function(id, sample, graphs) {
     id,
     function(input, output, session) {
       output$path <- shiny::renderText({
-        req(sample()$datapath)
+        shiny::req(sample()$datapath)
         basename(sample()$datapath)
       })
       
