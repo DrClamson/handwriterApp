@@ -321,7 +321,8 @@ openServer <- function(id){
           graphs1 = graphs$sample1,
           graphs2 = graphs$sample2,
           clusters1 = clusters$sample1,
-          clusters2 = clusters$sample2
+          clusters2 = clusters$sample2,
+          slr_df = slr_df()
         )
         return(x)
       })
