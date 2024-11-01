@@ -315,7 +315,7 @@ openServer <- function(id){
       writerProfileServer("writer_profiles", sample1, sample2, shiny::reactive(clusters))
       
       # Set up parameters to pass to Rmd document
-      params <- reactive({
+      params <- shiny::reactive({
         x <- list(
           project_dir = file.path(tempdir(), "comparison1"),
           graphs1 = graphs$sample1,

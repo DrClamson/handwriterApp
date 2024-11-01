@@ -312,7 +312,7 @@ closedServer <- function(id){
       # REPORT ----
       
       # Set up parameters to pass to Rmd document
-      params <- reactive({
+      params <- shiny::reactive({
         x <- list(
         main_dir = global$main_dir,
         analysis = global$analysis,
