@@ -2,4 +2,5 @@
 
 export("%>%")
 export(handwriterApp)
+export(plot_writer_profiles)
 importFrom(magrittr,"%>%")

@@ -31,10 +31,13 @@ openUI <- function(id) {
                                                                                                     shiny::br(),
                                                                                                     shiny::helpText("Select two handwritten documents to compare. The files must be PNG images."),
                                                                                                     shiny::fileInput(ns("open_upload1"), "Document 1", accept = ".png", multiple=FALSE),
-                                                                                                    shiny::fileInput(ns("open_upload2"), "Document 2", accept = ".png", multiple=FALSE)
-                                                                                                  ),
-                                                                                                  shiny::hr(),
-                                                                                                  shiny::actionButton(ns("compare"), "Compare Documents", width = "100%")
+                                                                                                    shiny::fileInput(ns("open_upload2"), "Document 2", accept = ".png", multiple=FALSE),
+                                                                                                    shiny::hr(),
+                                                                                                    shiny::actionButton(ns("compare"), "Compare Documents", width = "100%"),
+                                                                                                    shiny::br(),
+                                                                                                    shiny::br(),
+                                                                                                    reportSidebarUI(ns('open_report'))
+                                                                                                  )
                                                                                        ),
                                                                ),
                                                                
@@ -228,7 +231,7 @@ openServer <- function(id){
           shiny::fluidRow(shiny::column(width=12, singleImageBodyUI(ns("template1"), max_height=NULL))),
           shiny::h2("Writer Profiles"),
           shiny::HTML("<p>For each handwriting sample, handwriter assigns each graph to the cluster with the most similar shape. Then
-                      for each document, handwriter calculates the proportation of graphs assigned to each cluster. The rate at which a 
+                      for each document, handwriter calculates the proportion of graphs assigned to each cluster. The rate at which a 
                       writer produces graphs in each cluster serves as an estimate of a <i>writer profile</i>.</p>"),
           shiny::br(),
           writerProfileBodyUI(ns("writer_profiles"))
@@ -299,6 +302,8 @@ openServer <- function(id){
         )
       })
       
+      # REPORT ----
+      
       singleImageServer("sample1", sample1)
       singleImageServer("sample2", sample2)
       
@@ -308,6 +313,21 @@ openServer <- function(id){
       singleImageServer("template1", template_plot, title = "Clusters")
       
       writerProfileServer("writer_profiles", sample1, sample2, shiny::reactive(clusters))
+      
+      # Set up parameters to pass to Rmd document
+      params <- shiny::reactive({
+        x <- list(
+          project_dir = file.path(tempdir(), "comparison1"),
+          graphs1 = graphs$sample1,
+          graphs2 = graphs$sample2,
+          clusters1 = clusters$sample1,
+          clusters2 = clusters$sample2,
+          slr_df = slr_df()
+        )
+        return(x)
+      })
+      reportServer('open_report', params = params, report_template = "open_report_pdf.Rmd")
+      
     }
   )
 }

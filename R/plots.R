@@ -28,7 +28,10 @@
 #'
 #' @return A line plot
 #'
-#' @noRd
+#' @export
+#' 
+#' @examples
+#' plot_writer_profiles(rates)
 #' 
 plot_writer_profiles <- function(rates) {
   # prevent note: "no visible binding for global variable"

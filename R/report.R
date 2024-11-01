@@ -15,14 +15,14 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-caseReportSidebarUI <- function(id) {
+reportSidebarUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::fluidRow(shiny::column(12, shiny::downloadButton(ns("report"), "Generate report"), align="center"))
   )
 }
 
-caseReportServer <- function(id, global) {
+reportServer <- function(id, params, report_template) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
@@ -33,7 +33,7 @@ caseReportServer <- function(id, global) {
         },
         content = function(file) {
           rmd_name <- system.file(file.path("extdata", "report_templates"), 
-                                  "report_pdf.Rmd", 
+                                  report_template, 
                                   package = "handwriterApp")
           src <- normalizePath(rmd_name)
           
@@ -42,20 +42,13 @@ caseReportServer <- function(id, global) {
           # can happen when deployed).
           tempReport <- file.path(tempdir(), basename(rmd_name))
           file.copy(src, tempReport, overwrite = TRUE)
-          
-          # Set up parameters to pass to Rmd document
-          params <- list(
-            main_dir = global$main_dir,
-            analysis = global$analysis,
-            model = global$model
-          )
-          
+
           # Knit the document, passing in the 'params' list, and eval it in a
           # child of the global environment (this isolates the code in the document
           # from the code in this app).
           rmarkdown::render(tempReport, 
                             output_file = file,
-                            params = params,
+                            params = params(),
                             envir = new.env(parent = globalenv())
           )
         }
