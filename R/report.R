@@ -18,7 +18,7 @@
 reportSidebarUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::fluidRow(shiny::column(12, shiny::downloadButton(ns("report"), "Generate report"), align="center"))
+    shiny::downloadButton(class = "btn-sidebar", ns("report"), "Generate report")
   )
 }
 
