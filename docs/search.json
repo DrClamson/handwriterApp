@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "contact.html",
+    "href": "contact.html",
+    "title": "Contact",
+    "section": "",
+    "text": "Center for Statistics and Applications in Forensic Evidence\n195 Durham Center\n613 Morrill Road\nAmes, Iowa 50011\n(515) 294-7278\ncsafe@iastate.edu"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Welcome",
+    "section": "",
+    "text": "Unlock the power of handwriting analysis with handwriter. This tool is designed to assist forensic examiners by analyzing handwritten documents. Whether you are a forensic document examiner, legal professional, academic, or simply curious about how statistics are applied to handwriting, handwriter provides an automated way to evaluate handwriting samples."
+  },
+  {
+    "objectID": "index.html#installation",
+    "href": "index.html#installation",
+    "title": "Welcome",
+    "section": "Installation",
+    "text": "Installation\n\nInstall Software\nHandwriter requires R, RStudio IDE, and JAGS.\n\nInstall R and RStudio from POSIT\nInstall JAGS from SourceForge\nWindows only:\n\nIf you have a 64-bit Intel machine install RTools from the RTools44 installer\nIf you have a 64-bit ARM machine install RTools from the RTools44 ARM installer\n\n\n\n\nInstall R Packages\nInstall the handwriterApp R package. Open RStudio and navigate to the console window and type\n\noptions(timeout = 100000)\ninstall.packages(\"devtools\")\ndevtools::install_github(\"CSAFE-ISU/handwriter\")\ndevtools::install_github(\"CSAFE-ISU/handwriterApp\")\ndevtools::install_github(\"CSAFE-ISU/handwriterRF\")\n\nYou might encounter the following message.\n\n\n\n\n\nHandwriter uses other R packages. This message asks whether to install the newest versions of the Rcpp, mvtnorm, and curl packages. You will likely see different R packages listed. Type “1” without the quotation marks and hit enter to install all updates."
+  },
+  {
+    "objectID": "index.html#handwriting-samples",
+    "href": "index.html#handwriting-samples",
+    "title": "Welcome",
+    "section": "Handwriting Samples",
+    "text": "Handwriting Samples\nScan your handwriting samples at 300 DPI and save them as PNG files. If you don’t have your own handwriting samples, you can download samples for free from the CSAFE Handwriting Database."
+  },
+  {
+    "objectID": "index.html#launch-the-app",
+    "href": "index.html#launch-the-app",
+    "title": "Welcome",
+    "section": "Launch the App",
+    "text": "Launch the App\nOpen RStudio, navigate to the console window, and type:\n\nlibrary(handwriterApp)\nlibrary(handwriterRF)\nhandwriterApp()\n\nIn the pop-up window, click Open in Browser. If you use the app in the pop-up window instead of in a browser, some links will not work."
+  },
+  {
+    "objectID": "index.html#choose-a-scenario",
+    "href": "index.html#choose-a-scenario",
+    "title": "Welcome",
+    "section": "Choose a Scenario",
+    "text": "Choose a Scenario\nHandwriter addresses two scenarios.\n\n\n\n  \n    SCENARIO 1\n    \n    Compare a questioned document to a single handwritten document.\n    \n    \n    \n    \n    \n    \n    Requirements\n      \n        \n        Questioned Document: from an unknown writer.\n        \n        \n        Comparison Document: from a known or unknown writer.\n        \n      \n    \n    \n    \n    Result: A score-based likelihood ratio that expresses the support of the evidence in favor of the samples having been written by the same writer or different writers.\n    \n  \n\n\n\n  \n    SCENARIO 2\n    \n    \n    Compare a questioned document to a group of known handwriting samples.\n    \n    \n    \n    \n    \n    Requirements\n      \n        \n        Questioned Document: from an unknown writer.\n        \n        \n        Additional Documents: Three known writing samples from each writer in a group of potential writers. The questioned document MUST have been written by someone in this group.\n        \n      \n    \n    \n    \n    Result: The posterior probability that each potential writer wrote the questioned document.\n    \n    \n  \n\n\n\nIn the app, choose the scenario that fits your handwriting samples by clicking the scenario’s button. Follow the instructions to analyze your handwriting samples."
+  }
+]
