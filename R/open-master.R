@@ -32,10 +32,7 @@ openUI <- function(id) {
                                                                                                     shiny::helpText("Select two handwritten documents to compare. The files must be PNG images."),
                                                                                                     shiny::fileInput(ns("open_upload1"), "Document 1", accept = ".png", multiple=FALSE),
                                                                                                     shiny::fileInput(ns("open_upload2"), "Document 2", accept = ".png", multiple=FALSE),
-                                                                                                    shiny::hr(),
-                                                                                                    shiny::actionButton(ns("compare"), "Compare Documents", width = "100%"),
-                                                                                                    shiny::br(),
-                                                                                                    shiny::br(),
+                                                                                                    shiny::actionButton(class = "btn-sidebar", ns("compare"), "Compare Documents", width = "100%"),
                                                                                                     reportSidebarUI(ns('open_report'))
                                                                                                   )
                                                                                        ),

@@ -29,8 +29,8 @@ closedUI <- function(id) {
                                                                                                   format_sidebar(title = "COMPARE QUESTIONED DOCUMENTS TO KNOWN WRITING SAMPLES",
                                                                                                                  help_text = "Compare one or more questioned documents to known writing samples from each writer in a group of potential writers. The questioned document(s) MUST have been written by someone in this group.
                                                                                                                  See a demo with example data or use your own handwriting samples."),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_button"), "Demo")),
-                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("case_button"), align="right", "Use Your Own Samples")))
+                                                                                                  shiny::tagList(shiny::actionButton(class = "btn-sidebar", ns("demo_button"), "Demo"),
+                                                                                                                 shiny::actionButton(class = "btn-sidebar", ns("case_button"), align="right", "Use Your Own Samples"))
                                                                                        ),
                                                                ),
                                                                
@@ -39,8 +39,8 @@ closedUI <- function(id) {
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::div(id = "autonomous",
                                                                                                   shiny::includeHTML(system.file(file.path("extdata", "HTML"), "demo_preview.html", package = "handwriterApp")),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_preview_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_preview_next_button"), "Next")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(class = "btn-sidebar", ns("demo_preview_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(class = "btn-sidebar", ns("demo_preview_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
@@ -52,8 +52,8 @@ closedUI <- function(id) {
                                                                                                                  help_text = "Estimate writer profiles from the known writing samples and fit a statistical model to the writer profiles.",
                                                                                                                  module = demoKnownSidebarUI(ns("demo_known")),
                                                                                                                  break_after_module = TRUE),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_known_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_known_next_button"), "Next")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(class = "btn-sidebar", ns("demo_known_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(class = "btn-sidebar", ns("demo_known_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
@@ -65,8 +65,8 @@ closedUI <- function(id) {
                                                                                                                  help_text = "Estimate writer profiles from the questioned documents. Use the statistical model to estimate the posterior probabilities that each POI wrote a questioned document.",
                                                                                                                  module = demoQDSidebarUI(ns("demo_qd")),
                                                                                                                  break_after_module = TRUE),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("demo_qd_back_button"), "Back")),
-                                                                                                                  shiny::column(width = 9, align = "right", shiny::actionButton(ns("demo_qd_next_button"), "Finish")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(class = "btn-sidebar", ns("demo_qd_back_button"), "Back")),
+                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(class = "btn-sidebar", ns("demo_qd_next_button"), "Finish")))
                                                                                        ),
                                                                ),
                                                                
@@ -74,8 +74,8 @@ closedUI <- function(id) {
                                                                shiny::conditionalPanel(condition="input.screen == 'Case Requirements'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::includeHTML(system.file(file.path("extdata", "HTML"), "case_requirements.html", package = "handwriterApp")),
-                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("case_requirements_back_button"), "Back")), 
-                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("case_requirements_next_button"), "Next")))
+                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(class = "btn-sidebar", ns("case_requirements_back_button"), "Back")), 
+                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(class = "btn-sidebar", ns("case_requirements_next_button"), "Next")))
                                                                                        
                                                                ),
                                                                
@@ -83,8 +83,8 @@ closedUI <- function(id) {
                                                                shiny::conditionalPanel(condition="input.screen == 'Case Files'",
                                                                                        ns = shiny::NS(id),
                                                                                        shiny::includeHTML(system.file(file.path("extdata", "HTML"), "case_files.html", package = "handwriterApp")),
-                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("case_files_back_button"), "Back")), 
-                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(ns("case_files_next_button"), "Next")))
+                                                                                       shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(class = "btn-sidebar", ns("case_files_back_button"), "Back")), 
+                                                                                                       shiny::column(width = 6, align = "right", shiny::actionButton(class = "btn-sidebar", ns("case_files_next_button"), "Next")))
                                                                                        
                                                                ),
                                                                
@@ -98,8 +98,8 @@ closedUI <- function(id) {
                                                                             an empty folder to start a new analysis. If you want
                                                                             to continue an analysis, select that folder.",
                                                                                                                  module = caseMaindirUI(ns('case_maindir'))),
-                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("case_project_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("case_project_next_button"), "Next")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(class = "btn-sidebar", ns("case_project_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(class = "btn-sidebar", ns("case_project_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
@@ -111,8 +111,8 @@ closedUI <- function(id) {
                                                                                                                  help_text = "Where are the writer IDs located in the file names?",
                                                                                                                  module = caseKnownSidebarUI(ns('case_known')),
                                                                                                                  break_after_module = FALSE),
-                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("case_known_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("case_known_next_button"), "Next")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(class = "btn-sidebar", ns("case_known_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(class = "btn-sidebar", ns("case_known_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
@@ -124,8 +124,8 @@ closedUI <- function(id) {
                                                                                                                  help_text = "Where are the writer IDs located in the file names?",
                                                                                                                  module = caseQDSidebarUI(ns('case_qd')),
                                                                                                                  break_after_module = FALSE),
-                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(ns("case_qd_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(ns("case_qd_next_button"), "Next")))
+                                                                                                  shiny::fluidRow(shiny::column(width = 6, shiny::actionButton(class = "btn-sidebar", ns("case_qd_back_button"), "Back")), 
+                                                                                                                  shiny::column(width = 6, align = "right", shiny::actionButton(class = "btn-sidebar", ns("case_qd_next_button"), "Next")))
                                                                                        ),
                                                                ),
                                                                
@@ -135,8 +135,8 @@ closedUI <- function(id) {
                                                                                        shiny::div(id = "autonomous",
                                                                                                   format_sidebar(title = "REPORT",
                                                                                                                  help_text = "Download the report."),
-                                                                                                  shiny::fluidRow(shiny::column(width = 3, shiny::actionButton(ns("case_report_back_button"), "Back")), 
-                                                                                                                  shiny::column(width = 9, align = "right", reportSidebarUI(ns('case_report'))))
+                                                                                                  shiny::actionButton(class = "btn-sidebar", ns("case_report_back_button"), "Back"),
+                                                                                                  reportSidebarUI(ns('case_report'))
                                                                                        ),
                                                                ),
                                                              ))),
