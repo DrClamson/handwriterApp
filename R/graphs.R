@@ -37,8 +37,6 @@ graphsUI <- function(id){
                                    shiny::textOutput(ns("path")),
                                    shiny::hr()),
                 bslib::card_body(
-                  min_width = 600,
-                  min_height = 1000,
                   shiny::plotOutput(ns("graphs"))
                 )
     ),
@@ -66,9 +64,8 @@ graphsServer <- function(id, sample, graphs) {
       })
       
       output$graphs <- shiny::renderPlot({
-        handwriter::plot_graphs(graphs(), ncol=5)
-      },
-      width = 600)
+        handwriter::plotNodes(graphs(), nodeSize = 1)
+      })
     }
   )
 }
