@@ -59,11 +59,11 @@ Handwriter has been tested on handwriting examples from publicly available handw
 Handwriter processes handwriting by converting the writing to black and white, thinning the writing to 1 pixel in width, and following a set of rules to break the writing into component shapes called *graphs*. Graphs capture shapes, not necessarily individual letters. Graphs might be a part of a letter or contain parts of multiple letters.
 
 ```{r graphs1, echo=FALSE, fig.cap="Graphs from the first document.", fig.align="center"}
-handwriter::plot_graphs(params$graphs1, ncol=5)
+handwriter::plotNodes(params$graphs1)
 ```
 
 ```{r graphs2, echo=FALSE, fig.cap="Graphs from the second document.", fig.align="center"}
-handwriter::plot_graphs(params$graphs2, ncol=5)
+handwriter::plotNodes(params$graphs2)
 ```
 
 ## Clusters

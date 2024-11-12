@@ -322,7 +322,7 @@ scenario1Server <- function(id){
         )
         return(x)
       })
-      reportServer('report', params = params, report_template = "report_pdf.Rmd")
+      reportServer('report', params = params, report_template = "scenario1_report_pdf.Rmd")
       
     }
   )
