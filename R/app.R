@@ -115,7 +115,7 @@ handwriterApp <- function(...){
                                                                                                          shiny::tags$div(
                                                                                                            class = "text-center",  # Bootstrap class for centering
                                                                                                            shiny::actionButton(class = "scenario-btn",
-                                                                                                                               "open_button", "Scenario 1", width = "50%")
+                                                                                                                               "scenario1_button", "Scenario 1", width = "50%")
                                                                                                          )
                                                                                              ),
                                                                                              bslib::card(class="scenario",
@@ -130,7 +130,7 @@ handwriterApp <- function(...){
                                                                                                          shiny::tags$div(
                                                                                                            class = "text-center",  # Bootstrap class for centering
                                                                                                            shiny::actionButton(class = "scenario-btn",
-                                                                                                                               "closed_button", "Scenario 2", width = "50%")
+                                                                                                                               "scenario2_button", "Scenario 2", width = "50%")
                                                                                                          )
                                                                                              ),
                                                                                            ),
@@ -141,12 +141,12 @@ handwriterApp <- function(...){
                                                                        
                                                                        shiny::tabPanel(
                                                                          "Scenario 1",
-                                                                         openUI('open1'),
+                                                                         scenario1UI('scen1'),
                                                                        ),
                                                                        
                                                                        shiny::tabPanel(
                                                                          "Scenario 2",
-                                                                         closedUI('closed1'),
+                                                                         scenario2UI('scen2'),
                                                                        ),
                                                                        
                                                                        shiny::navbarMenu("More",
@@ -196,22 +196,22 @@ handwriterApp <- function(...){
     })
     
     # Switch to Scenario 1 tab
-    shiny::observeEvent(input$open_button, {
+    shiny::observeEvent(input$scenario1_button, {
       shiny::updateNavbarPage(session, "my-navbar", selected = "Scenario 1")
     })
     
     # Switch to Scenario 1 tab
-    shiny::observeEvent(input$open_button, {
+    shiny::observeEvent(input$scenario1_button, {
       shiny::updateNavbarPage(session, "my-navbar", selected = "Scenario 1")
     })
     
     # Switch to Scenario 2 tab
-    shiny::observeEvent(input$closed_button, {
+    shiny::observeEvent(input$scenario2_button, {
       shiny::updateNavbarPage(session, "my-navbar", selected = "Scenario 2")
     })
     
-    openServer('open1')
-    closedServer('closed1')
+    scenario1Server('scen1')
+    scenario2Server('scen2')
   }
   
   shiny::shinyApp(ui, server, ...)

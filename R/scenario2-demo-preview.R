@@ -15,30 +15,30 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-demoPreviewBodyUI <- function(id){
+demoPreviewUI <- function(id){
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("KNOWN WRITING EXAMPLES"),
-    shiny::fluidRow(shiny::column(width=4, singleImageBodyUI(ns("demo1"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demo2"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demo3")))),
-    shiny::fluidRow(shiny::column(width=4, singleImageBodyUI(ns("demo4"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demo5"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demo6")))),
-    shiny::fluidRow(shiny::column(width=4, singleImageBodyUI(ns("demo7"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demo8"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demo9")))),
-    shiny::fluidRow(shiny::column(width=4, singleImageBodyUI(ns("demo10"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demo11"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demo12")))),
-    shiny::fluidRow(shiny::column(width=4, singleImageBodyUI(ns("demo13"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demo14"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demo15")))),
+    shiny::fluidRow(shiny::column(width=4, singleImageUI(ns("demo1"))),
+                    shiny::column(width=4, singleImageUI(ns("demo2"))),
+                    shiny::column(width=4, singleImageUI(ns("demo3")))),
+    shiny::fluidRow(shiny::column(width=4, singleImageUI(ns("demo4"))),
+                    shiny::column(width=4, singleImageUI(ns("demo5"))),
+                    shiny::column(width=4, singleImageUI(ns("demo6")))),
+    shiny::fluidRow(shiny::column(width=4, singleImageUI(ns("demo7"))),
+                    shiny::column(width=4, singleImageUI(ns("demo8"))),
+                    shiny::column(width=4, singleImageUI(ns("demo9")))),
+    shiny::fluidRow(shiny::column(width=4, singleImageUI(ns("demo10"))),
+                    shiny::column(width=4, singleImageUI(ns("demo11"))),
+                    shiny::column(width=4, singleImageUI(ns("demo12")))),
+    shiny::fluidRow(shiny::column(width=4, singleImageUI(ns("demo13"))),
+                    shiny::column(width=4, singleImageUI(ns("demo14"))),
+                    shiny::column(width=4, singleImageUI(ns("demo15")))),
     shiny::br(),
     shiny::h1("QUESTIONED WRITING EXAMPLES"),
-    shiny::fluidRow(shiny::column(width=4, singleImageBodyUI(ns("demoQ1"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demoQ2"))),
-                    shiny::column(width=4, singleImageBodyUI(ns("demoQ3")))),
+    shiny::fluidRow(shiny::column(width=4, singleImageUI(ns("demoQ1"))),
+                    shiny::column(width=4, singleImageUI(ns("demoQ2"))),
+                    shiny::column(width=4, singleImageUI(ns("demoQ3")))),
   )
 }
 

@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-openUI <- function(id) {
+scenario1UI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::sidebarLayout(shiny::tags$div(id=ns("my-sidebar"),
@@ -30,10 +30,10 @@ openUI <- function(id) {
                                                                                                     shiny::tags$h1(class = "responsive-text", "COMPARE TWO DOCUMENTS"),
                                                                                                     shiny::br(),
                                                                                                     shiny::helpText("Select two handwritten documents to compare. The files must be PNG images."),
-                                                                                                    shiny::fileInput(ns("open_upload1"), "Document 1", accept = ".png", multiple=FALSE),
-                                                                                                    shiny::fileInput(ns("open_upload2"), "Document 2", accept = ".png", multiple=FALSE),
+                                                                                                    shiny::fileInput(ns("upload1"), "Document 1", accept = ".png", multiple=FALSE),
+                                                                                                    shiny::fileInput(ns("upload2"), "Document 2", accept = ".png", multiple=FALSE),
                                                                                                     shiny::actionButton(class = "btn-sidebar", ns("compare"), "Compare Documents", width = "100%"),
-                                                                                                    reportSidebarUI(ns('open_report'))
+                                                                                                    reportUI(ns('report'))
                                                                                                   )
                                                                                        ),
                                                                ),
@@ -62,7 +62,7 @@ openUI <- function(id) {
 }
 
 
-openServer <- function(id){
+scenario1Server <- function(id){
   shiny::moduleServer(
     id,
     function(input, output, session){
@@ -88,9 +88,9 @@ openServer <- function(id){
         # reset clusters
         clusters$sample1 <- NULL
         
-        fix_upload_name(input$open_upload1)
+        fix_upload_name(input$upload1)
       }) %>% 
-        shiny::bindEvent(input$open_upload1)
+        shiny::bindEvent(input$upload1)
       
       sample2 <- shiny::reactive({
         cat(file=stderr(), "sample2 reactive \n")
@@ -101,9 +101,9 @@ openServer <- function(id){
         # reset clusters
         clusters$sample1 <- NULL
         
-        fix_upload_name(input$open_upload2)
+        fix_upload_name(input$upload2)
       }) %>% 
-        shiny::bindEvent(input$open_upload2)
+        shiny::bindEvent(input$upload2)
       
       template_plot <- shiny::reactive({
         x <- list()
@@ -123,8 +123,7 @@ openServer <- function(id){
         # handwriterRF::calculate_slr() deletes the contents of tempdir() >
         # comparison before the function terminates, but the app needs the
         # cluster assignments to plot the writer profiles, so use tempdir() >
-        # comparison1 as the project directory and delete this folder and its
-        # contents when the clear_open button is clicked.
+        # comparison1 as the project directory.
         
         unlink(file.path(tempdir(), "comparison1"), recursive = TRUE)
         
@@ -157,8 +156,8 @@ openServer <- function(id){
         shiny::tagList(
           shiny::h1("HANDWRITING SAMPLES"),
           shiny::br(),
-          shiny::fluidRow(shiny::column(width=6, singleImageBodyUI(ns("sample1"))),
-                          shiny::column(width=6, singleImageBodyUI(ns("sample2")))),
+          shiny::fluidRow(shiny::column(width=6, singleImageUI(ns("sample1"))),
+                          shiny::column(width=6, singleImageUI(ns("sample2")))),
         )
       })
       
@@ -170,12 +169,12 @@ openServer <- function(id){
         cat(file=stderr(), "render hypotheses UI \n")
         
         shiny::tagList(
-          shiny::h1("HYPOTHESES"),
-          shiny::HTML("<p>Handwriter addresses two hypotheses:
+          shiny::h1("PROPOSITIONS"),
+          shiny::HTML("<p>Handwriter addresses two propositions:
                       <ul>
-                        <li> <strong>H<sub>p</sub>: The two documents were written by the same writer.</strong>
+                        <li> <strong>P<sub>1</sub>: The two documents were written by the same writer.</strong>
                         </li>
-                        <li> <strong>H<sub>d</sub>: The two documents were written by different writers.</strong>
+                        <li> <strong>P<sub>2</sub>: The two documents were written by different writers.</strong>
                         </li>
                       </ul>
                       </p>"),
@@ -218,20 +217,20 @@ openServer <- function(id){
                       to break the writing into component shapes called <i>graphs</i>. Graphs capture shapes, 
                       not necessarily individual letters. Graphs might be a part of a letter or contain parts of multiple letters.</p>"),
           shiny::br(),
-          shiny::fluidRow(shiny::column(width=6, graphsBodyUI(ns("sample1_graphs"))),
-                          shiny::column(width=6, graphsBodyUI(ns("sample2_graphs")))),
+          shiny::fluidRow(shiny::column(width=6, graphsUI(ns("sample1_graphs"))),
+                          shiny::column(width=6, graphsUI(ns("sample2_graphs")))),
           shiny::h2("Clusters"),
           shiny::HTML("<p>Handwriter use 40 exemplar shapes called <i>clusters</i>. Again, these shapes are not necessarily individual letters. 
                       They might be part of a letter or contain parts of multiple letters. For more information on how these 40 clusters were created, 
                       see <cite><a href='https://onlinelibrary.wiley.com/doi/abs/10.1002/sam.11488'> A clustering method for graphical handwriting 
                       components and statistical writership analysis.</a></cite></p>"),
-          shiny::fluidRow(shiny::column(width=12, singleImageBodyUI(ns("template1"), max_height=NULL))),
+          shiny::fluidRow(shiny::column(width=12, singleImageUI(ns("template1"), max_height=NULL))),
           shiny::h2("Writer Profiles"),
           shiny::HTML("<p>For each handwriting sample, handwriter assigns each graph to the cluster with the most similar shape. Then
                       for each document, handwriter calculates the proportion of graphs assigned to each cluster. The rate at which a 
                       writer produces graphs in each cluster serves as an estimate of a <i>writer profile</i>.</p>"),
           shiny::br(),
-          writerProfileBodyUI(ns("writer_profiles"))
+          writerProfileUI(ns("writer_profiles"))
         )
       })
       
@@ -323,7 +322,7 @@ openServer <- function(id){
         )
         return(x)
       })
-      reportServer('open_report', params = params, report_template = "open_report_pdf.Rmd")
+      reportServer('report', params = params, report_template = "report_pdf.Rmd")
       
     }
   )

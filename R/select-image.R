@@ -15,6 +15,18 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#' Select Image Module UI
+#' 
+#' Creates a drop-down list of known or questioned images. The user selects an image
+#' from the drop-down list and a preview of the image, a plot with the image's nodes, 
+#' and a plot of the writer's profile are displayed in three separate tabs.
+#'
+#' @param id An ID string that corresponds with the ID used to call the module's
+#'   server function
+#'
+#' @return A drop-down list and tabs
+#' 
+#' @noRd
 selectImageUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
@@ -23,6 +35,20 @@ selectImageUI <- function(id) {
   )
 }
 
+#' Select Image Module Server
+#' 
+#' Creates a drop-down list of known or questioned images. The user selects an image
+#' from the drop-down list and a preview of the image, a plot with the image's nodes, 
+#' and a plot of the writer's profile are displayed in three separate tabs.
+#'
+#' @param id An ID string that corresponds with the ID used to call the module's
+#'   server function
+#' @param global Reactive values
+#' @param type Either "model" or "questioned"
+#'
+#' @return A drop-down list and tabs
+#' 
+#' @noRd
 selectImageServer <- function(id, global, type) {
   shiny::moduleServer(
     id,

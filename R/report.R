@@ -15,13 +15,39 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-reportSidebarUI <- function(id) {
+
+#' Report Module UI
+#'
+#' Creates a button that generates and downloads a report as a PDF file.
+#' Parameters from the app are plugged into a report template.
+#'
+#' @param id An ID string that corresponds with the ID used to call the module's
+#'   server function
+#'
+#' @return A PDF file
+#' 
+#' @noRd
+reportUI <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::downloadButton(class = "btn-sidebar", ns("report"), "Generate report")
   )
 }
 
+#' Report Module Server
+#'
+#' Creates a button that generates and downloads a report as a PDF file.
+#' Parameters from the app are plugged into a report template.
+#'
+#' @param id An ID string that corresponds with the ID used to call the module's
+#'   UI function
+#' @param params A reactive list of parameters
+#' @param report_template Filename of the report template saved in extdata >
+#'   report_templates
+#'
+#' @return A PDF file
+#'
+#' @noRd
 reportServer <- function(id, params, report_template) {
   shiny::moduleServer(
     id,

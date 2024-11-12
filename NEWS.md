@@ -6,7 +6,7 @@
 
 ## Minor improvements and fixes
 
-* Added the option to view a full-screen version of images displayed with `singleImageBodyUI()` and `singleImageServer()`.
+* Added the option to view a full-screen version of images displayed with `singleImageUI()` and `singleImageServer()`.
 
 * Changed the navigation bar to have tabs Home, Scenarios, Scenario 1, Scenario 2, and More. More is a drop-down menu that gives the options About, Contact, and License.
 
@@ -14,11 +14,11 @@
 
 * Changed the color of links to light blue in the sidebar and purple in the body.
 
-* Fixed a bug in the closed-set demo where the document previews were displaying correctly.
+* Fixed a bug in the demo where the document previews were displaying correctly.
 
-* Renamed `currentImageUI()` and `currentImageServer()` as `selectImageUI()` and `selectImageServer()` respectively. This change better accommodates the new `singleImageBodyUI()` and `singleImageServer()` module.
+* Renamed `currentImageUI()` and `currentImageServer()` as `selectImageUI()` and `selectImageServer()` respectively. This change better accommodates the new `singleImageUI()` and `singleImageServer()` module.
 
-* Replaced the phrase "simulate casework" with "use your own samples" in the closed-set method for better clarity.
+* Replaced the phrase "simulate casework" with "use your own samples" in scenario 2 for better clarity.
 
 # handwriterApp 1.0.1
 
