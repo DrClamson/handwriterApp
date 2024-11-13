@@ -1,0 +1,104 @@
+---
+title: "Writership Analysis Report"
+output:
+  bookdown::pdf_document2:
+    extra_dependencies: ["flafter"]
+params:
+  project_dir: NA
+  graphs1: NA
+  graphs2: NA
+  clusters1: NA
+  clusters2: NA
+  slr_df: NA
+---
+
+```{r setup, include=FALSE}
+library(handwriter)
+library(handwriterRF)
+library(handwriterApp)
+library(magick)
+# knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+```
+
+# HANDWRITING SAMPLES
+
+```{r sample1, echo=FALSE, fig.cap="Handwriting sample 1.", out.width = '100%'}
+files <- list.files(file.path(tempdir(), "comparison1", "docs"), full.names = TRUE)
+knitr::include_graphics(files[1])
+```
+
+```{r sample2, echo=FALSE, fig.cap="Handwriting sample 2.", out.width = '100%'}
+knitr::include_graphics(files[2])
+```
+
+```{r docs, echo=FALSE}
+doc_paths <- list.files(file.path(params$project_dir, "docs"))
+knitr::kable(
+  data.frame("File" = basename(doc_paths)), 
+  booktabs = TRUE,
+  caption = "Handwriting samples"
+)
+```
+
+# HYPOTHESES
+
+Handwriter addresses two hypotheses:
+
+- $H_p:$ The two documents were written by the same writer.
+- $H_d:$ The two documents were written by different writers.
+
+# LIMITATIONS
+
+Handwriter assumes that the documents were written in the writer's natural handwriting and that the writer did not attempt to disguise their handwriting nor forge someone else's handwriting.
+
+Handwriter has been tested on handwriting examples from publicly available handwriting databases, where volunteers were asked to copy a writing prompt in their natural handwriting. Error rates on other types of handwriting samples are unknown.
+
+# WRITER PROFILES
+
+## Graphs
+Handwriter processes handwriting by converting the writing to black and white, thinning the writing to 1 pixel in width, and following a set of rules to break the writing into component shapes called *graphs*. Graphs capture shapes, not necessarily individual letters. Graphs might be a part of a letter or contain parts of multiple letters.
+
+```{r graphs1, echo=FALSE, fig.cap="Graphs from the first document.", fig.align="center"}
+handwriter::plotNodes(params$graphs1)
+```
+
+```{r graphs2, echo=FALSE, fig.cap="Graphs from the second document.", fig.align="center"}
+handwriter::plotNodes(params$graphs2)
+```
+
+## Clusters
+
+Handwriter use 40 exemplar shapes called *clusters*. Again, these shapes are not necessarily individual letters. They might be part of a letter or contain parts of multiple letters. For more information on how these 40 clusters were created, see https://onlinelibrary.wiley.com/doi/abs/10.1002/sam.11488.
+
+```{r template, echo=FALSE, fig.cap="Cluster template with 40 clusters.", out.width = '100%'}
+knitr::include_graphics(system.file("extdata", "images", "template.png", package = "handwriterApp"))
+```
+
+## Writer Profiles
+
+For each handwriting sample, handwriter assigns each graph to the cluster with the most similar shape. Then for each document, handwriter calculates the proportion of graphs assigned to each cluster. The rate at which a writer produces graphs in each cluster serves as an estimate of a *writer profile*.
+
+```{r profiles, echo=FALSE, fig.cap="Writer profiles estimated from the two documents.", out.width = '100%'}
+df <- rbind(params$clusters1, params$clusters2)
+        
+counts <- handwriter::get_cluster_fill_counts(df)
+rates <- handwriterRF::get_cluster_fill_rates(counts)
+        
+plot_writer_profiles(rates)
+```
+
+# COMPARISON RESULTS
+
+Handwriter measures the similarity between the two writer profiles using a random forest trained on handwriting samples from the CSAFE Handwriting Database (https://data.csafe.iastate.edu/HandwritingDatabase/). The result is a *similarity score* between the two writer profiles. Next, handwriter calculates the likelihood of observing the similarity score if the *same writer* hypothesis is true and the likelihood of observing the similarity score if the *different writers* hypothesis is true. The *score-based likelihood ratio* is the ratio of these two likelihoods. For more information, see https://doi.org/10.1002/sam.11566.
+
+## Similarity Score
+
+The similarity score is `r params$slr_df$score`.
+
+## Score-based Likelihood Ratio
+
+The score-based likelihood ratio is `r params$slr_df$slr`.
+
+## Verbal Interpretation of the Score-based Likelihood Ratio
+
+`r handwriterRF::interpret_slr(params$slr_df)`

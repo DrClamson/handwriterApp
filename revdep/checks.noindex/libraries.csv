@@ -1,0 +1,11 @@
+package,old,new,delta
+handwriterApp,1.0.1,2.0.0,*
+commonmark,NA,1.9.2,*
+evaluate,NA,1.0.1,*
+fs,NA,1.6.5,*
+knitr,NA,1.49,*
+lpSolve,NA,5.6.22,*
+ranger,NA,0.17.0,*
+rmarkdown,NA,2.29,*
+tinytex,NA,0.54,*
+xfun,NA,0.49,*

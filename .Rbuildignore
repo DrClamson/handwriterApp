@@ -13,4 +13,5 @@
 ^docs$
 ^manuals$
 ^_quarto$
+^revdep$
 ^CRAN-SUBMISSION$

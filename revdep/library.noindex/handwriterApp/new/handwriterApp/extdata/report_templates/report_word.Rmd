@@ -1,0 +1,87 @@
+---
+title: "Writership Analysis Report"
+output: 
+  bookdown::word_document2:
+    fig_caption: true
+    number_sections: true
+    global_numbering: true
+params:
+  main_dir: NA
+  analysis: NA
+  known_docs: NA
+  model: NA
+  qd_path: NA
+  qd_doc: NA
+---
+
+```{r setup, include=FALSE}
+library(handwriter)
+library(magick)
+```
+
+# Questioned Document
+
+The questioned document is shown in Figure 1.
+
+```{r qd, echo=FALSE, fig.cap="The questioned document scaled to the width of the page.", fig.align="center", out.width= "100%"}
+qd_path <- list.files(file.path(params$main_dir, "data", "questioned_docs"), pattern = ".png", full.names = TRUE) 
+qd_image <- magick::image_read(qd_path)
+qd_image
+```
+
+The handwriter R package processed a PNG scan of the QD by
+
+1. Converting the image to black and white
+2. Thinning the writing so that it is only one pixel wide
+3. Splitting the writing into component shapes called *graphs*
+
+```{r qdgraphs, echo=FALSE, fig.cap="The questioned document split into graphs.", out.width= "100%"}
+handwriter::plotNodes(params$qd_doc)
+```
+
+Figure 2 shows the processed QD split into graphs.
+
+Next, handwriter estimated a writer profile for the QD by assigning its graphs to the cluster template
+and counting the number of graphs in each cluster. The writer profile estimated from the QD is shown in Figure 3.
+
+```{r qdprofile, echo=FALSE, fig.cap="The writer profile from the questioned document", fig.align="center", message=FALSE, fig.show='hold'}
+handwriter::plot_cluster_fill_counts(params$analysis)
+```
+
+# Known Writing Samples
+Three known writing samples were collected from each person of interest. The scanned PNG files of the known writing samples are listed in Table 1.
+
+```{r knowndocs, echo=FALSE}
+known_docs <- data.frame("files"=params$known_docs)
+knitr::kable(
+  known_docs, booktabs = TRUE,
+  caption = 'Known writing samples from persons of interest.'
+)
+```
+
+Each known writing sample was processed with the handwriter package with the same steps as the questioned document:
+
+1. Converting the image to black and white
+2. Thinning the writing so that it is only one pixel wide
+3. Splitting the writing into component shapes called *graphs*
+
+Next, handwriter estimated a writer profile each person of interest by first assigning the graphs from the known writing samples to the cluster template and counting the number of graphs in each cluster. Then handwriter fit a statistical model, called a Bayesian hierarchical model, to the cluster fill counts of all known writing samples to estimate the true writer profile of each person of interest. The estimated writer profiles of the persons of interest are displayed in Figure 4.
+
+```{r knownprofiles, echo=FALSE, fig.cap="Estimates of the writer profiles of the persons of interest. The error bars show the 2.5% and 9.75% credible intervals.", fig.align="center"}
+handwriter::plot_credible_intervals(params$model, facet=TRUE)
+```
+
+# Writership Analysis
+Using the estimated writer profiles of each person of interest and the writer profile from the QD, handwriter calculates the posterior probability that each person of interest wrote the QD. The posterior probabilities of writership are listed in Table 2.
+
+```{r analysis, echo=FALSE}
+pp <- params$analysis$posterior_probabilities
+colnames(pp) <- c("Person of Interest", "Posterior Probability of Writership")
+pp <- pp %>% dplyr::mutate(`Posterior Probability of Writership`=paste0(100*`Posterior Probability of Writership`, "%"))
+
+knitr::kable(
+  pp, booktabs = TRUE,
+  caption = 'The posterior probability that each person of interest wrote the questioned document.'
+)
+```
+

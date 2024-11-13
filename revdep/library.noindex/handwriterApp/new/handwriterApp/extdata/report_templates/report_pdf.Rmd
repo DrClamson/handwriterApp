@@ -1,0 +1,81 @@
+---
+title: "Writership Analysis Report"
+output:
+  bookdown::pdf_document2:
+    extra_dependencies: ["flafter"]
+params:
+  main_dir: NA
+  analysis: NA
+  model: NA
+---
+
+```{r setup, include=FALSE}
+library(handwriter)
+library(magick)
+# knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+```
+
+# Questioned Document(s)
+
+The analyzed questioned document(s) are listed in Table 1.
+
+```{r qds, echo=FALSE}
+qd_paths <- list.files(file.path(params$main_dir, "data", "questioned_docs"))
+knitr::kable(
+  data.frame("File" = basename(qd_paths)), 
+  booktabs = TRUE,
+  caption = "Questioned document(s)"
+)
+```
+
+The estimated writer profile(s) for each questioned document are displayed in Figure 1. The handwriter R package estimates the writer profile from a document with the following steps:
+
+1. Convert the image to black and white.
+2. Thin the writing so that it is only one pixel wide.
+3. Split the writing into component shapes called *graphs*.
+4. Assign each graph in the document to the nearest cluster. 
+5. Count the number of graphs assigned to each cluster. 
+
+The *cluster fill counts* are an estimate of the *writer's profile*.
+
+```{r qdprofile, echo=FALSE, fig.cap="The writer profile(s) from the questioned document(s)", fig.align="center", message=FALSE, fig.show='hold'}
+handwriter::plot_cluster_fill_counts(params$analysis, facet = TRUE)
+```
+
+# Known Writing Samples
+Three known writing samples were collected from each person of interest. The scanned PNG files of the known writing samples are listed in Table 2.
+```{r knowndocs, echo=FALSE}
+known_docs <- list.files(file.path(params$main_dir, "data", "model_docs"), pattern = ".png", full.names = TRUE)
+knitr::kable(
+  data.frame("File" = basename(known_docs)), 
+  booktabs = TRUE,
+  caption = 'Known writing samples from persons of interest.'
+)
+```
+
+Each known writing sample was processed with the handwriter package with the same steps as the questioned document:
+
+1. Convert the image to black and white.
+2. Thin the writing so that it is only one pixel wide.
+3. Split the writing into component shapes called *graphs*.
+4. Assign each graph in the document to the nearest cluster. 
+5. Count the number of graphs assigned to each cluster.
+
+Next, handwriter fit a statistical model, called a Bayesian hierarchical model, to the cluster fill counts of all known writing samples to estimate the true writer profile of each person of interest. The estimated writer profiles of the persons of interest are displayed in Figure 2.
+
+```{r knownprofiles, echo=FALSE, fig.cap="Estimates of the writer profiles of the persons of interest. The error bars show the 2.5% and 9.75% credible intervals.", fig.align="center"}
+handwriter::plot_credible_intervals(params$model, facet=TRUE)
+```
+
+# Writership Analysis
+The handwriter package used the statistical model and the estimated writer profile(s) from a questioned document(s) to calculate the posterior probability that each person wrote the questioned document(s). Table 3 shows the posterior probabilities of writership for each questioned document and each person of interest. Each row in the table corresponds to a person of interest and each column corresponds to a questioned document. The posterior probability in each column sums to 100%.
+
+```{r analysis, echo=FALSE}
+pp <- make_posteriors_df(analysis = params$analysis)
+
+knitr::kable(
+  pp, booktabs = TRUE,
+  caption = 'The posterior probability that each person of interest wrote each questioned document.'
+)
+```
+
