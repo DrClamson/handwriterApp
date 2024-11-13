@@ -8,17 +8,19 @@
 
 * Added the option to view a full-screen version of images displayed with `singleImageUI()` and `singleImageServer()`.
 
-* Changed the navigation bar to have tabs Home, Scenarios, Scenario 1, Scenario 2, and More. More is a drop-down menu that gives the options About, Contact, and License.
+* Changed the navigation bar to have tabs Home, Scenarios, Scenario 1, Scenario 2, and More. More is a drop-down menu that gives the options About, Permitted Use, Contact, and License.
+
+* Added a Permitted Use tab that informs users the app has not been validated for casework or court testimony and should not be used to draw formal conclusions. The app may be used for research and testing by forensics practitioners and other.
 
 * Created a new function `plot_writer_profiles()` that plots writer profiles on the same set of axes and labels the lines by the document name. This function is similar to `handwriter::plot_cluster_fill_rates()`, but that function labels the lines by writer ID.
 
 * Changed the color of links to light blue in the sidebar and purple in the body.
 
-* Fixed a bug in the demo where the document previews were displaying correctly.
+* Fixed a bug in the demo where the document previews were not displaying correctly.
 
 * Renamed `currentImageUI()` and `currentImageServer()` as `selectImageUI()` and `selectImageServer()` respectively. This change better accommodates the new `singleImageUI()` and `singleImageServer()` module.
 
-* Replaced the phrase "simulate casework" with "use your own samples" in scenario 2 for better clarity.
+* Replaced the phrase "simulate casework" with "use your own samples" in Scenario 2 for better clarity.
 
 # handwriterApp 1.0.1
 
