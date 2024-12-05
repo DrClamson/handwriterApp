@@ -130,7 +130,8 @@ scenario1Server <- function(id){
         slr <- handwriterRF::calculate_slr(
           sample1_path = sample1()$datapath,
           sample2_path = sample2()$datapath,
-          project_dir = file.path(tempdir(), "comparison1"))
+          project_dir = file.path(tempdir(), "comparison1"),
+          rforest = handwriterRF::random_forest)
         
         # load graphs
         graphs$sample1 <- readRDS(file.path(tempdir(), "comparison1", "graphs", stringr::str_replace(basename(sample1()$datapath), ".png", "_proclist.rds")))
