@@ -1,5 +1,11 @@
 # handwriterApp (development version)
 
+## Minor improvements and fixes
+
+* Previously, calling `handwriterRF::calculate_slr()` returned an error that `random_forest` cannot be found unless `library('handwriterRF')` was called first. Now
+`handwriterRF::calculate_slr()` is called with the argument `handwriterRF::random_forest` so that users don't need to run `library('handwriterRF')`.
+
+
 # handwriterApp 2.0.0
 
 ## New features
